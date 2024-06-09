@@ -1,0 +1,26 @@
+defaults:
+  - override job_logging: colorlog
+  - override hydra_logging: colorlog
+
+
+
+run:
+  dir: ./outputs/${project}/${run_name}
+job_logging:
+  version: 1
+  formatters:
+    simple:
+      format: '[%(asctime)s][%(levelname)s] - %(message)s'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: simple
+      stream: ext://sys.stdout
+    file:
+      class: logging.FileHandler
+      formatter: simple
+      filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+  root:
+    level: INFO
+    handlers:
+      - file

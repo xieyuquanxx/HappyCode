@@ -1,0 +1,32 @@
+  0%|                                                                                 | 0/465 [00:00<?, ?it/s]Error executing job with overrides: []
+Traceback (most recent call last):
+  File "/data/Users/xyq/developer/yuquan/vit_classification.py", line 131, in main
+    trainer.train()
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/transformers/trainer.py", line 1885, in train
+    return inner_training_loop(
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/transformers/trainer.py", line 2178, in _inner_training_loop
+    for step, inputs in enumerate(epoch_iterator):
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/accelerate/data_loader.py", line 454, in __iter__
+    current_batch = next(dataloader_iter)
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 49, in fetch
+    data = self.dataset.__getitems__(possibly_batched_index)
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/datasets/arrow_dataset.py", line 2865, in __getitems__
+    batch = self.__getitem__(keys)
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/datasets/arrow_dataset.py", line 2861, in __getitem__
+    return self._getitem(key)
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/datasets/arrow_dataset.py", line 2846, in _getitem
+    formatted_output = format_table(
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/datasets/formatting/formatting.py", line 633, in format_table
+    return formatter(pa_table, query_type=query_type)
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/datasets/formatting/formatting.py", line 401, in __call__
+    return self.format_batch(pa_table)
+  File "/data/Users/xyq/miniconda3/envs/xyq/lib/python3.10/site-packages/datasets/formatting/formatting.py", line 516, in format_batch
+    return self.transform(batch)
+  File "/data/Users/xyq/developer/yuquan/vit_classification.py", line 85, in transforms
+    raise
+RuntimeError: No active exception to reraise
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

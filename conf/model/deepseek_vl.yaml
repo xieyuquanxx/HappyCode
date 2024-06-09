@@ -1,0 +1,8 @@
+model_path: model_repo/deepseek-vl-7b-chat
+
+
+
+freeze:
+  vision_model: True
+  language_model: True
+  aligner: False

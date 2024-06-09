@@ -1,0 +1,930 @@
+2024-06-01 15:35:39,582 INFO    StreamThr :1828811 [internal.py:wandb_internal():85] W&B internal server running at pid: 1828811, started at: 2024-06-01 15:35:39.581126
+2024-06-01 15:35:39,587 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status
+2024-06-01 15:35:39,593 INFO    WriterThread:1828811 [datastore.py:open_for_write():87] open: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/run-63rg0z2g.wandb
+2024-06-01 15:35:39,594 DEBUG   SenderThread:1828811 [sender.py:send():378] send: header
+2024-06-01 15:35:39,595 DEBUG   SenderThread:1828811 [sender.py:send():378] send: run
+2024-06-01 15:35:41,377 INFO    SenderThread:1828811 [dir_watcher.py:__init__():211] watching files in: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files
+2024-06-01 15:35:41,377 INFO    SenderThread:1828811 [sender.py:_start_run_threads():1123] run started: 63rg0z2g with start time 1717227339.580719
+2024-06-01 15:35:41,394 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: check_version
+2024-06-01 15:35:41,395 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: check_version
+2024-06-01 15:35:41,909 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: run_start
+2024-06-01 15:35:41,931 DEBUG   HandlerThread:1828811 [system_info.py:__init__():26] System info init
+2024-06-01 15:35:41,931 DEBUG   HandlerThread:1828811 [system_info.py:__init__():41] System info init done
+2024-06-01 15:35:41,931 INFO    HandlerThread:1828811 [system_monitor.py:start():194] Starting system monitor
+2024-06-01 15:35:41,931 INFO    SystemMonitor:1828811 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-06-01 15:35:41,932 INFO    HandlerThread:1828811 [system_monitor.py:probe():214] Collecting system info
+2024-06-01 15:35:41,933 INFO    SystemMonitor:1828811 [interfaces.py:start():188] Started cpu monitoring
+2024-06-01 15:35:41,934 INFO    SystemMonitor:1828811 [interfaces.py:start():188] Started disk monitoring
+2024-06-01 15:35:41,936 INFO    SystemMonitor:1828811 [interfaces.py:start():188] Started gpu monitoring
+2024-06-01 15:35:41,937 INFO    SystemMonitor:1828811 [interfaces.py:start():188] Started memory monitoring
+2024-06-01 15:35:41,940 INFO    SystemMonitor:1828811 [interfaces.py:start():188] Started network monitoring
+2024-06-01 15:35:41,998 DEBUG   HandlerThread:1828811 [system_info.py:probe():150] Probing system
+2024-06-01 15:35:42,000 DEBUG   HandlerThread:1828811 [gitlib.py:_init_repo():56] git repository is invalid
+2024-06-01 15:35:42,001 DEBUG   HandlerThread:1828811 [system_info.py:probe():198] Probing system done
+2024-06-01 15:35:42,001 DEBUG   HandlerThread:1828811 [system_monitor.py:probe():223] {'os': 'Linux-6.2.0-39-generic-x86_64-with-glibc2.35', 'python': '3.10.14', 'heartbeatAt': '2024-06-01T07:35:41.998392', 'startedAt': '2024-06-01T07:35:39.571519', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/data/Users/xyq/developer/yuquan/vit_classification.py', 'codePathLocal': 'vit_classification.py', 'codePath': 'vit_classification.py', 'host': 'ubun', 'username': 'xyq', 'executable': '/data/Users/xyq/miniconda3/envs/xyq/bin/python', 'cpu_count': 64, 'cpu_count_logical': 128, 'cpu_freq': {'current': 2110.9501484375, 'min': 800.0, 'max': 3500.0}, 'cpu_freq_per_core': [{'current': 800.422, 'min': 800.0, 'max': 3500.0}, {'current': 800.949, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2294.805, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.468, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2200.005, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.0, 'min': 800.0, 'max': 3500.0}, {'current': 799.468, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.577, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.537, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.221, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.808, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 799.989, 'min': 800.0, 'max': 3500.0}, {'current': 800.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 3500.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 2300.0, 'min': 800.0, 'max': 3500.0}, {'current': 800.0, 'min': 800.0, 'max': 3500.0}], 'disk': {'/': {'total': 1758.8579597473145, 'used': 366.26220703125}}, 'gpu': 'NVIDIA A800 80GB PCIe', 'gpu_count': 8, 'gpu_devices': [{'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}, {'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}, {'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}, {'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}, {'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}, {'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}, {'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}, {'name': 'NVIDIA A800 80GB PCIe', 'memory_total': 85899345920}], 'memory': {'total': 1007.511962890625}}
+2024-06-01 15:35:42,001 INFO    HandlerThread:1828811 [system_monitor.py:probe():224] Finished collecting system info
+2024-06-01 15:35:42,001 INFO    HandlerThread:1828811 [system_monitor.py:probe():227] Publishing system info
+2024-06-01 15:35:42,001 DEBUG   HandlerThread:1828811 [system_info.py:_save_conda():207] Saving list of conda packages installed into the current environment
+2024-06-01 15:35:42,380 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_created():271] file/dir created: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/conda-environment.yaml
+2024-06-01 15:35:44,371 DEBUG   HandlerThread:1828811 [system_info.py:_save_conda():222] Saving conda packages done
+2024-06-01 15:35:44,374 INFO    HandlerThread:1828811 [system_monitor.py:probe():229] Finished publishing system info
+2024-06-01 15:35:44,378 DEBUG   SenderThread:1828811 [sender.py:send():378] send: files
+2024-06-01 15:35:44,379 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-metadata.json with policy now
+2024-06-01 15:35:44,380 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/conda-environment.yaml
+2024-06-01 15:35:44,381 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_created():271] file/dir created: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-metadata.json
+2024-06-01 15:35:44,470 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: python_packages
+2024-06-01 15:35:44,471 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: python_packages
+2024-06-01 15:35:44,471 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:35:44,472 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:35:44,996 DEBUG   SenderThread:1828811 [sender.py:send():378] send: telemetry
+2024-06-01 15:35:44,997 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:35:44,997 DEBUG   SenderThread:1828811 [sender.py:send():378] send: config
+2024-06-01 15:35:45,000 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:35:45,001 DEBUG   SenderThread:1828811 [sender.py:send():378] send: telemetry
+2024-06-01 15:35:45,001 DEBUG   SenderThread:1828811 [sender.py:send():378] send: telemetry
+2024-06-01 15:35:45,001 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:35:45,001 WARNING SenderThread:1828811 [sender.py:send_metric():1340] Seen metric with glob (shouldn't happen)
+2024-06-01 15:35:45,001 DEBUG   SenderThread:1828811 [sender.py:send():378] send: telemetry
+2024-06-01 15:35:45,381 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_created():271] file/dir created: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/requirements.txt
+2024-06-01 15:35:45,381 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_created():271] file/dir created: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:45,726 INFO    wandb-upload_0:1828811 [upload_job.py:push():130] Uploaded file /tmp/tmp4g6fgvr1wandb/w1mq4y1l-wandb-metadata.json
+2024-06-01 15:35:47,382 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:49,383 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:50,051 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:35:51,384 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:53,385 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:55,386 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:55,954 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:35:57,387 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:59,388 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:35:59,496 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:35:59,497 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:36:01,081 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:01,389 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:03,390 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:05,392 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:06,153 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:07,393 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:09,394 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:11,395 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:11,821 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:12,396 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/config.yaml
+2024-06-01 15:36:13,396 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:14,494 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:36:14,495 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:36:15,397 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:17,297 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:17,403 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:18,639 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:36:18,644 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:36:18,645 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:36:18,645 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:36:18,646 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:36:18,646 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:36:18,646 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:36:18,647 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:36:19,404 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:19,405 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_created():271] file/dir created: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:36:21,405 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:22,700 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:23,406 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:25,407 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:27,408 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:28,327 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:29,410 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:29,495 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:36:29,496 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:36:31,411 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:33,412 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:33,962 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:35,413 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:37,414 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:39,416 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:39,593 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:41,416 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:41,944 DEBUG   SystemMonitor:1828811 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-06-01 15:36:41,951 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:36:43,417 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:45,174 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:45,178 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:36:45,418 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:45,609 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:36:46,419 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/config.yaml
+2024-06-01 15:36:47,419 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:49,421 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:50,806 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:51,422 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:54,795 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:36:54,798 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:36:54,798 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:36:54,800 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:36:55,429 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:36:55,430 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:55,859 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:36:57,431 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:36:59,432 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:00,163 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:37:00,164 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:37:00,987 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:01,433 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:03,434 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:05,435 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:06,058 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:07,436 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:09,437 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:11,228 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:11,439 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:11,956 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:37:13,440 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:15,164 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:37:15,165 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:37:15,441 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:16,248 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:17,442 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:19,443 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:21,444 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:21,695 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:23,445 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:25,446 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:27,116 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:27,447 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:28,742 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:37:28,745 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:37:28,745 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:37:28,746 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:37:29,448 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:37:29,449 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:30,162 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:37:30,163 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:37:31,449 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:32,308 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:33,450 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:35,451 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:37,403 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:37,452 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:39,453 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:41,454 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:41,962 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:37:42,511 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:43,456 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:45,457 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:45,482 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:37:45,484 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:37:47,457 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:47,662 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:49,459 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:51,460 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:52,825 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:53,461 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:55,462 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:57,464 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:37:57,955 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:37:58,057 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:37:58,061 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:37:58,065 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:37:58,065 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:37:58,066 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:37:58,066 DEBUG   SenderThread:1828811 [sender.py:send():378] send: metric
+2024-06-01 15:37:58,066 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:37:58,067 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:37:58,068 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:37:58,464 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:37:59,465 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:00,482 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:38:00,483 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:38:01,466 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:02,987 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:03,467 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:05,467 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:07,470 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:08,027 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:08,243 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:38:08,247 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:38:08,248 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:38:08,249 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:38:08,470 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:38:09,471 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:11,471 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:11,967 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:38:13,083 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:13,472 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:15,473 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:15,483 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:38:15,484 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:38:17,474 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:18,199 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:19,477 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/config.yaml
+2024-06-01 15:38:19,478 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:21,478 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:23,795 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:24,480 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:26,481 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:28,482 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:28,990 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:30,483 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:38:30,485 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:38:30,489 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:32,486 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:34,206 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:34,487 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:36,487 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:38,489 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:39,296 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:40,491 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:41,971 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:38:42,492 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:44,493 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:44,654 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:45,184 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:38:45,187 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:38:45,188 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:38:45,189 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:38:45,494 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:38:45,513 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:38:45,514 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:38:46,494 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:47,495 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:48,495 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:50,131 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:50,496 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:52,497 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:55,625 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:38:56,500 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:38:58,501 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:00,502 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:00,705 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:39:00,706 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:39:01,033 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:04,504 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:06,505 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:06,551 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:08,507 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:10,508 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:11,976 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:39:11,978 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:12,509 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:14,510 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:16,511 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:16,992 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:16,993 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:39:16,994 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:39:20,513 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:22,514 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:22,754 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:25,337 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:39:25,342 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:39:25,343 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:39:25,345 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:39:25,517 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:39:26,517 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:27,518 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:28,518 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:28,560 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:30,520 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:31,992 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:39:31,993 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:39:32,520 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:34,286 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:34,521 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:36,522 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:38,523 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:39,811 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:40,524 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:41,981 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:39:42,526 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:44,526 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:45,343 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:46,993 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:39:46,994 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:39:48,529 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:50,530 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:51,013 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:54,532 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:56,533 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:39:56,617 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:39:58,534 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:00,538 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:00,863 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:40:00,866 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:40:00,867 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:40:00,869 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:40:01,539 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:40:01,724 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:01,993 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:40:01,994 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:40:02,540 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:03,540 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:04,541 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:06,849 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:08,543 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:10,546 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:11,902 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:11,990 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:40:14,550 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:16,551 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:16,927 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:16,993 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:40:16,994 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:40:18,552 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:19,616 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:40:19,620 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:40:19,621 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:40:19,622 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:40:20,553 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:40:20,553 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:21,553 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:22,624 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:24,555 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:26,556 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:27,981 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:28,557 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:30,557 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:32,559 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:32,880 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:40:32,881 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:40:33,244 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:36,561 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:38,562 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:38,870 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:40,563 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:41,994 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:40:42,401 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:40:42,404 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:40:42,405 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:40:42,406 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:40:42,564 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:40:42,565 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:43,565 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:44,407 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:44,565 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:46,566 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:47,880 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:40:47,881 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:40:48,567 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:50,241 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:50,568 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:52,569 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:54,571 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:40:55,269 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:40:58,573 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:00,306 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:00,575 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:02,576 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:02,880 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:41:02,880 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:41:04,577 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:05,308 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:06,578 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:08,579 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:10,541 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:10,580 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:12,000 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:41:12,582 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:14,582 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:15,746 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:16,584 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:18,585 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:19,138 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:41:19,139 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:41:20,585 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:20,897 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:21,711 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:41:21,714 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:41:21,714 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:41:21,715 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:41:22,587 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:41:22,587 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:23,587 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:24,588 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:26,012 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:28,590 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:30,591 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:31,390 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:32,592 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:34,156 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:41:34,157 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:41:34,593 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:36,456 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:36,594 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:38,596 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:40,597 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:42,004 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:41:42,006 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:42,598 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:44,600 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:46,600 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:47,701 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:48,601 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:49,155 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:41:49,156 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:41:50,602 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:52,603 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:53,403 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:56,606 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:58,607 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:41:58,811 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:41:59,887 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:41:59,892 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:41:59,892 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:41:59,893 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:42:00,608 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:42:00,608 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:01,608 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:02,609 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:04,156 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:42:04,156 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:04,157 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:42:04,610 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:06,611 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:08,613 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:09,964 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:10,614 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:12,009 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:42:12,615 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:14,616 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:15,127 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:16,617 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:18,618 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:19,155 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:42:19,156 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:42:20,282 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:20,619 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:22,621 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:24,622 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:25,378 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:26,623 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:28,625 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:30,547 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:32,627 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:33,170 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:42:33,173 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:42:33,173 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:42:33,174 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:42:33,628 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:42:34,628 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:35,032 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:42:35,033 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:42:35,629 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:36,006 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:38,631 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:40,632 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:41,015 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:42,014 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:42:42,633 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:43,381 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:42:43,385 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:42:43,385 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:42:43,388 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:42:43,633 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:42:44,634 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:45,635 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:46,390 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:48,636 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:50,030 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:42:50,031 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:42:50,637 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:52,325 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:42:52,638 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:54,639 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:56,640 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:42:57,848 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:00,644 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:02,645 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:03,521 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:04,646 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:05,031 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:43:05,032 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:43:06,648 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:08,650 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:08,681 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:10,650 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:12,020 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:43:13,875 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:14,653 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:16,654 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:18,655 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:18,929 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:19,330 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:43:19,333 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:43:19,333 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:43:19,334 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:43:19,656 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:43:20,030 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:43:20,031 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:43:20,656 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:21,657 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:22,657 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:24,159 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:24,658 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:26,660 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:28,661 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:29,295 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:30,662 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:32,663 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:34,411 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:34,664 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:35,031 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:43:35,032 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:43:36,665 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:38,667 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:39,869 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:40,668 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:42,024 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:43:42,669 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:44,670 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:45,260 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:46,671 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:48,672 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:50,242 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:43:50,243 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:43:50,600 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:50,673 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:52,676 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:54,892 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:43:54,895 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:43:54,896 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:43:54,897 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:43:55,678 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:43:55,678 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:55,746 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:43:57,679 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:43:59,680 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:00,751 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:01,681 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:03,682 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:05,238 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:44:05,239 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:44:05,683 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:05,974 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:07,684 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:09,685 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:11,047 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:11,686 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:12,030 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:44:13,687 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:15,688 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:16,067 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:17,690 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:19,691 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:20,239 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:44:20,240 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:44:21,105 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:21,691 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:23,693 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:25,694 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:26,161 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:27,599 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:44:27,605 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:44:27,606 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:44:27,608 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:44:27,695 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:44:27,696 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:29,697 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:31,370 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:31,698 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:33,699 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:35,511 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:44:35,512 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:44:35,700 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:36,473 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:37,701 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:39,702 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:41,703 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:41,901 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:42,035 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:44:43,704 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:45,705 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:47,428 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:47,706 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:49,708 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:50,511 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:44:50,512 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:44:51,709 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:52,967 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:53,710 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:55,711 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:57,712 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:44:58,063 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:44:59,713 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:01,482 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:45:01,487 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:45:01,487 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:45:01,488 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:45:01,714 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:45:01,715 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:03,494 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:03,715 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:05,511 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:45:05,512 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:45:05,716 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:07,717 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:08,612 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:09,718 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:11,719 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:12,039 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:45:12,846 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:45:12,849 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:45:12,850 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:45:12,851 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:45:13,676 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:13,720 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:45:13,721 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:15,721 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:17,722 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:18,761 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:19,724 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:20,513 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:45:20,515 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:45:21,725 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:23,840 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:25,727 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:27,728 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:29,041 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:31,731 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:33,732 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:34,316 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:35,512 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:45:35,514 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:45:35,733 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:37,734 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:39,329 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:39,735 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:41,736 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:42,044 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:45:43,737 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:44,387 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:45,738 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:47,739 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:48,647 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:45:48,649 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:45:48,650 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:45:48,651 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:45:48,740 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:45:49,390 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:49,740 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:50,526 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:45:50,526 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:45:51,741 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:53,742 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:54,522 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:45:55,744 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:57,745 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:59,745 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:45:59,868 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:01,747 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:03,748 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:05,127 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:05,526 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:46:05,527 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:46:07,751 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:09,752 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:10,196 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:11,753 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:12,050 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:46:13,754 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:15,333 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:15,755 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:17,756 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:19,757 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:20,490 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:20,526 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:46:20,527 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:46:21,714 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:46:21,718 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:46:21,719 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:46:21,720 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:46:21,758 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:46:21,759 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:23,759 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:25,520 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:25,760 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:27,761 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:29,761 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:30,694 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:31,762 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:33,763 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:35,764 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:35,885 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:36,421 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:46:36,421 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:46:39,766 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:41,507 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:41,768 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:42,053 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:46:43,771 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:45,772 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:46,897 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:47,773 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:49,775 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:51,421 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:46:51,421 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:46:51,776 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:51,947 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:52,433 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:46:52,436 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:46:52,437 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:46:52,437 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:46:52,777 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:46:53,778 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:55,779 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:46:57,179 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:46:59,781 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:01,782 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:02,362 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:03,783 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:05,784 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:06,426 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:47:06,428 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:47:07,782 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:07,785 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:09,786 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:11,788 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:12,059 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:47:13,062 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:13,789 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:15,790 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:17,791 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:18,162 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:19,792 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:20,554 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:47:20,558 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:47:20,559 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:20,560 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:20,793 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:47:21,426 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-01 15:47:21,427 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: stop_status
+2024-06-01 15:47:21,794 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:21,900 DEBUG   SenderThread:1828811 [sender.py:send():378] send: telemetry
+2024-06-01 15:47:21,901 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:47:21,901 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:21,905 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:21,905 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:21,906 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:21,906 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:21,907 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:21,908 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:21,908 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:21,909 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:21,909 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:21,910 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:47:21,910 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:21,910 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:22,794 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:47:23,315 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:23,795 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:25,795 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:27,308 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-01 15:47:27,311 DEBUG   SenderThread:1828811 [sender.py:send():378] send: history
+2024-06-01 15:47:27,311 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: summary_record
+2024-06-01 15:47:27,312 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:27,796 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:47:27,797 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:27,937 DEBUG   SenderThread:1828811 [sender.py:send():378] send: exit
+2024-06-01 15:47:27,937 INFO    SenderThread:1828811 [sender.py:send_exit():585] handling exit code: 0
+2024-06-01 15:47:27,938 INFO    SenderThread:1828811 [sender.py:send_exit():587] handling runtime: 706
+2024-06-01 15:47:27,938 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:27,939 INFO    SenderThread:1828811 [sender.py:send_exit():593] send defer
+2024-06-01 15:47:27,939 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:27,939 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 0
+2024-06-01 15:47:27,940 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:27,940 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 0
+2024-06-01 15:47:27,940 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 1
+2024-06-01 15:47:27,941 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:27,941 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 1
+2024-06-01 15:47:27,941 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:27,941 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 1
+2024-06-01 15:47:27,941 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 2
+2024-06-01 15:47:27,942 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:27,942 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 2
+2024-06-01 15:47:27,942 INFO    HandlerThread:1828811 [system_monitor.py:finish():203] Stopping system monitor
+2024-06-01 15:47:27,943 DEBUG   SystemMonitor:1828811 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-06-01 15:47:27,945 INFO    HandlerThread:1828811 [interfaces.py:finish():200] Joined cpu monitor
+2024-06-01 15:47:27,945 DEBUG   SystemMonitor:1828811 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-06-01 15:47:27,945 INFO    HandlerThread:1828811 [interfaces.py:finish():200] Joined disk monitor
+2024-06-01 15:47:28,798 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:47:29,584 INFO    HandlerThread:1828811 [interfaces.py:finish():200] Joined gpu monitor
+2024-06-01 15:47:29,585 INFO    HandlerThread:1828811 [interfaces.py:finish():200] Joined memory monitor
+2024-06-01 15:47:29,585 INFO    HandlerThread:1828811 [interfaces.py:finish():200] Joined network monitor
+2024-06-01 15:47:29,586 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:29,586 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:29,588 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:29,588 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 2
+2024-06-01 15:47:29,588 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 3
+2024-06-01 15:47:29,589 DEBUG   SenderThread:1828811 [sender.py:send():378] send: stats
+2024-06-01 15:47:29,591 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:29,592 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:29,592 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 3
+2024-06-01 15:47:29,593 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:29,593 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 3
+2024-06-01 15:47:29,593 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 4
+2024-06-01 15:47:29,593 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:29,594 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 4
+2024-06-01 15:47:29,594 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:29,594 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 4
+2024-06-01 15:47:29,595 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 5
+2024-06-01 15:47:29,595 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:29,595 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 5
+2024-06-01 15:47:29,597 DEBUG   SenderThread:1828811 [sender.py:send():378] send: summary
+2024-06-01 15:47:29,598 INFO    SenderThread:1828811 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-01 15:47:29,599 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:29,600 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 5
+2024-06-01 15:47:29,600 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 6
+2024-06-01 15:47:29,600 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:29,600 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 6
+2024-06-01 15:47:29,601 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:29,601 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 6
+2024-06-01 15:47:29,607 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:29,798 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:47:29,799 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:29,938 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:30,025 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 7
+2024-06-01 15:47:30,025 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:30,025 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:30,025 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 7
+2024-06-01 15:47:30,026 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:30,026 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 7
+2024-06-01 15:47:30,798 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/config.yaml
+2024-06-01 15:47:30,940 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:31,546 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 8
+2024-06-01 15:47:31,546 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:31,547 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:31,547 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 8
+2024-06-01 15:47:31,548 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:31,548 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 8
+2024-06-01 15:47:31,548 INFO    SenderThread:1828811 [job_builder.py:build():432] Attempting to build job artifact
+2024-06-01 15:47:31,552 INFO    SenderThread:1828811 [job_builder.py:_get_source_type():576] no source found
+2024-06-01 15:47:31,553 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 9
+2024-06-01 15:47:31,553 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:31,553 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 9
+2024-06-01 15:47:31,554 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:31,554 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 9
+2024-06-01 15:47:31,554 INFO    SenderThread:1828811 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-06-01 15:47:31,799 INFO    Thread-12 :1828811 [dir_watcher.py:_on_file_modified():288] file/dir modified: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:31,800 INFO    SenderThread:1828811 [dir_watcher.py:finish():388] scan: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files
+2024-06-01 15:47:31,801 INFO    SenderThread:1828811 [dir_watcher.py:finish():402] scan save: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log output.log
+2024-06-01 15:47:31,801 INFO    SenderThread:1828811 [dir_watcher.py:finish():402] scan save: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-metadata.json wandb-metadata.json
+2024-06-01 15:47:31,802 INFO    SenderThread:1828811 [dir_watcher.py:finish():402] scan save: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json wandb-summary.json
+2024-06-01 15:47:31,802 INFO    SenderThread:1828811 [dir_watcher.py:finish():402] scan save: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/requirements.txt requirements.txt
+2024-06-01 15:47:31,802 INFO    SenderThread:1828811 [dir_watcher.py:finish():402] scan save: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/conda-environment.yaml conda-environment.yaml
+2024-06-01 15:47:31,803 INFO    SenderThread:1828811 [dir_watcher.py:finish():402] scan save: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/config.yaml config.yaml
+2024-06-01 15:47:31,803 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 10
+2024-06-01 15:47:31,803 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:31,804 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 10
+2024-06-01 15:47:31,831 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:31,831 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 10
+2024-06-01 15:47:31,831 INFO    SenderThread:1828811 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-01 15:47:31,941 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:31,942 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:32,804 INFO    wandb-upload_0:1828811 [upload_job.py:push():130] Uploaded file /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/output.log
+2024-06-01 15:47:32,943 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:32,944 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:33,066 INFO    wandb-upload_1:1828811 [upload_job.py:push():130] Uploaded file /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/wandb-summary.json
+2024-06-01 15:47:33,104 INFO    wandb-upload_4:1828811 [upload_job.py:push():130] Uploaded file /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/config.yaml
+2024-06-01 15:47:33,393 INFO    wandb-upload_3:1828811 [upload_job.py:push():130] Uploaded file /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/conda-environment.yaml
+2024-06-01 15:47:33,400 INFO    wandb-upload_2:1828811 [upload_job.py:push():130] Uploaded file /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/files/requirements.txt
+2024-06-01 15:47:33,601 INFO    Thread-11 (_thread_body):1828811 [sender.py:transition_state():613] send defer: 11
+2024-06-01 15:47:33,601 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:33,601 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 11
+2024-06-01 15:47:33,602 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:33,602 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 11
+2024-06-01 15:47:33,603 INFO    SenderThread:1828811 [file_pusher.py:join():175] waiting for file pusher
+2024-06-01 15:47:33,603 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 12
+2024-06-01 15:47:33,604 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:33,604 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 12
+2024-06-01 15:47:33,604 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:33,604 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 12
+2024-06-01 15:47:33,605 INFO    SenderThread:1828811 [file_stream.py:finish():601] file stream finish called
+2024-06-01 15:47:33,944 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:35,406 INFO    SenderThread:1828811 [file_stream.py:finish():605] file stream finish is done
+2024-06-01 15:47:35,406 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 13
+2024-06-01 15:47:35,406 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:35,407 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:35,407 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 13
+2024-06-01 15:47:35,407 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: status_report
+2024-06-01 15:47:35,408 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:35,408 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 13
+2024-06-01 15:47:35,408 INFO    SenderThread:1828811 [sender.py:transition_state():613] send defer: 14
+2024-06-01 15:47:35,409 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: defer
+2024-06-01 15:47:35,409 INFO    HandlerThread:1828811 [handler.py:handle_request_defer():184] handle defer: 14
+2024-06-01 15:47:35,410 DEBUG   SenderThread:1828811 [sender.py:send():378] send: final
+2024-06-01 15:47:35,410 DEBUG   SenderThread:1828811 [sender.py:send():378] send: footer
+2024-06-01 15:47:35,411 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: defer
+2024-06-01 15:47:35,411 INFO    SenderThread:1828811 [sender.py:send_request_defer():609] handle sender defer: 14
+2024-06-01 15:47:35,412 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:35,413 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-01 15:47:35,414 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: server_info
+2024-06-01 15:47:35,415 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: get_summary
+2024-06-01 15:47:35,416 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: sampled_history
+2024-06-01 15:47:35,418 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-01 15:47:35,419 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:35,419 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: poll_exit
+2024-06-01 15:47:35,420 DEBUG   SenderThread:1828811 [sender.py:send_request():405] send_request: server_info
+2024-06-01 15:47:35,687 INFO    MainThread:1828811 [wandb_run.py:_footer_history_summary_info():3994] rendering history
+2024-06-01 15:47:35,688 INFO    MainThread:1828811 [wandb_run.py:_footer_history_summary_info():4026] rendering summary
+2024-06-01 15:47:35,689 INFO    MainThread:1828811 [wandb_run.py:_footer_sync_info():3953] logging synced files
+2024-06-01 15:47:35,690 DEBUG   HandlerThread:1828811 [handler.py:handle_request():158] handle_request: shutdown
+2024-06-01 15:47:35,690 INFO    HandlerThread:1828811 [handler.py:finish():882] shutting down handler
+2024-06-01 15:47:36,415 INFO    WriterThread:1828811 [datastore.py:close():296] close: /data/Users/xyq/developer/yuquan/wandb/run-20240601_153539-63rg0z2g/run-63rg0z2g.wandb
+2024-06-01 15:47:36,687 INFO    SenderThread:1828811 [sender.py:finish():1545] shutting down sender
+2024-06-01 15:47:36,687 INFO    SenderThread:1828811 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-01 15:47:36,687 INFO    SenderThread:1828811 [file_pusher.py:join():175] waiting for file pusher
