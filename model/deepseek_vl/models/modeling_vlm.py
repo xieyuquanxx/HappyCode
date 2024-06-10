@@ -112,6 +112,8 @@ class MultiModalityPreTrainedModel(PreTrainedModel):
     _no_split_modules = []
     _skip_keys_device_placement = "past_key_values"
 
+    main_input_name: str = "inputs_embeds"
+
 
 class MultiModalityCausalLM(MultiModalityPreTrainedModel):
     def __init__(self, config: MultiModalityConfig):
@@ -194,7 +196,6 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
             )
         # input_ids 和 inputs_embeds 不能同时为空，也不能同时都不为空
         return self.language_model.forward(
-            input_ids=None,
             attention_mask=attention_mask,
             position_ids=position_ids,
             past_key_values=past_key_values,

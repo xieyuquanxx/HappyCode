@@ -1,29 +1,36 @@
 import argparse
-import logging
 import pathlib
 
-import hydra
 import torch
 from hydra import compose, initialize
 from omegaconf import DictConfig
-from transformers import AutoModelForCausalLM, Trainer, TrainingArguments
+from transformers import AutoModelForCausalLM, TrainingArguments
 
 from dataset.deepseek_vl_sft_dataset import make_sft_data_modlue
-from model import DeepSeekTrainer
-from model.callback.logger import LoggerLogCallback
-from model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
-from utils import safe_save_model_for_hf_trainer
-
-logger = logging.getLogger(__name__)
+from model import DeepSeekTrainer, MultiModalityCausalLM, VLChatProcessor
+from model.callback import LoggerLogCallback
+from utils import get_logger, safe_save_model_for_hf_trainer
 
 local_rank = None
 
 
-# todo:
-# * 1. lora       6/9
-@hydra.main(version_base=None, config_path="conf", config_name="config")
+def find_all_linear_names_of_llm(model):
+    cls = torch.nn.Linear
+    lora_module_names = set()
+    for name, module in model.named_modules():
+        if isinstance(module, cls):
+            names = name.split(".")
+            lora_module_names.add(names[0] if len(names) == 1 else names[-1])
+    if "lm_head" in lora_module_names:  # ? needed for 16-bit
+        lora_module_names.remove("lm_head")
+    return list(lora_module_names)
+
+
+# @hydra.main(version_base=None, config_path="conf", config_name="config")
 def main(cfg: DictConfig):
     global local_rank
+    logger = get_logger(__name__, cfg)
+
     logger.info(cfg)
 
     vl_chat_processor: VLChatProcessor = VLChatProcessor.from_pretrained(
@@ -51,12 +58,20 @@ def main(cfg: DictConfig):
         for param in vl_gpt.aligner.parameters():
             param.requires_grad = False
 
-    # lora_cfg = cfg["training"]["lora"]
-    # del cfg["training"]["lora"]
-    # if lora_cfg["lora_enable"]:
-    #     from peft import LoraConfig, get_peft_model
+    lora_cfg = cfg["model"]["lora"]
+    if lora_cfg["lora_enable"]:
+        from peft import LoraConfig, get_peft_model
 
-    #     raise NotImplementedError("Lora is not implemented yet.")
+        lora_config = LoraConfig(
+            r=lora_cfg["lora_r"],
+            lora_alpha=lora_cfg["lora_alpha"],
+            target_modules=find_all_linear_names_of_llm(vl_gpt.language_model),
+            lora_dropout=lora_cfg["lora_dropout"],
+            bias=lora_cfg["lora_bias"],
+            task_type="CAUSAL_LM",
+        )
+        logger.info("Adding LoRA Adapters...")
+        vl_gpt = get_peft_model(vl_gpt, lora_config)
 
     training_args = TrainingArguments(
         run_name=cfg["run_name"],
@@ -92,8 +107,10 @@ def main(cfg: DictConfig):
 
     trainer.save_state()
 
-    if cfg["training"]["lora"]["enable"]:
-        raise NotImplementedError("Lora is not implemented yet.")
+    if lora_cfg["lora_enable"]:
+        if training_args.local_rank == 0 or training_args.local_rank == -1:
+            vl_gpt.config.save_pretrained(training_args.output_dir)
+            vl_gpt.save_pretrained(training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
 

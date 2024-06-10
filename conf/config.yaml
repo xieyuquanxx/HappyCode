@@ -7,7 +7,10 @@ defaults:
 
 project: ??
 
-
 run_name: ${now:%Y-%m-%d-%H-%M}
 
 ckpt_dir: ./checkpoints/${project}
+
+log:
+  dir: ${ckpt_dir}/${run_name}/logs
+  file: ${project}.log

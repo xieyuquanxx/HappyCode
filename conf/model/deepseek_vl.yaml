@@ -6,3 +6,11 @@ freeze:
   vision_model: True
   language_model: True
   aligner: False
+
+
+lora:
+  lora_enable: True
+  lora_r: 128
+  lora_alpha: 256
+  lora_dropout: 0.05
+  lora_bias: "none"

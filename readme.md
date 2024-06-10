@@ -7,3 +7,7 @@ conda activate happy_code
 
 pip install -r requirements.txt
 ```
+
+## Rules
+1. place model weights to `model_repo/`
+2. place data to `data/`

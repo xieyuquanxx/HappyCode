@@ -8,4 +8,4 @@ CUDA_VISIBLE_DEVICES=${gpus} deepspeed deepseek_vl_sft.py \
     model=deepseek_vl \
     dataset=deepseek_vl_sft \
     training=deepseek_vl \
-    training.num_train_epochs=10 \
+    training.num_train_epochs=5 \

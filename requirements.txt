@@ -12,6 +12,7 @@ pytorchvideo==0.1.5
 peft==0.11.1
 deepspeed==0.14.2
 tensorboard==0.7.2
+rich==13.7.1
 # from deepseek-vl
 timm==1.0.3
 sentencepiece==0.2.0
