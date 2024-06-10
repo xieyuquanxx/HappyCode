@@ -4,3 +4,4 @@ outputs/
 tests/
 model_repo/
 __pycache__/
+wandb/

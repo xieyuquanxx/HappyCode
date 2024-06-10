@@ -27,8 +27,8 @@ seed: 42
 
 eval_strategy: "no" # ['no', 'steps', 'epoch']
 
-save_strategy: "no" # ['no', 'steps', 'epoch']
-save_total_limit: 2
+save_strategy: "steps" # ['no', 'steps', 'epoch']
+save_total_limit: 10
 
 log_level: "info"
 logging_strategy: "steps"

@@ -9,6 +9,7 @@ from omegaconf import DictConfig
 from transformers import AutoModelForCausalLM, Trainer, TrainingArguments
 
 from dataset.deepseek_vl_sft_dataset import make_sft_data_modlue
+from model import DeepSeekTrainer
 from model.callback.logger import LoggerLogCallback
 from model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
 from utils import safe_save_model_for_hf_trainer
@@ -75,7 +76,7 @@ def main(cfg: DictConfig):
     # # data module
     data_module = make_sft_data_modlue(vl_chat_processor, cfg["dataset"])
 
-    trainer = Trainer(
+    trainer = DeepSeekTrainer(
         model=vl_gpt,
         args=training_args,
         tokenizer=vl_chat_processor.tokenizer,
