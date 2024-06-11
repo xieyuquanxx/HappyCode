@@ -5,12 +5,12 @@ model_path: model_repo/deepseek-vl-7b-chat
 freeze:
   vision_model: True
   language_model: True
-  aligner: False
+  aligner: True
 
 
 lora:
-  lora_enable: True
-  lora_r: 128
-  lora_alpha: 256
+  lora_enable: False
+  lora_r: 8
+  lora_alpha: 32
   lora_dropout: 0.05
   lora_bias: "none"

@@ -5,7 +5,7 @@ defaults:
   - training: vit-base-oxford-iiit-pets
   - hydra: default
 
-project: ??
+project: ???
 
 run_name: ${now:%Y-%m-%d-%H-%M}
 

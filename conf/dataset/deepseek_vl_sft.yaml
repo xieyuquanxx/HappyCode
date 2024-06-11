@@ -1,2 +1,2 @@
-data_dir: data/sft_test
-file: test.json
+data_dir: data/MP5_dataset
+file: Mine_7k_deepseek_vl_vqa.json
