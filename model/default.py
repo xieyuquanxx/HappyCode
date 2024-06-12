@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
+from typing import Literal
 
 from hydra.core.config_store import ConfigStore
-from omegaconf import MISSING
+from omegaconf import MISSING, DictConfig
 
 
 @dataclass
@@ -10,7 +11,10 @@ class LoraConfig:
     lora_r: int = 8
     lora_alpha: int = 32
     lora_dropout: float = 0.05
-    lora_bias = "none"
+    lora_bias: str = field(
+        default="none",
+        metadata={"help": "Bias type for Lora. Can be 'none', 'all' or 'lora_only'"},
+    )
 
 
 @dataclass
@@ -88,7 +92,7 @@ class LogConfig:
 
 
 @dataclass
-class HappyCodeConfig:
+class HappyCodeConfig(DictConfig):
     project: str = MISSING
     run_name: str = "HappyCode"
     ckpt_dir: str = "ckpt"
@@ -103,5 +107,3 @@ class HappyCodeConfig:
 cs = ConfigStore.instance()
 
 cs.store(name="config", node=HappyCodeConfig)
-
-print("done")

@@ -1,7 +1,7 @@
 import logging
 import os
 
-from omegaconf import DictConfig
+from model import LogConfig
 
 # from rich.logging import RichHandler
 
@@ -19,11 +19,11 @@ def rank0_log(local_rank: int | None, logger: logging.Logger, msg: str) -> None:
         logger.info(msg)
 
 
-def get_logger(name: str, cfg: DictConfig) -> logging.Logger:
-    log_dir = cfg["log"]["dir"]
+def get_logger(name: str, cfg: LogConfig) -> logging.Logger:
+    log_dir = cfg.dir
     os.makedirs(log_dir, exist_ok=True)
 
-    log_file = os.path.join(log_dir, cfg["log"]["file"])
+    log_file = os.path.join(log_dir, cfg.file)
     file_handler = logging.FileHandler(log_file)
     # rich_handler = RichHandler(markup=True)
 

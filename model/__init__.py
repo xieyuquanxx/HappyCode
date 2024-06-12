@@ -1,4 +1,18 @@
 from .deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
-from .default import HappyCodeConfig
+from .default import (
+    BaseDatasetConfig,
+    BaseModelConfig,
+    BaseTrainingConfig,
+    HappyCodeConfig,
+    LogConfig,
+)
 
-__all__ = ["MultiModalityCausalLM", "VLChatProcessor", "HappyCodeConfig"]
+__all__ = [
+    "MultiModalityCausalLM",
+    "VLChatProcessor",
+    "HappyCodeConfig",
+    "BaseDatasetConfig",
+    "BaseModelConfig",
+    "BaseTrainingConfig",
+    "LogConfig",
+]

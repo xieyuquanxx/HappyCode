@@ -39,53 +39,51 @@ def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
-    logger = get_logger(__name__, cfg)
+    logger = get_logger(__name__, cfg.log)
 
-    seed_everything(cfg["training"]["seed"])
+    seed_everything(cfg.training.seed)
 
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
-    processor: VLChatProcessor = VLChatProcessor.from_pretrained(
-        cfg["model"]["model_path"]
-    )  # type: ignore
+    processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
-        cfg["model"]["model_path"], trust_remote_code=True
+        cfg.model.model_path, trust_remote_code=True
     )
 
-    rank0_log(local_rank, logger, f"Load Model from {cfg['model']['model_path']}")
+    rank0_log(local_rank, logger, f"Load Model from {cfg.model.model_path}")
 
-    if cfg["model"]["freeze"]["vision_model"]:
+    if cfg.model.freeze.vision_model:
         rank0_log(local_rank, logger, "freeze vision model")
         for param in model.vision_model.parameters():
             param.requires_grad = False
 
-    if cfg["model"]["freeze"]["language_model"]:
+    if cfg.model.freeze.language_model:
         rank0_log(local_rank, logger, "freeze language model")
         for param in model.language_model.parameters():
             param.requires_grad = False
 
-    if cfg["model"]["freeze"]["aligner"]:
+    if cfg.model.freeze.aligner:
         rank0_log(local_rank, logger, "freeze aligner")
         for param in model.aligner.parameters():
             param.requires_grad = False
 
-    lora_cfg = cfg["model"]["lora"]
-    if lora_cfg["lora_enable"]:
+    lora_cfg = cfg.model.lora
+    if lora_cfg.lora_enable:
         from peft.mapping import get_peft_model
         from peft.tuners.lora import LoraConfig
 
         lora_config = LoraConfig(
-            r=lora_cfg["lora_r"],
-            lora_alpha=lora_cfg["lora_alpha"],
+            r=lora_cfg.lora_r,
+            lora_alpha=lora_cfg.lora_alpha,
             target_modules=find_all_linear_names_of_llm(model.language_model),
-            lora_dropout=lora_cfg["lora_dropout"],
-            bias=lora_cfg["lora_bias"],
+            lora_dropout=lora_cfg.lora_dropout,
+            bias=lora_cfg.lora_bias,
             task_type="CAUSAL_LM",
         )
-        if cfg["training"]["bf16"]:
+        if cfg.training.bf16:
             model.language_model = model.language_model.to(torch.bfloat16)
-        if cfg["training"]["fp16"]:
+        if cfg.training.fp16:
             model.language_model = model.language_model.to(torch.float16)
         rank0_log(
             local_rank,
@@ -95,11 +93,11 @@ def main(cfg: HappyCodeConfig) -> None:
         model = get_peft_model(model, lora_config)
 
     training_args = TrainingArguments(
-        run_name=cfg["run_name"],
-        output_dir=f"{cfg['ckpt_dir']}/{cfg['run_name']}",
+        run_name=cfg.run_name,
+        output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **cfg["training"],
+        **vars(cfg.training),
     )
 
     training_args.local_rank = local_rank
@@ -110,7 +108,7 @@ def main(cfg: HappyCodeConfig) -> None:
     model.aligner = model.aligner.to(device=training_args.device)
 
     # # data module
-    data_module = make_sft_data_modlue(processor, cfg["dataset"])
+    data_module = make_sft_data_modlue(processor, cfg.dataset)
 
     trainer = Trainer(
         model=model,
@@ -120,7 +118,7 @@ def main(cfg: HappyCodeConfig) -> None:
     )
     trainer.add_callback(LoggerLogCallback(logger))
 
-    ckpt_dir = f"{cfg['ckpt_dir']}/{cfg['run_name']}"
+    ckpt_dir = f"{cfg.ckpt_dir}/{cfg.run_name}"
     if list(pathlib.Path(ckpt_dir).glob("checkpoint-*")):
         trainer.train(resume_from_checkpoint=True)
     else:
@@ -128,7 +126,7 @@ def main(cfg: HappyCodeConfig) -> None:
 
     trainer.save_state()
 
-    if lora_cfg["lora_enable"]:
+    if lora_cfg.lora_enable:
         if training_args.local_rank == 0 or training_args.local_rank == -1:
             model.config.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir)
