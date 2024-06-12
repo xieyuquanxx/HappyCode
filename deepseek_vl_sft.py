@@ -4,7 +4,7 @@ from typing import List
 
 import torch
 from hydra import compose, initialize
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import OmegaConf
 from transformers import (
     AutoModelForCausalLM,
     LlamaForCausalLM,
@@ -13,9 +13,9 @@ from transformers import (
 )
 
 from dataset.deepseek_vl_sft_dataset import make_sft_data_modlue
-from model import MultiModalityCausalLM, VLChatProcessor
+from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor
 from model.callback import LoggerLogCallback
-from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer
+from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 local_rank = 0
 
@@ -37,9 +37,11 @@ def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
     return list(lora_module_names)
 
 
-def main(cfg: DictConfig) -> None:
+def main(cfg: HappyCodeConfig) -> None:
     global local_rank
     logger = get_logger(__name__, cfg)
+
+    seed_everything(cfg["training"]["seed"])
 
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
@@ -147,7 +149,7 @@ if __name__ == "__main__":
         "--config-name",
         "-cn",
         help="Overrides the config_name specified in hydra.main()",
-        default="config.yaml",
+        default="happy.yaml",
     )
     parser.add_argument("--local_rank", type=int, default=0, help="deepspeed arguments")
 

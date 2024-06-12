@@ -34,6 +34,7 @@ uv pip install -r  requirements.txt
   - [x] SFT
   - [x] LoRA
   - [ ] text-only
+  - [ ] flash-attnention
 - [ ] Mamba
   - [ ] Mamba-vision
 
