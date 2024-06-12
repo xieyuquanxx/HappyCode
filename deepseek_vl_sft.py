@@ -7,9 +7,9 @@ from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
 from transformers import (
     AutoModelForCausalLM,
-    TrainingArguments,
-    Trainer,
     LlamaForCausalLM,
+    Trainer,
+    TrainingArguments,
 )
 
 from dataset.deepseek_vl_sft_dataset import make_sft_data_modlue
