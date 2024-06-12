@@ -1,7 +1,7 @@
 import json
 import os
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any
 
 from omegaconf import DictConfig
 from torch.utils.data import Dataset
@@ -19,7 +19,7 @@ class SftDataset(Dataset):
 
         self.sft_file = os.path.join(dataset_cfg["data_dir"], dataset_cfg["file"])
 
-        self.sft_data = json.load(open(self.sft_file, "r"))
+        self.sft_data = json.load(open(self.sft_file, "r"))[:1000]
 
     def __len__(self):
         return len(self.sft_data)

@@ -2,7 +2,8 @@ import logging
 import os
 
 from omegaconf import DictConfig
-from rich.logging import RichHandler
+
+# from rich.logging import RichHandler
 
 
 def rank0_log(local_rank: int | None, logger: logging.Logger, msg: str):
@@ -24,14 +25,14 @@ def get_logger(name: str, cfg: DictConfig) -> logging.Logger:
 
     log_file = os.path.join(log_dir, cfg["log"]["file"])
     file_handler = logging.FileHandler(log_file)
-    rich_handler = RichHandler(markup=True)
+    # rich_handler = RichHandler(markup=True)
 
     logging.basicConfig(
         format="[%(asctime)s]: %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level="INFO"
     )
     log = logging.getLogger(name)
     log.setLevel(logging.INFO)
-    log.addHandler(rich_handler)
+    # log.addHandler(rich_handler)
     log.addHandler(file_handler)
     log.propagate = False
 
