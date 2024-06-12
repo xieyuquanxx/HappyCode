@@ -1,8 +1,8 @@
 # Happy Code
 
 ## Modern Tools
-- (Ruff)[https://github.com/astral-sh/ruff]
-- (uv)[https://github.com/astral-sh/uv]
+- [Ruff](https://github.com/astral-sh/ruff)
+- [uv](https://github.com/astral-sh/uv)
 
 
 ## Install
@@ -13,7 +13,7 @@ conda activate happy_code
 
 pip install -r requirements.txt
 ```
-or you can use (uv)[https://github.com/astral-sh/uv]:
+or you can use [uv](https://github.com/astral-sh/uv):
 ```bash
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
