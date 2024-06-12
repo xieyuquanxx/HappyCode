@@ -1,20 +1,26 @@
 import argparse
 import pathlib
+from typing import List
 
 import torch
 from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
-from transformers import AutoModelForCausalLM, TrainingArguments
+from transformers import (
+    AutoModelForCausalLM,
+    TrainingArguments,
+    Trainer,
+    LlamaForCausalLM,
+)
 
 from dataset.deepseek_vl_sft_dataset import make_sft_data_modlue
-from model import DeepSeekTrainer, MultiModalityCausalLM, VLChatProcessor
+from model import MultiModalityCausalLM, VLChatProcessor
 from model.callback import LoggerLogCallback
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer
 
 local_rank = 0
 
 
-def find_all_linear_names_of_llm(model):
+def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
     """
     gate_proj, up_proj, down_proj don't need to be trained in LoRA Fine-tuning
     """
@@ -31,7 +37,7 @@ def find_all_linear_names_of_llm(model):
     return list(lora_module_names)
 
 
-def main(cfg: DictConfig):
+def main(cfg: DictConfig) -> None:
     global local_rank
     logger = get_logger(__name__, cfg)
 
@@ -104,7 +110,7 @@ def main(cfg: DictConfig):
     # # data module
     data_module = make_sft_data_modlue(processor, cfg["dataset"])
 
-    trainer = DeepSeekTrainer(
+    trainer = Trainer(
         model=model,
         args=training_args,
         tokenizer=processor.tokenizer,

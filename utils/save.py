@@ -2,7 +2,9 @@ import torch
 import transformers
 
 
-def safe_save_model_for_hf_trainer(trainer: transformers.Trainer, output_dir: str):
+def safe_save_model_for_hf_trainer(
+    trainer: transformers.Trainer, output_dir: str
+) -> None:
     """Collects the state dict and dump to disk.
     https://github.com/haotian-liu/LLaVA/blob/main/llava/train/train.py#L185
     """

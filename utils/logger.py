@@ -6,7 +6,7 @@ from omegaconf import DictConfig
 # from rich.logging import RichHandler
 
 
-def rank0_log(local_rank: int | None, logger: logging.Logger, msg: str):
+def rank0_log(local_rank: int | None, logger: logging.Logger, msg: str) -> None:
     """
     Logs the given message using the provided logger if the local rank is 0 or -1.
 

@@ -16,5 +16,6 @@ pip install -r requirements.txt
 ## Models
 - [ ] DeepSeek-VL
   - [x] SFT
+  - [x] LoRA
 - [ ] Mamba
   - [ ] Mamba-vision
