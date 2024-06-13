@@ -34,10 +34,8 @@ uv pip install -r  requirements.txt
   - [x] SFT
   - [x] LoRA
   - [ ] text-only
-  - [ ] flash-attnention
+  - [x] flash-attention
 - [ ] Mamba
-  - [ ] Mamba-vision
-
 
 ## Tips
 ### Soft Link

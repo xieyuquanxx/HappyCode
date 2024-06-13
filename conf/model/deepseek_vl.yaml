@@ -14,3 +14,5 @@ lora:
   lora_alpha: 32
   lora_dropout: 0.05
   lora_bias: "none"
+
+attn_implementation: "none" # [none, flash_attention_2]

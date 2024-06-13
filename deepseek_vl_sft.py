@@ -14,7 +14,6 @@ from transformers import (
 
 from dataset.deepseek_vl_sft_dataset import make_sft_data_modlue
 from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor
-from model.callback import LoggerLogCallback
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 local_rank = 0
@@ -48,7 +47,11 @@ def main(cfg: HappyCodeConfig) -> None:
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
-        cfg.model.model_path, trust_remote_code=True
+        cfg.model.model_path,
+        trust_remote_code=True,
+        attn_implementation=None
+        if cfg.model.attn_implementation == "none"
+        else cfg.model.attn_implementation,
     )
 
     rank0_log(local_rank, logger, f"Load Model from {cfg.model.model_path}")
@@ -78,19 +81,19 @@ def main(cfg: HappyCodeConfig) -> None:
             lora_alpha=lora_cfg.lora_alpha,
             target_modules=find_all_linear_names_of_llm(model.language_model),
             lora_dropout=lora_cfg.lora_dropout,
-            bias=lora_cfg.lora_bias,
+            bias=lora_cfg.lora_bias,  # type: ignore
             task_type="CAUSAL_LM",
         )
         if cfg.training.bf16:
-            model.language_model = model.language_model.to(torch.bfloat16)
+            model.language_model = model.language_model.to(torch.bfloat16)  # type: ignore
         if cfg.training.fp16:
-            model.language_model = model.language_model.to(torch.float16)
+            model.language_model = model.language_model.to(torch.float16)  # type: ignore
         rank0_log(
             local_rank,
             logger,
-            f"Adding LoRA Adapters...\nLora Config:\n {OmegaConf.to_yaml(lora_cfg)}",
+            f"Adding LoRA Adapters...\nLora Config:\n{OmegaConf.to_yaml(lora_cfg)}",
         )
-        model = get_peft_model(model, lora_config)
+        model = get_peft_model(model, lora_config)  # type: ignore
 
     training_args = TrainingArguments(
         run_name=cfg.run_name,
@@ -116,7 +119,6 @@ def main(cfg: HappyCodeConfig) -> None:
         tokenizer=processor.tokenizer,
         **data_module,
     )
-    trainer.add_callback(LoggerLogCallback(logger))
 
     ckpt_dir = f"{cfg.ckpt_dir}/{cfg.run_name}"
     if list(pathlib.Path(ckpt_dir).glob("checkpoint-*")):
@@ -156,4 +158,4 @@ if __name__ == "__main__":
     cfg = compose(config_name=args.config_name, overrides=args.overrides)
     local_rank = args.local_rank
 
-    main(cfg)
+    main(cfg)  # type: ignore

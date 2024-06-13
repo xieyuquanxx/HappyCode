@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import Literal
 
 from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING, DictConfig
@@ -31,6 +30,12 @@ class BaseModelConfig:
         default_factory=MultiModalityCausalLMBackboneConfig
     )
     lora: LoraConfig = field(default_factory=LoraConfig)
+    attn_implementation: str = field(
+        default="none",
+        metadata={
+            "help": "Attention implementation. Can be 'none', 'flash_attention_2'"
+        },
+    )
 
 
 @dataclass
