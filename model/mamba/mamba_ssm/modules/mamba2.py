@@ -197,7 +197,7 @@ class Mamba2(nn.Module):
                 # The states are updated inplace
                 out, _, _ = self.step(u, conv_state, ssm_state)
                 return out
-
+        # u: [B, Seqlen, Hidden_dim 512] -> zxbcdt: [B, Seqlen, 2192]
         zxbcdt = self.in_proj(u)  # (B, L, d_in_proj) or (B * L, d_in_proj)
         if seqlen_og is not None:
             zxbcdt = rearrange(zxbcdt, "(b l) d -> b l d", l=seqlen)
@@ -206,6 +206,7 @@ class Mamba2(nn.Module):
             {} if self.dt_limit == (0.0, float("inf")) else dict(dt_limit=self.dt_limit)
         )
         if self.use_mem_eff_path and inference_params is None:
+            # out: [B, Seqlen, 512]
             out = mamba_split_conv1d_scan_combined(
                 zxbcdt,
                 rearrange(self.conv1d.weight, "d 1 w -> d w"),

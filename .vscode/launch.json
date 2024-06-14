@@ -16,6 +16,14 @@
                 "dataset=deepseek_vl_sft",
                 "training=deepseek_vl"
             ]
+        },
+        {
+            "name": "mamba",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mamba.py",
+            "console": "integratedTerminal",
+            "args": []
         }
     ]
 }

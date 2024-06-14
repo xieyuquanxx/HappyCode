@@ -5,23 +5,22 @@
 - [uv](https://github.com/astral-sh/uv)
 
 
-## Install
-using conda:
-```bash
-conda create -n happy_code python=3.12
-conda activate happy_code
-
-pip install -r requirements.txt
-```
-or you can use [uv](https://github.com/astral-sh/uv):
+## Install for Mamba
 ```bash
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
-uv venv
-source .venv/bin/activate
+
+uv venv .mamba --python <python3.10 path>
+source .mamba/bin/activate
 # install wheel first
 uv pip install wheel
 uv pip install -r  requirements.txt
+
+uv pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+uv pip install packaging causal_conv1d --no-cache-dir --no-build-isolation
+
+cd model/mamba
+uv pip install -e . --no-cache-dir --no-build-isolation
 ```
 
 ## Rules
@@ -38,7 +37,7 @@ uv pip install -r  requirements.txt
   - [x] [flash-attention2](https://github.com/Dao-AILab/flash-attention)
 - [ ] [Mamba](https://github.com/state-spaces/mamba)
   - [x] Mamba
-  - [x] Mamba2 https://github.com/state-spaces/mamba/issues/390
+  - [x] Mamba2
   
 
 ## Tips
