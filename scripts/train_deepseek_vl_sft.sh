@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gpus=0,1,2,3
+gpus=3
 
 project_name=deepseek_vl_7b_sft_lora
 model=deepseek_vl

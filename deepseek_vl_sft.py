@@ -38,8 +38,8 @@ def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
+    return
     logger = get_logger(__name__, cfg.log)
-
     seed_everything(cfg.training.seed)
 
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))

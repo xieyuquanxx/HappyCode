@@ -8,7 +8,7 @@
 ## Install
 using conda:
 ```bash
-conda create -n happy_code python=3.10
+conda create -n happy_code python=3.12
 conda activate happy_code
 
 pip install -r requirements.txt
@@ -30,12 +30,15 @@ uv pip install -r  requirements.txt
 
 
 ## Models
-- [ ] DeepSeek-VL-7B
+对于每一个模型，都用`uv`为其创建一个虚拟环境，例如:`uv venv .deepseek`，`uv venv .mamba`，这样不同模型依赖不会相互破坏。
+- [ ] [DeepSeek-VL-7B](https://github.com/deepseek-ai/DeepSeek-VL)
   - [x] SFT
   - [x] LoRA
   - [ ] text-only
-  - [x] flash-attention
-- [ ] Mamba
+  - [x] [flash-attention2](https://github.com/Dao-AILab/flash-attention)
+- [ ] [Mamba](https://github.com/state-spaces/mamba)
+  - [x] Mamba
+  - [ ] Mamba2
 
 ## Tips
 ### Soft Link
