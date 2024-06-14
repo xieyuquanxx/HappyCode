@@ -4,8 +4,9 @@ from lm_eval.__main__ import cli_evaluate
 from lm_eval.api.model import LM
 from lm_eval.api.registry import register_model
 from lm_eval.models.huggingface import HFLM
-from mamba_ssm.models.mixer_seq_simple import MambaLMHeadModel
 from transformers import AutoTokenizer
+
+from model.mamba.mamba_ssm.models.mixer_seq_simple import MambaLMHeadModel
 
 
 @register_model("mamba")

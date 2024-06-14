@@ -7,8 +7,9 @@ import time
 import torch
 import torch.nn.functional as F
 from einops import rearrange
-from mamba_ssm.models.mixer_seq_simple import MambaLMHeadModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+from model.mamba.mamba_ssm.models.mixer_seq_simple import MambaLMHeadModel
 
 parser = argparse.ArgumentParser(description="Generation benchmarking")
 parser.add_argument("--model-name", type=str, default="state-spaces/mamba-130m")
