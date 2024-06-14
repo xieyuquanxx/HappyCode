@@ -38,7 +38,8 @@ uv pip install -r  requirements.txt
   - [x] [flash-attention2](https://github.com/Dao-AILab/flash-attention)
 - [ ] [Mamba](https://github.com/state-spaces/mamba)
   - [x] Mamba
-  - [ ] Mamba2
+  - [x] Mamba2 https://github.com/state-spaces/mamba/issues/390
+  
 
 ## Tips
 ### Soft Link

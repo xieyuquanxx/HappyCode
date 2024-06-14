@@ -1,25 +1,16 @@
-wheel
-transformers==4.41.2
-datasets==2.19.1
-accelerate==0.30.1
-evaluate==0.4.2
-hydra-core==1.3.2
-wandb==0.17.1
-pillow==10.3.0
-scikit-learn==1.5.0
-peft==0.11.1
-deepspeed==0.14.2
-tensorboard
-rich==13.7.1
-# from deepseek-vl
-timm==1.0.3
-sentencepiece==0.2.0
-attrdict==2.0.1
+# python3.10
+wheel==0.43.0
+lit==15.0.7
+triton>=2.1.0 # https://github.com/state-spaces/mamba/issues/123
+setuptools==69.5.1
 einops==0.8.0
-# from mamba
-# causal-conv1d install by wheel
+attrdict==2.0.1
+# uv pip install packaging causal_conv1d --no-cache-dir --no-build-isolation
+# uv pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+# uv pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+transformers==4.41.2
+# cd mamba
+# uv pip install -e . --no-cache-dir --no-build-isolation
 # lm-eval==0.4.2
 # flash-attn
 # jupyterlab
-triton==2.2.0
-# pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118

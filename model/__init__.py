@@ -6,10 +6,13 @@ from .default import (
     HappyCodeConfig,
     LogConfig,
 )
+from .mamba import Mamba, Mamba2
 
 __all__ = [
     "MultiModalityCausalLM",
     "VLChatProcessor",
+    "Mamba",
+    "Mamba2",
     "HappyCodeConfig",
     "BaseDatasetConfig",
     "BaseModelConfig",
