@@ -5,7 +5,15 @@
 - [uv](https://github.com/astral-sh/uv)
 
 
-## Install for Mamba
+## Install for Affordancellm
+using conda:
+```bash
+conda create -n happy_code python=3.12
+conda activate happy_code
+
+pip install -r requirements.txt
+```
+or you can use [uv](https://github.com/astral-sh/uv):
 ```bash
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
