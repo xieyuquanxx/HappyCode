@@ -5,7 +5,7 @@
 - [uv](https://github.com/astral-sh/uv)
 
 
-## Install
+## Install for Affordancellm
 using conda:
 ```bash
 conda create -n happy_code python=3.12
