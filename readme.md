@@ -5,22 +5,17 @@
 - [uv](https://github.com/astral-sh/uv)
 
 
-## Install for Mamba
+## Install for GPT2
 ```bash
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-uv venv .mamba --python <python3.10 path>
-source .mamba/bin/activate
-# install wheel first
-uv pip install wheel
-uv pip install -r  requirements.txt
+uv venv .gpt2 --python <python3.10 path>
+source .gpt2/bin/activate
 
 uv pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 --index-url https://download.pytorch.org/whl/cu118
-uv pip install packaging causal_conv1d --no-cache-dir --no-build-isolation
+uv pip install -r requirements.txt
 
-cd model/mamba
-uv pip install -e . --no-cache-dir --no-build-isolation
 ```
 
 ## Rules

@@ -24,6 +24,14 @@
             "program": "mamba.py",
             "console": "integratedTerminal",
             "args": []
+        },
+        {
+            "name": "gpt2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "train_gpt2.py",
+            "console": "integratedTerminal",
+            "args": []
         }
     ]
 }
