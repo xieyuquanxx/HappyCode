@@ -64,6 +64,19 @@ class VLChatProcessorTrainOutput(VLChatProcessorOutput):
 
 
 @dataclass
+class VLChatProcessorDPOTrainOutput(DictOutput):
+    prompt: str
+    chosen_input_ids: torch.Tensor
+    rejected_input_ids: torch.Tensor
+    chosen_labels: torch.Tensor
+    rejected_labels: torch.Tensor
+    pixel_values: torch.Tensor
+
+    def __len__(self):
+        return len(self.chosen_input_ids)
+
+
+@dataclass
 class BatchedVLChatProcessorOutput(DictOutput):
     sft_format: List[str]
     input_ids: torch.Tensor
@@ -138,6 +151,8 @@ class VLChatProcessor(ProcessorMixin):
 
         self.is_train = is_train
 
+        self.chat_template = get_conv_template(sft_format)
+
         super().__init__(
             image_processor,
             tokenizer,
@@ -154,6 +169,92 @@ class VLChatProcessor(ProcessorMixin):
         conv = get_conv_template(self.sft_format)
         conv.set_system_message(self.system_prompt)
         return conv
+
+    def make_single_turn_conv(self, prompt: str, response: str):
+        return [
+            {
+                "role": "User",
+                "content": prompt,
+            },
+            {"role": "Assistant", "content": response},
+        ]
+
+    def process_batch_conv(
+        self,
+        conversations: List[List[Dict[str, str]]],
+        system_message: str | None = None,
+        add_end_for_empty_value=False,
+    ):
+        conv_template = get_conv_template(self.sft_format)
+        role_begin = {
+            "User": conv_template.roles[0],
+            "Assistant": conv_template.roles[1],
+        }
+        role_end = {
+            "User": conv_template.sep,
+            "Assistant": conv_template.sep2,
+        }
+        raw_texts = []
+        batch_input_ids = []
+        batch_attention_masks = []
+        batch_labels = []
+        for source in conversations:
+            __raw_text = ""
+            attention_masks = []
+            labels = []
+            previous_len = 0
+            for idx, sentence in enumerate(source):
+                begin = role_begin[sentence["role"]]
+                end = role_end[sentence["role"]]
+                extend_text = (
+                    begin
+                    + sentence["content"]
+                    + (
+                        end
+                        if sentence["content"] != "" or add_end_for_empty_value
+                        else ""
+                    )
+                )
+                __raw_text += extend_text
+                text_tokens = self.tokenizer(
+                    sentence["content"], padding=False, add_special_tokens=(idx == 0)
+                )
+                current_tokens = self.tokenizer(__raw_text)
+                input_ids = current_tokens["input_ids"]
+                attention_masks = current_tokens["attention_mask"]
+                extend_len = len(input_ids) - previous_len
+                previous_len = len(input_ids)
+                labels.extend([-100] * extend_len)
+                if (
+                    sentence["role"] == "Assistant"
+                    and len(text_tokens["input_ids"]) != 0
+                ):
+                    target_len = min(
+                        [extend_len, len(text_tokens["input_ids"]), len(labels)]
+                    )
+                    labels[-target_len:] = text_tokens["input_ids"][-target_len:]
+
+            labels = [
+                label if mask == 1 else -100
+                for label, mask in zip(labels, attention_masks)
+            ]
+            assert (
+                len(input_ids) == len(attention_masks) == len(labels)
+            ), f"input_ids:{len(input_ids)}, attention_masks:{len(attention_masks)}, labels:{len(labels)}"
+            batch_input_ids.append(input_ids)
+            batch_attention_masks.append(attention_masks)
+            batch_labels.append(labels)
+            raw_texts.append(__raw_text)
+        return {
+            "prompt": None,
+            "answer": None,
+            "full": dict(
+                input_ids=batch_input_ids,
+                attention_mask=batch_attention_masks,
+                labels=batch_labels,
+            ),
+            "raw_str": raw_texts,
+        }
 
     def apply_sft_template_for_multi_turn_prompts(
         self,

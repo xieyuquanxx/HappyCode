@@ -6,6 +6,7 @@ from .default import (
     HappyCodeConfig,
     LogConfig,
 )
+from .dpo_trainer import VLDPOTrainer
 
 __all__ = [
     "MultiModalityCausalLM",
@@ -15,4 +16,5 @@ __all__ = [
     "BaseModelConfig",
     "BaseTrainingConfig",
     "LogConfig",
+    "VLDPOTrainer",
 ]

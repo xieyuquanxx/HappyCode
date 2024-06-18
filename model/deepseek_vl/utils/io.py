@@ -41,7 +41,7 @@ def load_pretrained_model(model_path: str):
     return tokenizer, vl_chat_processor, vl_gpt
 
 
-def load_pil_images(conversations: List[Dict[str, str]]) -> List[PIL.Image.Image]:
+def  load_pil_images(conversations: List[Dict[str, str]]) -> List[PIL.Image.Image]:
     """
 
     Support file path or base64 images.

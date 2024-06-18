@@ -5,23 +5,15 @@
 - [uv](https://github.com/astral-sh/uv)
 
 
-## Install
-using conda:
-```bash
-conda create -n happy_code python=3.12
-conda activate happy_code
-
-pip install -r requirements.txt
-```
-or you can use [uv](https://github.com/astral-sh/uv):
+## Install for DPO
 ```bash
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
+
 uv venv
 source .venv/bin/activate
-# install wheel first
-uv pip install wheel
 uv pip install -r  requirements.txt
+uv pip install torch==2.3.0+cu118 torchvision==0.18.0+cu118 --index-url https://download.pytorch.org/whl/cu118
 ```
 
 ## Rules
