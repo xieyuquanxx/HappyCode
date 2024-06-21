@@ -21,21 +21,17 @@
             "name": "deepseek-vl-dpo",
             "type": "debugpy",
             "request": "launch",
-            "program": "deepseek_vl_sft.py",
+            "program": "deepseek_vl_dpo.py",
             "console": "integratedTerminal",
             "env": {
-                "MASTER_ADDR": "localhost",
-                "MASTER_PORT": "28500",
-                "RANK": "0",
-                "LOCAL_RANK": "0",
-                "WORLD_SIZE": "1",
-                "CUDA_VISIBLE_DEVICES": "1"
+                "CUDA_VISIBLE_DEVICES": "4"
             },
             "args": [
                 "project=deepseek_vl_7b_dpo",
                 "model=deepseek_vl",
                 "dataset=deepseek_vl_dpo",
-                "training=deepseek_vl_dpo"
+                "training=deepseek_vl_dpo",
+                "model.lora.lora_enable=True"
             ]
         }
     ]

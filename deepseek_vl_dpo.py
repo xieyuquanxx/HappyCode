@@ -9,11 +9,12 @@ from transformers import (
     AutoModelForCausalLM,
     LlamaForCausalLM,
 )
-from trl import DPOConfig, DPOTrainer
+from trl import DPOConfig
 
 from dataset.deepseek_vl_sft_dataset import make_dpo_data_modlue
 from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
+
 
 local_rank = 0
 
@@ -47,17 +48,14 @@ def main(cfg: HappyCodeConfig) -> None:
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
-        attn_implementation=None
-        if cfg.model.attn_implementation == "none"
-        else cfg.model.attn_implementation,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
     )
     ref_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
-        attn_implementation=None
-        if cfg.model.attn_implementation == "none"
-        else cfg.model.attn_implementation,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
     )
+    ref_model.eval()
 
     rank0_log(local_rank, logger, f"Load Model from {cfg.model.model_path}")
 
@@ -114,17 +112,14 @@ def main(cfg: HappyCodeConfig) -> None:
         device=training_args.device,
     )
     model.aligner = model.aligner.to(device=training_args.device)
-
-    # # data module
+    # data module
     data_module = make_dpo_data_modlue(processor, cfg.dataset)
 
     trainer = VLDPOTrainer(
         model=model,
         ref_model=ref_model,
         args=training_args,
-        beta=0.1,
-        processor=processor,
-        max_prompt_length=256,
+        tokenizer=processor.tokenizer,
         **data_module,
     )
 

@@ -1,7 +1,8 @@
 # total batch size 16:  50G
 #                  32:  75G
 
-deepspeed: "scripts/deepspeed/zero3.json"
+# deepspeed: "scripts/deepspeed/zero3.json"
+deepspeed: 
 
 per_device_train_batch_size: 4
 per_device_eval_batch_size: 1

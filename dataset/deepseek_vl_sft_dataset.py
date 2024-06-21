@@ -3,7 +3,6 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-import datasets
 from torch.utils.data import Dataset
 
 from model import BaseDatasetConfig
@@ -12,9 +11,7 @@ from model.deepseek_vl.utils.io import load_pil_images
 
 
 class DeepSeekSftDataset(Dataset):
-    def __init__(
-        self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig
-    ):
+    def __init__(self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig):
         super(DeepSeekSftDataset, self).__init__()
 
         self.chat_processor = vl_chat_processor
@@ -43,15 +40,11 @@ class DeepSeekSftDataset(Dataset):
         #     data = [data]
         pil_images = load_pil_images(data)
 
-        return self.chat_processor(
-            conversations=data, images=pil_images, force_batchify=False
-        )
+        return self.chat_processor(conversations=data, images=pil_images, force_batchify=False)
 
 
 class DeepSeekDPODataset(Dataset):
-    def __init__(
-        self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig
-    ):
+    def __init__(self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig):
         super(DeepSeekDPODataset, self).__init__()
 
         self.chat_processor = vl_chat_processor
@@ -60,6 +53,9 @@ class DeepSeekDPODataset(Dataset):
         self.file = os.path.join(dataset_cfg.data_dir, dataset_cfg.file)
 
         self.data = json.load(open(self.file, "r"))[:1000]
+
+    def map(self, *args, **kargs):
+        return self
 
     def __len__(self):
         return len(self.data)
@@ -84,14 +80,10 @@ class DeepSeekDPODataset(Dataset):
         # images_outputs = self.chat_processor.image_processor(
         #     pil_images, return_tensors="pt"
         # )
-        prompt_prepare = self.chat_processor(
-            conversations=raw_prompt, images=pil_images, force_batchify=True
-        )
-        chosen_prepare = self.chat_processor(
-            conversations=chosen_data, images=pil_images, force_batchify=True
-        )
+        prompt_prepare = self.chat_processor(conversations=raw_prompt, images=pil_images, force_batchify=False)
+        chosen_prepare = self.chat_processor(conversations=chosen_data, images=pil_images, force_batchify=False)
         rejected_prepare = self.chat_processor(
-            conversations=rejected_data, images=pil_images, force_batchify=True
+            conversations=rejected_data, images=pil_images, force_batchify=False
         )
         return {
             "prompt_prepare": prompt_prepare,
@@ -132,7 +124,7 @@ class DPODataCollator(object):
         prompt_prepares = [sample["prompt_prepare"] for sample in batch]
         chosen_prepares = [sample["chosen_prepare"] for sample in batch]
         rejected_prepares = [sample["rejected_prepare"] for sample in batch]
-        prompts = [sample.sft_format[0] for sample in prompt_prepares]
+        prompts = [sample.sft_format for sample in prompt_prepares]
         prompt_batch = self.vl_chat_processor.batchify(prompt_prepares)
         chosen_batch = self.vl_chat_processor.batchify(chosen_prepares)
         rejected_batch = self.vl_chat_processor.batchify(rejected_prepares)
@@ -151,7 +143,7 @@ class DPODataCollator(object):
             "rejected_attention_mask": rejected_batch.attention_mask,
             "rejected_labels": rejected_batch.labels,
             # ===== image ====
-            "pixel_values": prompt_prepare.pixel_values,
+            "pixel_values": prompt_batch.pixel_values,
             "chosen_images_seq_mask": chosen_batch.images_seq_mask,
             "chosen_images_emb_mask": chosen_batch.images_emb_mask,
             "rejected_images_seq_mask": rejected_batch.images_seq_mask,
@@ -159,9 +151,7 @@ class DPODataCollator(object):
         }
 
 
-def make_sft_data_modlue(
-    vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig
-):
+def make_sft_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig):
     """Make dataset and collator for supervised fine-tuning."""
     sft_dataset = DeepSeekSftDataset(vl_chat_processor, dataset_cfg)
     data_collator = SFTDataCollator(vl_chat_processor)
@@ -173,22 +163,18 @@ def make_sft_data_modlue(
     }
 
 
-def make_dpo_data_modlue(
-    vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig
-):
+def make_dpo_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig):
     """Make dataset and collator for dpo."""
     dataset = DeepSeekDPODataset(vl_chat_processor, dataset_cfg)
     data_collator = DPODataCollator(vl_chat_processor)
 
-    def gen(torch_dataset):
-        for sample in torch_dataset:
-            yield sample
+    # def gen(torch_dataset):
+    #     for sample in torch_dataset:
+    #         yield sample
 
-    hf_dataset = datasets.Dataset.from_generator(
-        gen, gen_kwargs={"torch_dataset": dataset}
-    )
+    # hf_dataset = datasets.Dataset.from_generator(gen, gen_kwargs={"torch_dataset": dataset})
     return {
-        "train_dataset": hf_dataset,
+        "train_dataset": dataset,
         "eval_dataset": None,
         "data_collator": data_collator,
     }

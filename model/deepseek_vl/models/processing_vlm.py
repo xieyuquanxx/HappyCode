@@ -209,35 +209,21 @@ class VLChatProcessor(ProcessorMixin):
                 extend_text = (
                     begin
                     + sentence["content"]
-                    + (
-                        end
-                        if sentence["content"] != "" or add_end_for_empty_value
-                        else ""
-                    )
+                    + (end if sentence["content"] != "" or add_end_for_empty_value else "")
                 )
                 __raw_text += extend_text
-                text_tokens = self.tokenizer(
-                    sentence["content"], padding=False, add_special_tokens=(idx == 0)
-                )
+                text_tokens = self.tokenizer(sentence["content"], padding=False, add_special_tokens=(idx == 0))
                 current_tokens = self.tokenizer(__raw_text)
                 input_ids = current_tokens["input_ids"]
                 attention_masks = current_tokens["attention_mask"]
                 extend_len = len(input_ids) - previous_len
                 previous_len = len(input_ids)
                 labels.extend([-100] * extend_len)
-                if (
-                    sentence["role"] == "Assistant"
-                    and len(text_tokens["input_ids"]) != 0
-                ):
-                    target_len = min(
-                        [extend_len, len(text_tokens["input_ids"]), len(labels)]
-                    )
+                if sentence["role"] == "Assistant" and len(text_tokens["input_ids"]) != 0:
+                    target_len = min([extend_len, len(text_tokens["input_ids"]), len(labels)])
                     labels[-target_len:] = text_tokens["input_ids"][-target_len:]
 
-            labels = [
-                label if mask == 1 else -100
-                for label, mask in zip(labels, attention_masks)
-            ]
+            labels = [label if mask == 1 else -100 for label, mask in zip(labels, attention_masks)]
             assert (
                 len(input_ids) == len(attention_masks) == len(labels)
             ), f"input_ids:{len(input_ids)}, attention_masks:{len(attention_masks)}, labels:{len(labels)}"
@@ -344,9 +330,7 @@ class VLChatProcessor(ProcessorMixin):
             input_slices.append(input_ids[start:end])
 
             # add image tokens, and set the mask as False
-            input_slices.append(
-                self.image_id * torch.ones((self.num_image_tokens,), dtype=torch.long)
-            )
+            input_slices.append(self.image_id * torch.ones((self.num_image_tokens,), dtype=torch.long))
             start = index + 1
 
         # the left part
@@ -470,9 +454,7 @@ class VLChatProcessor(ProcessorMixin):
                 - image_id (int): the id of the image token
                 - num_image_tokens (List[int]): the number of image tokens
         """
-        prepare = self.process_one(
-            prompt=prompt, conversations=conversations, images=images
-        )
+        prepare = self.process_one(prompt=prompt, conversations=conversations, images=images)
 
         if force_batchify:
             prepare = self.batchify([prepare])
@@ -481,7 +463,7 @@ class VLChatProcessor(ProcessorMixin):
 
     def batchify(
         self, prepare_list: List[VLChatProcessorOutput]
-    ) -> BatchedVLChatProcessorOutput:
+    ) -> BatchedVLChatProcessorOutput | BatchedVLChatProcessorTrainOutput:
         """
         Preprocesses the inputs for multimodal inference.
 
@@ -503,22 +485,16 @@ class VLChatProcessor(ProcessorMixin):
         input_token_max_len = max(seq_lens)
         max_n_images = max(1, max(n_images))
 
-        batched_input_ids = torch.full(
-            (batch_size, input_token_max_len), self.pad_id
-        ).long()  # FIXME
+        batched_input_ids = torch.full((batch_size, input_token_max_len), self.pad_id).long()  # FIXME
 
-        batched_labels = torch.full(
-            (batch_size, input_token_max_len), self.ignore_id
-        ).long()
+        batched_labels = torch.full((batch_size, input_token_max_len), self.ignore_id).long()
 
         batched_attention_mask = torch.zeros((batch_size, input_token_max_len)).long()
         batched_pixel_values = torch.zeros(
             (batch_size, max_n_images, *self.image_processor.default_shape)
         ).float()
         batched_images_seq_mask = torch.zeros((batch_size, input_token_max_len)).bool()
-        batched_images_emb_mask = torch.zeros(
-            (batch_size, max_n_images, self.num_image_tokens)
-        ).bool()
+        batched_images_emb_mask = torch.zeros((batch_size, max_n_images, self.num_image_tokens)).bool()
 
         for i, prepare in enumerate(prepare_list):
             input_ids = prepare.input_ids

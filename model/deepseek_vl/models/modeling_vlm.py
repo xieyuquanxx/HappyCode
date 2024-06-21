@@ -166,10 +166,11 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
 
         # [b, T, D]
         input_ids[input_ids < 0] = 0  # ignore the image embeddings
+        # with torch.cuda.amp.autocast():
         inputs_embeds = self.language_model.get_input_embeddings()(input_ids)
 
         # replace with the image embeddings
-        inputs_embeds[images_seq_mask] = images_embeds[images_emb_mask]
+        inputs_embeds[images_seq_mask] = images_embeds[images_emb_mask].to(dtype=inputs_embeds.dtype)
 
         return inputs_embeds
 
@@ -191,9 +192,7 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
         **kargs,
     ):
         if inputs_embeds is None:
-            inputs_embeds = self.prepare_inputs_embeds(
-                input_ids, pixel_values, images_seq_mask, images_emb_mask
-            )
+            inputs_embeds = self.prepare_inputs_embeds(input_ids, pixel_values, images_seq_mask, images_emb_mask)
         # input_ids 和 inputs_embeds 不能同时为空，也不能同时都不为空
         return self.language_model.forward(
             attention_mask=attention_mask,
