@@ -1,12 +1,12 @@
 # Happy Code
-DPO for MLLM.
+DPO|SFT for MLLM.
 
 ## Modern Tools
 - [Ruff](https://github.com/astral-sh/ruff)
 - [uv](https://github.com/astral-sh/uv)
 
 
-## Install for DPO
+## Install
 ```bash
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -22,7 +22,7 @@ uv pip install torch==2.3.0+cu118 torchvision==0.18.0+cu118 --index-url https://
 2. place data to `data/`
 
 
-## DPO for Models
+## DPO|SFT for Models
 对于每一个模型，都用`uv`为其创建一个虚拟环境，例如:`uv venv .deepseek`，`uv venv .mamba`，这样不同模型依赖不会相互破坏。
 - [x] [DeepSeek-VL-7B](https://github.com/deepseek-ai/DeepSeek-VL)
 
