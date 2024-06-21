@@ -1,4 +1,5 @@
 import argparse
+import dataclasses
 import pathlib
 from typing import List
 
@@ -98,7 +99,7 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **dict(cfg.training),
+        **dataclasses.asdict(cfg.training),
     )
 
     training_args.local_rank = local_rank

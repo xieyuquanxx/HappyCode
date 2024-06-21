@@ -5,7 +5,7 @@ gpus=4,5
 project_name=deepseek_vl_7b_dpo
 model=deepseek_vl
 dataset=deepseek_vl_dpo
-training=deepseek_vl_dpo
+training=dpo
 
 
 WANDB_PROJECT=${project_name} deepspeed --include localhost:${gpus} deepseek_vl_dpo.py \

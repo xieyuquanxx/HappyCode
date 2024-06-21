@@ -4,7 +4,7 @@ gpus=3
 
 project_name=deepseek_vl_7b_sft_lora
 model=deepseek_vl
-dataset=deepseek_vl_sft
+dataset=sft
 training=deepseek_vl
 
 

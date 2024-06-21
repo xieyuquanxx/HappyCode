@@ -38,5 +38,9 @@ report_to: "wandb" # wandb/tensorboard
 
 # ================== DPO training arguments =====================
 beta: 0.1
+laebl_smoothing: float = 0
 loss_type: "sigmoid"
+label_pad_token_id: -100
+padding_value: 0
 max_length: 2048
+is_encoder_decoder: False

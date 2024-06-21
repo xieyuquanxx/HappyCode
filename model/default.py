@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 from hydra.core.config_store import ConfigStore
-from omegaconf import MISSING, DictConfig
+from omegaconf import MISSING
 
 
 @dataclass
@@ -26,15 +26,11 @@ class MultiModalityCausalLMBackboneConfig:
 @dataclass
 class BaseModelConfig:
     model_path: str = "model_repo/deepseek-vl-7b-chat"
-    freeze: MultiModalityCausalLMBackboneConfig = field(
-        default_factory=MultiModalityCausalLMBackboneConfig
-    )
+    freeze: MultiModalityCausalLMBackboneConfig = field(default_factory=MultiModalityCausalLMBackboneConfig)
     lora: LoraConfig = field(default_factory=LoraConfig)
     attn_implementation: str = field(
         default="none",
-        metadata={
-            "help": "Attention implementation. Can be 'none', 'flash_attention_2'"
-        },
+        metadata={"help": "Attention implementation. Can be 'none', 'flash_attention_2'"},
     )
 
 
@@ -71,6 +67,17 @@ class BaseTrainingConfig:
 
 
 @dataclass
+class DPOTrainingConfig(BaseTrainingConfig):
+    beta: float = 0.1
+    laebl_smoothing: float = 0
+    loss_type: str = "sigmoid"
+    label_pad_token_id: int = -100
+    padding_value: int = 0
+    max_length: int = 2048
+    is_encoder_decoder: bool = False
+
+
+@dataclass
 class BaseDatasetConfig:
     data_dir: str = field(
         default="data",
@@ -97,7 +104,7 @@ class LogConfig:
 
 
 @dataclass
-class HappyCodeConfig(DictConfig):
+class HappyCodeConfig:
     project: str = MISSING
     run_name: str = "HappyCode"
     ckpt_dir: str = "ckpt"
@@ -105,10 +112,11 @@ class HappyCodeConfig(DictConfig):
     log: LogConfig = field(default_factory=LogConfig)
 
     model: BaseModelConfig = field(default_factory=BaseModelConfig)
-    training: BaseTrainingConfig = field(default_factory=BaseTrainingConfig)  # type: ignore
+    training: BaseTrainingConfig = field(default_factory=BaseTrainingConfig)
     dataset: BaseDatasetConfig = field(default_factory=BaseDatasetConfig)
 
 
 cs = ConfigStore.instance()
 
 cs.store(name="config", node=HappyCodeConfig)
+cs.store(name="dpo", group="training", node=DPOTrainingConfig)

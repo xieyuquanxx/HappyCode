@@ -1,4 +1,5 @@
 import argparse
+import dataclasses
 import pathlib
 from typing import List
 
@@ -103,11 +104,10 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        padding_value=0,
-        **dict(cfg.training),
+        local_rank=local_rank,
+        **dataclasses.asdict(cfg.training),
     )
 
-    training_args.local_rank = local_rank
     model.vision_model = model.vision_model.to(
         dtype=torch.bfloat16 if training_args.bf16 else torch.float16,
         device=training_args.device,
@@ -134,7 +134,7 @@ def main(cfg: HappyCodeConfig) -> None:
 
     if lora_cfg.lora_enable:
         if training_args.local_rank == 0 or training_args.local_rank == -1:
-            model.config.save_pretrained(training_args.output_dir)
+            model.multi_model_config.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)

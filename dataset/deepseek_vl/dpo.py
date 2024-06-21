@@ -44,9 +44,7 @@ class DeepSeekDPODataset(Dataset):
         chosen_data = [prompt, chosen]
         rejected_data = [prompt, rejected]
         pil_images = load_pil_images(data)
-        # images_outputs = self.chat_processor.image_processor(
-        #     pil_images, return_tensors="pt"
-        # )
+
         prompt_prepare = self.chat_processor(conversations=raw_prompt, images=pil_images, force_batchify=False)
         chosen_prepare = self.chat_processor(conversations=chosen_data, images=pil_images, force_batchify=False)
         rejected_prepare = self.chat_processor(
@@ -99,11 +97,6 @@ def make_dpo_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDa
     dataset = DeepSeekDPODataset(vl_chat_processor, dataset_cfg)
     data_collator = DPODataCollator(vl_chat_processor)
 
-    # def gen(torch_dataset):
-    #     for sample in torch_dataset:
-    #         yield sample
-
-    # hf_dataset = datasets.Dataset.from_generator(gen, gen_kwargs={"torch_dataset": dataset})
     return {
         "train_dataset": dataset,
         "eval_dataset": None,

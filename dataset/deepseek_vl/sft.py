@@ -36,8 +36,6 @@ class DeepSeekSftDataset(Dataset):
         }
         """
         data = self.sft_data[index]["conversations"]
-        # if not isinstance(data, List):
-        #     data = [data]
         pil_images = load_pil_images(data)
 
         return self.chat_processor(conversations=data, images=pil_images, force_batchify=False)

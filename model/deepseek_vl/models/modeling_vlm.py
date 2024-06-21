@@ -87,8 +87,6 @@ class MultiModalityConfig(PretrainedConfig):
     aligner_config: AlignerConfig
     language_config: LlamaConfig
 
-    cofig: LlamaConfig
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         vision_config = kwargs.get("vision_config", {})
@@ -98,12 +96,7 @@ class MultiModalityConfig(PretrainedConfig):
         self.aligner_config = AlignerConfig(**aligner_config)
 
         language_config = kwargs.get("language_config", {})
-        # if isinstance(language_config, LlamaConfig):
-        #     self.language_config = language_config
-        # else:
         self.language_config = LlamaConfig(**language_config)
-
-        self.config = self.language_config
 
 
 class MultiModalityPreTrainedModel(PreTrainedModel):
@@ -125,12 +118,14 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
 
         aligner_config = config.aligner_config
         aligner_cls = model_name_to_cls(aligner_config.cls)
-        self.aligner = aligner_cls(aligner_config.params)
+        self.aligner = aligner_cls(aligner_config.params) # type: ignore
 
         language_config = config.language_config
         self.language_model = LlamaForCausalLM(language_config)
 
         self.config = language_config
+
+        self.multi_model_config = config
 
     def prepare_inputs_embeds(
         self,
