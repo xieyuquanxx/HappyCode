@@ -8,7 +8,7 @@ dataset=deepseek_vl_sft
 training=deepseek_vl
 
 
-WANDB_PROJECT=${project_name} CUDA_VISIBLE_DEVICES=${gpus} deepspeed deepseek_vl_sft.py \
+WANDB_PROJECT=${project_name} deepspeed --include localhost:${gpus} deepseek_vl_sft.py \
     project=${project_name} \
     model=${model} \
     dataset=${dataset} \

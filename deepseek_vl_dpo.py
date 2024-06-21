@@ -11,7 +11,7 @@ from transformers import (
 )
 from trl import DPOConfig
 
-from dataset.deepseek_vl_sft_dataset import make_dpo_data_modlue
+from dataset import make_dpo_data_modlue
 from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
@@ -103,6 +103,7 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
+        padding_value=0,
         **dict(cfg.training),
     )
 

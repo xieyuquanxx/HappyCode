@@ -1,7 +1,6 @@
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union, override
 
 import torch
-import torch.nn.functional as F
 from torch.nn.modules import Module
 from torch.optim.optimizer import Optimizer as Optimizer
 from trl import DPOTrainer
@@ -10,7 +9,7 @@ from trl import DPOTrainer
 class VLDPOTrainer(DPOTrainer):
     def concatenated_inputs(
         self,
-        batch: Dict[str, Union[List, torch.LongTensor]],
+        batch: Dict[str, torch.Tensor],
         is_encoder_decoder: bool = False,
         label_pad_token_id: int = -100,
         padding_value: int = 0,
@@ -52,8 +51,7 @@ class VLDPOTrainer(DPOTrainer):
         )
         len_chosen = batch["chosen_labels"].shape[0]
 
-        # model_kwargs = {"use_cache": False}
-        model_kwargs = {}
+        model_kwargs = {"use_cache": False}
 
         if "concatenated_images_seq_mask" in concatenated_batch:
             model_kwargs.update({"images_seq_mask": concatenated_batch["concatenated_images_seq_mask"].bool()})
@@ -88,71 +86,3 @@ class VLDPOTrainer(DPOTrainer):
         chosen_logps_avg = all_logps[:len_chosen] / size_completion[:len_chosen]
 
         return (chosen_logps, rejected_logps, chosen_logits, rejected_logits, chosen_logps_avg)
-
-    def get_batch_loss_metrics(
-        self,
-        model,
-        batch: Dict[str, Union[List, torch.LongTensor]],
-        train_eval: Literal["train", "eval"] = "train",
-    ):
-        """Compute the DPO loss and other metrics for the given batch of inputs for train or test."""
-        metrics = {}
-
-        (
-            policy_chosen_logps,
-            policy_rejected_logps,
-            policy_chosen_logits,
-            policy_rejected_logits,
-            policy_chosen_logps_avg,
-        ) = self.concatenated_forward(model, batch)
-
-        # if reference_chosen_logps and reference_rejected_logps in batch use them, otherwise use the reference model
-        if (
-            "reference_chosen_logps" in batch
-            and "reference_rejected_logps" in batch
-            and self.args.rpo_alpha is not None
-        ):
-            reference_chosen_logps = batch["reference_chosen_logps"]
-            reference_rejected_logps = batch["reference_rejected_logps"]
-        else:
-            with torch.no_grad():
-                if self.ref_model is None:
-                    with self.null_ref_context():
-                        (
-                            reference_chosen_logps,
-                            reference_rejected_logps,
-                            _,
-                            _,
-                            _,
-                        ) = self.concatenated_forward(self.model, batch)
-                else:
-                    (
-                        reference_chosen_logps,
-                        reference_rejected_logps,
-                        _,
-                        _,
-                        _,
-                    ) = self.concatenated_forward(self.ref_model, batch)
-
-        losses, chosen_rewards, rejected_rewards = self.dpo_loss(
-            policy_chosen_logps,
-            policy_rejected_logps,
-            reference_chosen_logps,
-            reference_rejected_logps,
-        )
-        reward_accuracies = (chosen_rewards > rejected_rewards).float()
-
-        if self.args.rpo_alpha is not None:
-            losses = losses * self.args.rpo_alpha - policy_chosen_logps_avg
-
-        prefix = "eval_" if train_eval == "eval" else ""
-        metrics[f"{prefix}rewards/chosen"] = chosen_rewards.mean().cpu()
-        metrics[f"{prefix}rewards/rejected"] = rejected_rewards.mean().cpu()
-        metrics[f"{prefix}rewards/accuracies"] = reward_accuracies.mean().cpu()
-        metrics[f"{prefix}rewards/margins"] = (chosen_rewards - rejected_rewards).mean().cpu()
-        metrics[f"{prefix}logps/rejected"] = policy_rejected_logps.detach().mean().cpu()
-        metrics[f"{prefix}logps/chosen"] = policy_chosen_logps.detach().mean().cpu()
-        metrics[f"{prefix}logits/rejected"] = policy_rejected_logits.detach().mean().cpu()
-        metrics[f"{prefix}logits/chosen"] = policy_chosen_logits.detach().mean().cpu()
-
-        return losses.mean(), metrics

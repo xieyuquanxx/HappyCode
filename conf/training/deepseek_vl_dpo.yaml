@@ -4,7 +4,7 @@
 # deepspeed: "scripts/deepspeed/zero3.json"
 deepspeed: 
 
-per_device_train_batch_size: 4
+per_device_train_batch_size: 2
 per_device_eval_batch_size: 1
 
 dataloader_num_workers: 4
