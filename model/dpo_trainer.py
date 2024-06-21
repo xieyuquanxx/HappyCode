@@ -15,6 +15,8 @@ class VLDPOTrainer(DPOTrainer):
         padding_value: int = 0,
         device: Optional[torch.device] = None,
     ) -> Dict[str, torch.LongTensor]:
+        if padding_value is None:
+            padding_value = 0
         concatenated_batch = super().concatenated_inputs(
             batch, is_encoder_decoder, label_pad_token_id, padding_value, device
         )
@@ -23,7 +25,7 @@ class VLDPOTrainer(DPOTrainer):
             v = batch["pixel_values"]
             concatenated_batch["concatenated_pixel_values"] = torch.cat([v, v], dim=0)  # type: ignore
             concatenated_batch["concatenated_images_seq_mask"] = (
-                concatenated_batch["concatenated_input_ids"] == 100015
+                concatenated_batch["concatenated_input_ids"] == 10001
             )
             if "chosen_images_emb_mask" in batch:
                 concatenated_batch["concatenated_images_emb_mask"] = torch.cat(

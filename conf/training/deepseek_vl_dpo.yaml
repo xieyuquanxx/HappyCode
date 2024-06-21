@@ -15,7 +15,7 @@ gradient_accumulation_steps: 1
 fp16: False
 bf16: True
 
-num_train_epochs: 2
+num_train_epochs: 50
 warmup_ratio: 0.1
 learning_rate: 3e-4
 lr_scheduler_type: "cosine"
@@ -24,8 +24,8 @@ seed: 42
 
 eval_strategy: "no" # ['no', 'steps', 'epoch']
 
-save_strategy: "epoch" # ['no', 'steps', 'epoch']
-save_steps: 5
+save_strategy: "steps" # ['no', 'steps', 'epoch']
+save_steps: 25
 save_total_limit: 5
 
 log_level: "info"
