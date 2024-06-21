@@ -1,0 +1,42 @@
+# total batch size 16:  50G
+#                  32:  75G
+
+# deepspeed: "scripts/deepspeed/zero3.json"
+deepspeed: 
+
+per_device_train_batch_size: 2
+per_device_eval_batch_size: 1
+
+dataloader_num_workers: 4
+dataloader_pin_memory: False
+
+gradient_accumulation_steps: 1
+
+fp16: False
+bf16: True
+
+num_train_epochs: 50
+warmup_ratio: 0.1
+learning_rate: 3e-4
+lr_scheduler_type: "cosine"
+
+seed: 42
+
+eval_strategy: "no" # ['no', 'steps', 'epoch']
+
+save_strategy: "steps" # ['no', 'steps', 'epoch']
+save_steps: 25
+save_total_limit: 5
+
+log_level: "info"
+logging_strategy: "steps"
+logging_steps: 1
+
+
+report_to: "wandb" # wandb/tensorboard
+
+
+# ================== DPO training arguments =====================
+beta: 0.1
+loss_type: "sigmoid"
+max_length: 2048

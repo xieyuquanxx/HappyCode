@@ -8,12 +8,11 @@ from omegaconf import OmegaConf
 from transformers import (
     AutoModelForCausalLM,
     LlamaForCausalLM,
-    Trainer,
-    TrainingArguments,
 )
+from trl import DPOConfig
 
-from dataset import make_sft_data_modlue
-from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor
+from dataset import make_dpo_data_modlue
+from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
@@ -51,6 +50,12 @@ def main(cfg: HappyCodeConfig) -> None:
         trust_remote_code=True,
         attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
     )
+    ref_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
+        cfg.model.model_path,
+        trust_remote_code=True,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
+    )
+    ref_model.eval()
 
     rank0_log(local_rank, logger, f"Load Model from {cfg.model.model_path}")
 
@@ -93,11 +98,12 @@ def main(cfg: HappyCodeConfig) -> None:
         )
         model = get_peft_model(model, lora_config)  # type: ignore
 
-    training_args = TrainingArguments(
+    training_args = DPOConfig(
         run_name=cfg.run_name,
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
+        padding_value=0,
         **dict(cfg.training),
     )
 
@@ -107,12 +113,12 @@ def main(cfg: HappyCodeConfig) -> None:
         device=training_args.device,
     )
     model.aligner = model.aligner.to(device=training_args.device)
+    # data module
+    data_module = make_dpo_data_modlue(processor, cfg.dataset)
 
-    # # data module
-    data_module = make_sft_data_modlue(processor, cfg.dataset)
-
-    trainer = Trainer(
+    trainer = VLDPOTrainer(
         model=model,
+        ref_model=ref_model,
         args=training_args,
         tokenizer=processor.tokenizer,
         **data_module,
@@ -155,5 +161,7 @@ if __name__ == "__main__":
 
     cfg = compose(config_name=args.config_name, overrides=args.overrides)
     local_rank = args.local_rank
+
+    # exit(0)
 
     main(cfg)  # type: ignore

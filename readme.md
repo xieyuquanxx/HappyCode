@@ -1,27 +1,20 @@
 # Happy Code
+DPO for MLLM.
 
 ## Modern Tools
 - [Ruff](https://github.com/astral-sh/ruff)
 - [uv](https://github.com/astral-sh/uv)
 
 
-## Install
-using conda:
-```bash
-conda create -n happy_code python=3.12
-conda activate happy_code
-
-pip install -r requirements.txt
-```
-or you can use [uv](https://github.com/astral-sh/uv):
+## Install for DPO
 ```bash
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
+
 uv venv
 source .venv/bin/activate
-# install wheel first
-uv pip install wheel
 uv pip install -r  requirements.txt
+uv pip install torch==2.3.0+cu118 torchvision==0.18.0+cu118 --index-url https://download.pytorch.org/whl/cu118
 ```
 
 ## Rules
@@ -29,16 +22,10 @@ uv pip install -r  requirements.txt
 2. place data to `data/`
 
 
-## Models
+## DPO for Models
 对于每一个模型，都用`uv`为其创建一个虚拟环境，例如:`uv venv .deepseek`，`uv venv .mamba`，这样不同模型依赖不会相互破坏。
-- [ ] [DeepSeek-VL-7B](https://github.com/deepseek-ai/DeepSeek-VL)
-  - [x] SFT
-  - [x] LoRA
-  - [ ] text-only
-  - [x] [flash-attention2](https://github.com/Dao-AILab/flash-attention)
-- [ ] [Mamba](https://github.com/state-spaces/mamba)
-  - [x] Mamba
-  - [ ] Mamba2
+- [x] [DeepSeek-VL-7B](https://github.com/deepseek-ai/DeepSeek-VL)
+
 
 ## Tips
 ### Soft Link

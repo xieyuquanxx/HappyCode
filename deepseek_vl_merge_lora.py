@@ -7,7 +7,7 @@ from transformers import AutoModelForCausalLM
 from model import MultiModalityCausalLM
 
 
-def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "cuda:0"):
+def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "cuda:0") -> None:
     device_arg = {"device_map": {"": device}}
 
     base_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
@@ -20,13 +20,14 @@ def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "c
     )
     model = adapter.merge_and_unload(progressbar=True)
     model.save_pretrained(f"checkpoints/{new_model_name}")
+    model.aligner.
+
+    print("done :)")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--model_name", type=str, default="model_repo/deepseek-vl-7b-chat"
-    )
+    parser.add_argument("--model_name", type=str, default="model_repo/deepseek-vl-7b-chat")
     parser.add_argument(
         "--lora_path",
         type=str,
