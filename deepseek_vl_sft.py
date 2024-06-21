@@ -12,9 +12,10 @@ from transformers import (
     TrainingArguments,
 )
 
-from dataset.deepseek_vl_sft_dataset import make_sft_data_modlue
+from dataset import make_sft_data_modlue
 from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
+
 
 local_rank = 0
 
@@ -38,7 +39,6 @@ def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
-    return
     logger = get_logger(__name__, cfg.log)
     seed_everything(cfg.training.seed)
 
@@ -49,9 +49,7 @@ def main(cfg: HappyCodeConfig) -> None:
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
-        attn_implementation=None
-        if cfg.model.attn_implementation == "none"
-        else cfg.model.attn_implementation,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
     )
 
     rank0_log(local_rank, logger, f"Load Model from {cfg.model.model_path}")
@@ -100,7 +98,7 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **vars(cfg.training),
+        **dict(cfg.training),
     )
 
     training_args.local_rank = local_rank
