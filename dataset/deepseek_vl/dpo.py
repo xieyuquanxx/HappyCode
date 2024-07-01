@@ -1,3 +1,4 @@
+import itertools
 import json
 import os
 from dataclasses import dataclass
@@ -8,6 +9,13 @@ from torch.utils.data import Dataset
 from model import BaseDatasetConfig
 from model.deepseek_vl.models import VLChatProcessor
 from model.deepseek_vl.utils.io import load_pil_images
+
+
+"""
+#TODO:
+1. 1个正样本+3个负样本
+2. 3个正样本+3个负样本
+"""
 
 
 class DeepSeekDPODataset(Dataset):
@@ -38,20 +46,28 @@ class DeepSeekDPODataset(Dataset):
         }
         """
         data = self.data[index]["conversations"]
-        assert len(data) == 3
-        prompt, chosen, rejected = data[0], data[1], data[2]
-        raw_prompt = [prompt, {"role": "Assistant", "content": ""}]
-        chosen_data = [prompt, chosen]
-        rejected_data = [prompt, rejected]
+        # assert len(data) == 9  # systerm + 输入输出各三个负样本 + 正样本输入输出
+        # system, input_chosen, output_chosen = data[0], data[1], data[5]
+        # input_rejected_1, input_rejected_2, input_rejected_3 = data[2], data[3], data[4]
+        # output_rejected_1, output_rejected_2, output_rejected_3 = data[6], data[7], data[8]
+        # prompt, chosen, rejected = data[0], data[1], data[2]
+
+        system, input_chosen, output_chosen = data[0], data[1], data[3]
+        rejected = list(filter(lambda x: x["role"] == "Assistant" and x["type"] == "rejected", data))
+        prompt = input_chosen
+
+        raw_prompt = [input_chosen, {"role": "Assistant", "content": ""}]
+        chosen_data = [input_chosen, output_chosen]
+        rejected_data = [[prompt, reject] for reject in rejected]
         pil_images = load_pil_images(data)
-        # images_outputs = self.chat_processor.image_processor(
-        #     pil_images, return_tensors="pt"
-        # )
+
+        self.chat_processor.system_prompt = system["content"]
         prompt_prepare = self.chat_processor(conversations=raw_prompt, images=pil_images, force_batchify=False)
         chosen_prepare = self.chat_processor(conversations=chosen_data, images=pil_images, force_batchify=False)
-        rejected_prepare = self.chat_processor(
-            conversations=rejected_data, images=pil_images, force_batchify=False
-        )
+        rejected_prepare = [
+            self.chat_processor(conversations=rejected_dt, images=pil_images, force_batchify=False)
+            for rejected_dt in rejected_data
+        ]
         return {
             "prompt_prepare": prompt_prepare,
             "chosen_prepare": chosen_prepare,
@@ -64,19 +80,25 @@ class DPODataCollator(object):
     vl_chat_processor: VLChatProcessor
 
     def __call__(self, batch) -> Dict[str, Any]:
-        prompt_prepares = [sample["prompt_prepare"] for sample in batch]
-        chosen_prepares = [sample["chosen_prepare"] for sample in batch]
+        prompt_prepares = [sample["prompt_prepare"] for sample in batch]  # B*[]
+        chosen_prepares = [sample["chosen_prepare"] for sample in batch]  # B*[prepare]
+        # B*[3*[prepare]]
         rejected_prepares = [sample["rejected_prepare"] for sample in batch]
-        prompts = [sample.sft_format for sample in prompt_prepares]
-        prompt_batch = self.vl_chat_processor.batchify(prompt_prepares)
-        chosen_batch = self.vl_chat_processor.batchify(chosen_prepares)
-        rejected_batch = self.vl_chat_processor.batchify(rejected_prepares)
+        # rejected_neg_num = len(rejected_prepares[0])
+        # bs = len(batch)
+        # prompts = [sample.sft_format for sample in prompt_prepares]
 
+        prompt_batch = self.vl_chat_processor.batchify(prompt_prepares)  # B
+        chosen_batch = self.vl_chat_processor.batchify(chosen_prepares)  # B
+        # flatten List[List]
+        rejected_prepares = list(itertools.chain(*rejected_prepares))
+        rejected_batch = self.vl_chat_processor.batchify(rejected_prepares)  # 3B
+        # pixel_size = prompt_batch.pixel_values.shape[1:]
         return {
             # =====no reponse=====
-            "prompt": prompts,
-            "prompt_input_ids": prompt_batch.input_ids,
-            "prompt_attention_mask": prompt_batch.attention_mask,
+            # "prompt": prompts,
+            # "prompt_input_ids": prompt_batch.input_ids,
+            # "prompt_attention_mask": prompt_batch.attention_mask,
             # ====chosen response=====
             "chosen_input_ids": chosen_batch.input_ids,
             "chosen_attention_mask": chosen_batch.attention_mask,
@@ -99,11 +121,6 @@ def make_dpo_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDa
     dataset = DeepSeekDPODataset(vl_chat_processor, dataset_cfg)
     data_collator = DPODataCollator(vl_chat_processor)
 
-    # def gen(torch_dataset):
-    #     for sample in torch_dataset:
-    #         yield sample
-
-    # hf_dataset = datasets.Dataset.from_generator(gen, gen_kwargs={"torch_dataset": dataset})
     return {
         "train_dataset": dataset,
         "eval_dataset": None,

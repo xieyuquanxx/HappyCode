@@ -20,7 +20,6 @@ def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "c
     )
     model = adapter.merge_and_unload(progressbar=True)
     model.save_pretrained(f"checkpoints/{new_model_name}")
-    model.aligner.
 
     print("done :)")
 

@@ -31,7 +31,8 @@
                 "model=deepseek_vl",
                 "dataset=deepseek_vl_dpo",
                 "training=deepseek_vl_dpo",
-                "model.lora.lora_enable=True"
+                "model.lora.lora_enable=True",
+                "dataset.file=test_two_img.json"
             ]
         }
     ]

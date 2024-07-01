@@ -1,2 +1,2 @@
 data_dir: data/dpo_test
-file: test.json
+file: test_single_img.json

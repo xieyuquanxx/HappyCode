@@ -7,3 +7,6 @@ __pycache__/
 wandb/
 build/
 *.egg-info
+
+dataset/mc_dataset*
+*.pkl
