@@ -7,6 +7,8 @@ model=deepseek_vl
 dataset=deepseek_vl_dpo
 training=deepseek_vl_dpo
 
+# images >=6 bs only 1
+# images == 4 bs can be 2 (2 will be slow)
 
 WANDB_PROJECT=${project_name} deepspeed --include localhost:${gpus} deepseek_vl_dpo.py \
     project=${project_name} \
@@ -17,4 +19,4 @@ WANDB_PROJECT=${project_name} deepspeed --include localhost:${gpus} deepseek_vl_
     training.deepspeed="scripts/deepspeed/zero3.json" \
     dataset.file=test_four_img.json \
     model.model_path="model_repo/deepseek-vl-1.3b-base" \
-    training.per_device_train_batch_size=1 \
+    training.per_device_train_batch_size=2 \

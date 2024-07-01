@@ -1,4 +1,3 @@
-from copy import deepcopy
 from typing import Dict, List, Literal, Optional, Tuple, Union
 
 import torch
@@ -22,16 +21,18 @@ class VLDPOTrainer(DPOTrainer):
         concatenated_batch = super().concatenated_inputs(
             batch, is_encoder_decoder, label_pad_token_id, padding_value, device
         )
-        # bs=1下
         if "pixel_values" in batch:
             # duplicate img_input in batchsize dimension
-            v = batch["pixel_values"]
-            concatedated_batch_size = concatenated_batch["concatenated_input_ids"].shape[0]
-            # concatenated_batch["concatenated_pixel_values"] = torch.cat([v, v], dim=0)  # type: ignore
-            concatenated_batch["concatenated_pixel_values"] = v.repeat(concatedated_batch_size, 1, 1, 1, 1)  # type: ignore
-            concatenated_batch["concatenated_images_seq_mask"] = (
-                concatenated_batch["concatenated_input_ids"] == 100015
-            )
+            v, rejected_neg_number = batch["pixel_values"], batch["rejected_input_ids"].shape[0]
+            bs, pixel_shape = v.shape[0], v.shape[1:]
+            rejected_neg_number //= bs  # =3
+            b = v.repeat(1, rejected_neg_number, 1, 1, 1).reshape(bs * rejected_neg_number, *pixel_shape)
+            concatenated_batch["concatenated_pixel_values"] = torch.cat([v, b], dim=0)  # type: ignore
+
+            if "chosen_images_emb_mask" in batch:
+                concatenated_batch["concatenated_images_seq_mask"] = (
+                    concatenated_batch["concatenated_input_ids"] == 100015
+                )
             if "chosen_images_emb_mask" in batch:
                 concatenated_batch["concatenated_images_emb_mask"] = torch.cat(
                     [
@@ -241,20 +242,46 @@ class VLDPOTrainer(DPOTrainer):
             policy_chosen_logps_avg,
         ) = self.concatenated_forward(model, batch)
 
+        bs = policy_chosen_logps.shape[0]
+        # rejected_number = policy_rejected_logps.shape[0] // bs
+
+        # loss_list = []
+        # chosen_rewards_list = []
+        # rejected_rewards_list = []
+        # reward_accuracies_list = []
+        # for i in range(bs):
+        #     losses, chosen_rewards, rejected_rewards = self.dpo_loss(
+        #         policy_chosen_logps[i],
+        #         policy_rejected_logps[i * rejected_number : (i + 1) * rejected_number],
+        #         reference_chosen_logps[i],
+        #         reference_rejected_logps[i * rejected_number : (i + 1) * rejected_number],
+        #     )
+        #     reward_accuracies = (chosen_rewards > rejected_rewards).float()
+
+        #     loss_list.append(losses)
+        #     chosen_rewards_list.append(chosen_rewards)
+        #     rejected_rewards_list.append(rejected_rewards)
+        #     reward_accuracies_list.append(reward_accuracies)
+        # losses = torch.cat(loss_list, dim=0)
+        # chosen_rewards = torch.tensor(chosen_rewards_list, device=losses.device)
+        # rejected_rewards = torch.cat(rejected_rewards_list, dim=0)
+        # reward_accuracies = torch.cat(reward_accuracies_list, dim=0)
+
         losses, chosen_rewards, rejected_rewards = self.dpo_loss(
-            policy_chosen_logps,
-            policy_rejected_logps,
-            reference_chosen_logps,
-            reference_rejected_logps,
+            policy_chosen_logps.reshape(bs, -1),
+            policy_rejected_logps.reshape(bs, -1),
+            reference_chosen_logps.reshape(bs, -1),
+            reference_rejected_logps.reshape(bs, -1),
         )
         reward_accuracies = (chosen_rewards > rejected_rewards).float()
-        # loss_list.append(losses)
 
         prefix = "eval_" if train_eval == "eval" else ""
         metrics[f"{prefix}rewards/chosen"] = chosen_rewards.mean().cpu()
         metrics[f"{prefix}rewards/rejected"] = rejected_rewards.mean().cpu()
         metrics[f"{prefix}rewards/accuracies"] = reward_accuracies.mean().cpu()
-        metrics[f"{prefix}rewards/margins"] = (chosen_rewards - rejected_rewards).mean().cpu()
+        metrics[f"{prefix}rewards/margins"] = (
+            (chosen_rewards.reshape(bs, -1) - rejected_rewards.reshape(bs, -1)).mean().cpu()
+        )
         metrics[f"{prefix}logps/rejected"] = policy_rejected_logps.detach().mean().cpu()
         metrics[f"{prefix}logps/chosen"] = policy_chosen_logps.detach().mean().cpu()
         metrics[f"{prefix}logits/rejected"] = policy_rejected_logits.detach().mean().cpu()

@@ -40,3 +40,4 @@ report_to: "wandb" # wandb/tensorboard
 beta: 0.1
 loss_type: "sigmoid"
 max_length: 2048
+max_prompt_length: 2048

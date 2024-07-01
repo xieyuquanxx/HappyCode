@@ -4,11 +4,15 @@ import pickle
 import numpy as np
 import json
 from collections import OrderedDict
-
+import random
 
 with open('dict_action.pkl', 'rb') as f1:
     dic=pickle.load(f1)
 
+
+del dic['pickItem']
+del dic['swapHands']
+print(dic.values())
 action_types = list(dic.values())
 
 
@@ -25,6 +29,14 @@ def camera_mapping(camera_value):
     camera_float = camera_value.tolist()
     return camera_float
 
+def adjust_sequence_length(action_sequence):
+    length = len(action_sequence)
+    if length > 400:
+        return action_sequence[:401]
+    else:
+        adjusted_length = (length // 40) * 40 + 1
+        return action_sequence[:adjusted_length]
+    
 def action_mapping(actions):
     action_list=[]
     for action in actions:
@@ -40,21 +52,50 @@ def action_mapping(actions):
     return action_list
 
 def create_negative_samples(action_sequence, action_types):
+    action_sequence = adjust_sequence_length(action_sequence)
     negative_samples = []
-    for actions in action_sequence:
-        negative_action = []
-        for action in actions:
-            if isinstance(action, str):
-                # 随机选择一个不同的 action 替换原来的 action
-                new_action = random.choice(action_types)
-                while new_action == action:
+    original_group_samples = []
+
+    # 去掉第一个子列表
+    action_sequence = action_sequence[1:]
+
+    # 每40个子列表为一组
+    num_groups = len(action_sequence) // 40
+
+    for group_idx in range(num_groups):
+        group_start = group_idx * 40
+        group_end = group_start + 40
+        group = action_sequence[group_start:group_end]
+
+        group_negative_samples = []
+
+        # 保存原始组的最后十个action
+        original_group_sample = group[30:40]
+        original_group_samples.append([original_group_sample])
+
+        # 只对每组子列表的最后十个action取样为负样本
+        for _ in range(3):  # 每组序列取三组对应的负样本
+            group_negative_sample = []
+            for idx in range(30, 40):
+                original_actions = group[idx]
+                negative_action = []
+                num_actions = random.choices([1, 2, 3], weights=[0.6, 0.3, 0.1], k=1)[0]  # 非等概率取1到3个action
+
+                for _ in range(num_actions):
                     new_action = random.choice(action_types)
-                negative_action.append(new_action)
-            elif isinstance(action, dict) and 'camera' in action:
-                # 对于 'camera' action，直接添加到负样本中
-                negative_action.append(action)
-        negative_samples.append(negative_action)
-    return negative_samples
+                    # 避免重复添加相同的action
+                    while new_action in negative_action:
+                        new_action = random.choice(action_types)
+                    negative_action.append(new_action)
+
+                group_negative_sample.append(negative_action)
+            
+            group_negative_samples.append(group_negative_sample)
+        
+        negative_samples.append(group_negative_samples)
+
+    return num_groups,original_group_samples,negative_samples
+
 
 def process_all_subfolders(base_directory):
     action_data=[]
@@ -67,9 +108,13 @@ def process_all_subfolders(base_directory):
                 if datas is not None:
                     dic={}
                     action_list=action_mapping(datas)
+                    num_groups,chosen_action_list,rejected_action_list=create_negative_samples(action_list, action_types)
                     dic['data_id']=subfolder
-                    dic['actions']=action_list
+                    dic['raw_actions']=action_list
                     dic['img_dir']=subfolder_path
+                    dic['clip_num']=num_groups
+                    dic['choosen']=chosen_action_list
+                    dic['rejected']=rejected_action_list
                     action_data.append(dic)
             else:
                 print(f"No .pkl file found in {subfolder_path}")
