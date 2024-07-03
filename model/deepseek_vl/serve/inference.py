@@ -36,9 +36,7 @@ from deepseek_vl.utils.conversation import Conversation
 def load_model(model_path):
     vl_chat_processor: VLChatProcessor = VLChatProcessor.from_pretrained(model_path)
     tokenizer = vl_chat_processor.tokenizer
-    vl_gpt: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
-        model_path, trust_remote_code=True
-    )
+    vl_gpt: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
     vl_gpt = vl_gpt.to(torch.bfloat16).cuda().eval()
     return tokenizer, vl_gpt, vl_chat_processor
 
@@ -50,11 +48,7 @@ def convert_conversation_to_prompts(conversation: Conversation):
     for i in range(0, len(messages), 2):
         prompt = {
             "role": messages[i][0],
-            "content": (
-                messages[i][1][0]
-                if isinstance(messages[i][1], tuple)
-                else messages[i][1]
-            ),
+            "content": (messages[i][1][0] if isinstance(messages[i][1], tuple) else messages[i][1]),
             "images": [messages[i][1][1]] if isinstance(messages[i][1], tuple) else [],
         }
         response = {"role": messages[i + 1][0], "content": messages[i + 1][1]}
@@ -68,9 +62,7 @@ class StoppingCriteriaSub(StoppingCriteria):
         super().__init__()
         self.stops = [stop.to("cuda") for stop in stops]
 
-    def __call__(
-        self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs
-    ):
+    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs):
         for stop in self.stops:
             if input_ids.shape[-1] < len(stop):
                 continue
@@ -100,9 +92,9 @@ def deepseek_generate(
         for pil_img in message["images"]:
             pil_images.append(pil_img)
 
-    prepare_inputs = vl_chat_processor(
-        conversations=prompts, images=pil_images, force_batchify=True
-    ).to(vl_gpt.device)
+    prepare_inputs = vl_chat_processor(conversations=prompts, images=pil_images, force_batchify=True).to(
+        vl_gpt.device
+    )
 
     return generate(
         vl_gpt,
@@ -132,12 +124,8 @@ def generate(
 
     streamer = TextIteratorStreamer(tokenizer)
 
-    stop_words_ids = [
-        torch.tensor(tokenizer.encode(stop_word)) for stop_word in stop_words
-    ]
-    stopping_criteria = StoppingCriteriaList(
-        [StoppingCriteriaSub(stops=stop_words_ids)]
-    )
+    stop_words_ids = [torch.tensor(tokenizer.encode(stop_word)) for stop_word in stop_words]
+    stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
 
     generation_config = dict(
         inputs_embeds=inputs_embeds,

@@ -60,9 +60,7 @@ models = load_models()
 MODELS = sorted(list(models.keys()))
 
 
-def generate_prompt_with_history(
-    text, image, history, vl_chat_processor, tokenizer, max_length=2048
-):
+def generate_prompt_with_history(text, image, history, vl_chat_processor, tokenizer, max_length=2048):
     """
     Generate a prompt with history for the deepseek application.
 
@@ -106,11 +104,7 @@ def generate_prompt_with_history(
 
     for _ in range(rounds):
         current_prompt = get_prompt(conversation)
-        current_prompt = (
-            current_prompt.replace("</s>", "")
-            if sft_format == "deepseek"
-            else current_prompt
-        )
+        current_prompt = current_prompt.replace("</s>", "") if sft_format == "deepseek" else current_prompt
 
         if torch.tensor(tokenizer.encode(current_prompt)).size(-1) <= max_length:
             return conversation_copy
@@ -263,9 +257,7 @@ def predict(
             response = strip_stop_words(full_response, stop_words)
             conversation.update_last_message(response)
             gradio_chatbot_output[-1][1] = response
-            yield gradio_chatbot_output, to_gradio_history(
-                conversation
-            ), "Generating..."
+            yield gradio_chatbot_output, to_gradio_history(conversation), "Generating..."
 
     print("flushed result to gradio")
     torch.cuda.empty_cache()
@@ -341,9 +333,7 @@ def build_demo(MODELS):
                     )
                 with gr.Row():
                     with gr.Column(scale=4):
-                        text_box = gr.Textbox(
-                            show_label=False, placeholder="Enter text", container=False
-                        )
+                        text_box = gr.Textbox(show_label=False, placeholder="Enter text", container=False)
                     with gr.Column(
                         min_width=70,
                     ):
@@ -475,9 +465,7 @@ def build_demo(MODELS):
             show_progress=True,
         )
 
-        reset_args = dict(
-            fn=reset_textbox, inputs=[], outputs=[text_box, status_display]
-        )
+        reset_args = dict(fn=reset_textbox, inputs=[], outputs=[text_box, status_display])
 
         predict_events = [
             text_box.submit(**transfer_input_args).then(**predict_args),

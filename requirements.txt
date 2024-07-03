@@ -1,4 +1,5 @@
 wheel
+ruff
 transformers
 datasets
 accelerate
@@ -11,15 +12,15 @@ peft
 deepspeed
 tensorboard
 rich
+trl
 # from deepseek-vl
 timm
 sentencepiece
 attrdict
 einops
-# from mamba
-# causal-conv1d install by wheel
-# lm-eval==0.4.2
 # flash-attn
-# jupyterlab
-# triton==2.2.0
-# uv pip install torch==2.3.0+cu118 torchvision==0.18.0+cu118 --index-url https://download.pytorch.org/whl/cu118
+jupyterlab
+# uv pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
+
+# from minerl
+# uv pip install env/minerl --no-cache-dir --no-build-isolation

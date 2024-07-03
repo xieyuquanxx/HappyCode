@@ -33,15 +33,13 @@ def load_pretrained_model(model_path: str):
     vl_chat_processor: VLChatProcessor = VLChatProcessor.from_pretrained(model_path)
     tokenizer = vl_chat_processor.tokenizer
 
-    vl_gpt: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
-        model_path, trust_remote_code=True
-    )
+    vl_gpt: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
     vl_gpt = vl_gpt.to(torch.bfloat16).cuda().eval()
 
     return tokenizer, vl_chat_processor, vl_gpt
 
 
-def  load_pil_images(conversations: List[Dict[str, str]]) -> List[PIL.Image.Image]:
+def load_pil_images(conversations: List[Dict[str, str]]) -> List[PIL.Image.Image]:
     """
 
     Support file path or base64 images.

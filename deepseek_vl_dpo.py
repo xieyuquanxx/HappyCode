@@ -1,6 +1,6 @@
 import argparse
 import pathlib
-from typing import List
+from dataclasses import asdict
 
 import torch
 from hydra import compose, initialize
@@ -19,7 +19,7 @@ from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_ev
 local_rank = 0
 
 
-def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
+def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:
     """
     gate_proj, up_proj, down_proj don't need to be trained in LoRA Fine-tuning
     """
@@ -48,12 +48,16 @@ def main(cfg: HappyCodeConfig) -> None:
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
-        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
+        attn_implementation=None
+        if cfg.model.attn_implementation == "none"
+        else cfg.model.attn_implementation,
     )
     ref_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
-        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
+        attn_implementation=None
+        if cfg.model.attn_implementation == "none"
+        else cfg.model.attn_implementation,
     )
     ref_model.eval()
 
@@ -104,7 +108,7 @@ def main(cfg: HappyCodeConfig) -> None:
         remove_unused_columns=False,
         load_best_model_at_end=False,
         padding_value=0,
-        **dict(cfg.training),
+        **asdict(cfg.training),
     )
 
     training_args.local_rank = local_rank

@@ -1,12 +1,21 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "python.languageServer": "Pylance",
-    "python.defaultInterpreterPath": ".venv/.dpo/bin/python",
+    "python.defaultInterpreterPath": ".venv/.mc/bin/python",
     "python.analysis.exclude": [
         "data",
         "**/mc_dataset**",
         "checkpoints",
         "model_repo",
         "wandb"
-    ]
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.ruff": "explicit",
+        "source.organizeImports.ruff": "explicit",
+    },
+    "notebook.formatOnSave.enabled": true,
+    "notebook.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true
+    }
 }

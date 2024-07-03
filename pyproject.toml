@@ -2,13 +2,42 @@
 index-url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py311"
 line-length = 114
 indent-width = 4
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
 
 [tool.ruff.lint]
 ignore = ["C408", "C901", "E501", "E731", "E741", "W605"]
-select = ["C", "E", "F", "I", "W"]
+select = ["C", "E", "F", "I", "W", "UP", "PERF"]
+fixable = ["ALL"]
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2

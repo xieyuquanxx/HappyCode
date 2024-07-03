@@ -42,14 +42,10 @@ def configure_logger():
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
     os.makedirs("deepseek_vl/serve/logs", exist_ok=True)
-    file_handler = logging.FileHandler(
-        f"deepseek_vl/serve/logs/{timestr}_gradio_log.log"
-    )
+    file_handler = logging.FileHandler(f"deepseek_vl/serve/logs/{timestr}_gradio_log.log")
     console_handler = logging.StreamHandler()
 
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
 
@@ -109,9 +105,7 @@ def normalize_markdown(md_text: str) -> str:  # deprecated
             inside_list = True
             normalized_lines.append(line)
         elif inside_list and line.strip() == "":
-            if i < len(lines) - 1 and not re.match(
-                r"^(\d+\.|-|\*|\+)\s", lines[i + 1].strip()
-            ):
+            if i < len(lines) - 1 and not re.match(r"^(\d+\.|-|\*|\+)\s", lines[i + 1].strip()):
                 normalized_lines.append(line)
             continue
         else:
@@ -214,9 +208,7 @@ def add_language_tag(text):
         code_block = match.group(2)
         if match.group(2).startswith("\n"):
             language = detect_language(code_block)
-            return (
-                f"```{language}{code_block}```" if language else f"```\n{code_block}```"
-            )
+            return f"```{language}{code_block}```" if language else f"```\n{code_block}```"
         else:
             return match.group(1) + code_block + "```"
 

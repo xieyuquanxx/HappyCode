@@ -36,9 +36,7 @@ def compact_text_chunks(self, prompt, text_chunks: List[str]) -> List[str]:
     return text_splitter.split_text(combined_str)
 
 
-def postprocess(
-    self, y: List[Tuple[str | None, str | None]]
-) -> List[Tuple[str | None, str | None]]:
+def postprocess(self, y: List[Tuple[str | None, str | None]]) -> List[Tuple[str | None, str | None]]:
     """
     Parameters:
         y: List of tuples representing the message and response pairs. Each message and response should be a string, which may be in Markdown format.
@@ -58,9 +56,10 @@ def postprocess(
     return temp
 
 
-with open("deepseek_vl/serve/assets/custom.js", "r", encoding="utf-8") as f, open(
-    "deepseek_vl/serve/assets/Kelpy-Codos.js", "r", encoding="utf-8"
-) as f2:
+with (
+    open("deepseek_vl/serve/assets/custom.js", "r", encoding="utf-8") as f,
+    open("deepseek_vl/serve/assets/Kelpy-Codos.js", "r", encoding="utf-8") as f2,
+):
     customJS = f.read()
     kelpyCodos = f2.read()
 

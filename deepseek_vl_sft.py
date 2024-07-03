@@ -1,6 +1,6 @@
 import argparse
 import pathlib
-from typing import List
+from dataclasses import asdict
 
 import torch
 from hydra import compose, initialize
@@ -20,7 +20,7 @@ from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_ev
 local_rank = 0
 
 
-def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
+def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:
     """
     gate_proj, up_proj, down_proj don't need to be trained in LoRA Fine-tuning
     """
@@ -98,7 +98,7 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **dict(cfg.training),
+        **asdict(cfg.training),
     )
 
     training_args.local_rank = local_rank

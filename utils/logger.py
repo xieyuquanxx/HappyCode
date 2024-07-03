@@ -27,9 +27,7 @@ def get_logger(name: str, cfg: LogConfig) -> logging.Logger:
     file_handler = logging.FileHandler(log_file)
     rich_handler = RichHandler(markup=True)
 
-    logging.basicConfig(
-        format="[%(asctime)s]: %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level="INFO"
-    )
+    logging.basicConfig(format="[%(asctime)s]: %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level="INFO")
     log = logging.getLogger(name)
     log.setLevel(logging.INFO)
     log.addHandler(rich_handler)

@@ -26,11 +26,15 @@ class MultiModalityCausalLMBackboneConfig:
 @dataclass
 class BaseModelConfig:
     model_path: str = "model_repo/deepseek-vl-7b-chat"
-    freeze: MultiModalityCausalLMBackboneConfig = field(default_factory=MultiModalityCausalLMBackboneConfig)
+    freeze: MultiModalityCausalLMBackboneConfig = field(
+        default_factory=MultiModalityCausalLMBackboneConfig
+    )
     lora: LoraConfig = field(default_factory=LoraConfig)
     attn_implementation: str = field(
         default="none",
-        metadata={"help": "Attention implementation. Can be 'none', 'flash_attention_2'"},
+        metadata={
+            "help": "Attention implementation. Can be 'none', 'flash_attention_2'"
+        },
     )
 
 
