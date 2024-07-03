@@ -1,3 +1,12 @@
 {
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "python.languageServer": "Pylance",
+    "python.defaultInterpreterPath": ".venv/.dpo/bin/python",
+    "python.analysis.exclude": [
+        "data",
+        "**/mc_dataset**",
+        "checkpoints",
+        "model_repo",
+        "wandb"
+    ]
 }

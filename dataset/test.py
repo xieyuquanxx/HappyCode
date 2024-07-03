@@ -1,10 +1,28 @@
 import os
 import json
 import numpy as np
-
-with open("test.json",'r',encoding='utf-8') as load_f:
+import pickle
+with open("/data/Users/xyq/developer/happy_code/dataset/mc_dataset_v1_img4.json",'r',encoding='utf-8') as load_f:
    datas = json.load(load_f)
-for i in range(len(datas)):
-   assert len(datas[i]['choosen'])==len(datas[i]['rejected']),'not equal'
-print(len(datas))
 
+print(len(datas))
+# print(datas[0])
+for data in datas:
+   if data['conversations'][1]["images"]==[]:
+      print(data['conversations'][0])
+
+datas = [data for data in datas if data['conversations'][1]["images"] != []]
+print(len(datas))
+with open("mc_dataset_v1_img4_2.json",'w',encoding='utf-8') as f:
+        json.dump(datas, f,ensure_ascii=False)
+        
+# for i in range(len(datas)):
+#    assert len(datas[i]['rejected'][0])==3,'not equal'
+# print(len(datas))
+
+# with open("/data/Users/xyq/developer/happy_code/dataset/mc_dataset_test/chop_a_tree_3/chop_a_tree_3.pkl",'rb') as f:
+#    data=pickle.load(f)
+
+
+# for action in data:
+#    print(action['camera'])

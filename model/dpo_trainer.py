@@ -13,7 +13,7 @@ class VLDPOTrainer(DPOTrainer):
         batch: Dict[str, torch.Tensor],
         is_encoder_decoder: bool = False,
         label_pad_token_id: int = -100,
-        padding_value: int = 0,
+        padding_value: int | None = 0,
         device: Optional[torch.device] = None,
     ) -> Dict[str, torch.LongTensor]:
         if padding_value is None:

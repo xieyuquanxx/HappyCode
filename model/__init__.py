@@ -8,6 +8,7 @@ from .default import (
 )
 from .dpo_trainer import VLDPOTrainer
 
+
 __all__ = [
     "MultiModalityCausalLM",
     "VLChatProcessor",

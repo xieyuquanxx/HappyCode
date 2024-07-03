@@ -10,12 +10,12 @@ per_device_eval_batch_size: 1
 dataloader_num_workers: 4
 dataloader_pin_memory: False
 
-gradient_accumulation_steps: 1
+gradient_accumulation_steps: 4
 
 fp16: False
 bf16: True
 
-num_train_epochs: 50
+num_train_epochs: 40
 warmup_ratio: 0.1
 learning_rate: 3e-4
 lr_scheduler_type: "cosine"
@@ -37,7 +37,7 @@ report_to: "wandb" # wandb/tensorboard
 
 
 # ================== DPO training arguments =====================
-beta: 0.1
+beta: 0.01
 loss_type: "sigmoid"
 max_length: 2048
 max_prompt_length: 2048

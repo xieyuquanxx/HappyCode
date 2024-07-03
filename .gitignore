@@ -10,3 +10,4 @@ build/
 
 dataset/mc_dataset*
 *.pkl
+*.json

@@ -1,2 +1,2 @@
-data_dir: data/dpo_test
-file: test_single_img.json
+data_dir: /data/Users/xyq/developer/happy_code/dataset
+file: mc_dataset_v1_img4_2.json

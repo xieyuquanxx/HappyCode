@@ -17,6 +17,7 @@ from dataset import train_test_split
 from model.callback import LoggerLogCallback
 from utils import image_bytes2PIL
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -52,9 +53,7 @@ def main(cfg: DictConfig):
     processor = AutoImageProcessor.from_pretrained(cfg["model"]["model_path"])
 
     def transforms(batch):
-        batch["pixel_values"] = [
-            image_bytes2PIL(x["bytes"]).convert("RGB") for x in batch["image"]
-        ]
+        batch["pixel_values"] = [image_bytes2PIL(x["bytes"]).convert("RGB") for x in batch["image"]]
         inputs = processor(batch["pixel_values"], do_resize=False, return_tensors="pt")
         inputs["labels"] = [label2id[y] for y in batch["label"]]
         return inputs
