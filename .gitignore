@@ -6,10 +6,12 @@ model_repo/
 __pycache__/
 wandb/
 build/
+logs/
+videos/
+
 *.egg-info
 
 dataset/mc_dataset*
 *.pkl
 *.json
-logs/
 *.log

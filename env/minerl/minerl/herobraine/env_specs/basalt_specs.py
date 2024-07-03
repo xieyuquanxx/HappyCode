@@ -1,14 +1,10 @@
-from typing import List, Optional, Sequence
+from collections.abc import Sequence
 
 import gym
 
 from minerl.env import _fake, _singleagent
-from minerl.herobraine import wrappers
-from minerl.herobraine.env_spec import EnvSpec
-from minerl.herobraine.env_specs import simple_embodiment
-from minerl.herobraine.hero import handlers, mc
-
 from minerl.herobraine.env_specs.human_controls import HumanControlEnvSpec
+from minerl.herobraine.hero import handlers, mc
 
 
 MAKE_HOUSE_VILLAGE_INVENTORY = [
@@ -104,9 +100,7 @@ def _basalt_gym_entrypoint(
     return env
 
 
-BASALT_GYM_ENTRY_POINT = (
-    "minerl.herobraine.env_specs.basalt_specs:_basalt_gym_entrypoint"
-)
+BASALT_GYM_ENTRY_POINT = "minerl.herobraine.env_specs.basalt_specs:_basalt_gym_entrypoint"
 
 
 class BasaltBaseEnvSpec(HumanControlEnvSpec):
@@ -149,36 +143,36 @@ class BasaltBaseEnvSpec(HumanControlEnvSpec):
         obs_handler_pov = handlers.POVObservation(self.resolution)
         return [obs_handler_pov]
 
-    def create_agent_start(self) -> List[handlers.Handler]:
+    def create_agent_start(self) -> list[handlers.Handler]:
         return super().create_agent_start() + [
             handlers.SimpleInventoryAgentStart(self.inventory),
             handlers.PreferredSpawnBiome(self.preferred_spawn_biome),
             handlers.DoneOnDeath(),
         ]
 
-    def create_agent_handlers(self) -> List[handlers.Handler]:
+    def create_agent_handlers(self) -> list[handlers.Handler]:
         return []
 
-    def create_server_world_generators(self) -> List[handlers.Handler]:
+    def create_server_world_generators(self) -> list[handlers.Handler]:
         # TODO the original biome forced is not implemented yet. Use this for now.
         return [handlers.DefaultWorldGenerator(force_reset=True)]
 
-    def create_server_quit_producers(self) -> List[handlers.Handler]:
+    def create_server_quit_producers(self) -> list[handlers.Handler]:
         return [
-            handlers.ServerQuitFromTimeUp((self.max_episode_steps * mc.MS_PER_STEP)),
+            handlers.ServerQuitFromTimeUp(self.max_episode_steps * mc.MS_PER_STEP),
             handlers.ServerQuitWhenAnyAgentFinishes(),
         ]
 
-    def create_server_decorators(self) -> List[handlers.Handler]:
+    def create_server_decorators(self) -> list[handlers.Handler]:
         return []
 
-    def create_server_initial_conditions(self) -> List[handlers.Handler]:
+    def create_server_initial_conditions(self) -> list[handlers.Handler]:
         return [
             handlers.TimeInitialCondition(allow_passage_of_time=False),
             handlers.SpawningInitialCondition(allow_spawning=True),
         ]
 
-    def get_blacklist_reason(self, npz_data: dict) -> Optional[str]:
+    def get_blacklist_reason(self, npz_data: dict) -> str | None:
         """
         Some saved demonstrations are bogus -- they only contain lobby frames.
 
@@ -345,7 +339,7 @@ class PenAnimalsVillageEnvSpec(BasaltBaseEnvSpec):
             ],
         )
 
-    def create_agent_start(self) -> List[handlers.Handler]:
+    def create_agent_start(self) -> list[handlers.Handler]:
         return super().create_agent_start() + [handlers.SpawnInVillage()]
 
 
@@ -389,5 +383,5 @@ class VillageMakeHouseEnvSpec(BasaltBaseEnvSpec):
             inventory=MAKE_HOUSE_VILLAGE_INVENTORY,
         )
 
-    def create_agent_start(self) -> List[handlers.Handler]:
+    def create_agent_start(self) -> list[handlers.Handler]:
         return super().create_agent_start() + [handlers.SpawnInVillage()]

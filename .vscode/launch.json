@@ -35,6 +35,13 @@
                 "dataset.file=test_two_img.json",
                 "training.per_device_train_batch_size=2"
             ]
+        },
+        {
+            "name": "minerl-test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "test_minerl.py",
+            "console": "integratedTerminal"
         }
     ]
 }

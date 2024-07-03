@@ -3,7 +3,7 @@ import os
 
 from rich.logging import RichHandler
 
-from model import LogConfig
+from conf import LogConfig
 
 
 def rank0_log(local_rank: int | None, logger: logging.Logger, msg: str) -> None:

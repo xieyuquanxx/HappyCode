@@ -1,4 +1,4 @@
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Literal
 
 import torch
 import torch.nn.functional as F
@@ -10,12 +10,12 @@ from trl import DPOTrainer
 class VLDPOTrainer(DPOTrainer):
     def concatenated_inputs(
         self,
-        batch: Dict[str, torch.Tensor],
+        batch: dict[str, torch.Tensor],
         is_encoder_decoder: bool = False,
         label_pad_token_id: int = -100,
         padding_value: int | None = 0,
-        device: Optional[torch.device] = None,
-    ) -> Dict[str, torch.LongTensor]:
+        device: torch.device | None = None,
+    ) -> dict[str, torch.LongTensor]:
         if padding_value is None:
             padding_value = 0
         concatenated_batch = super().concatenated_inputs(
@@ -44,8 +44,8 @@ class VLDPOTrainer(DPOTrainer):
         return concatenated_batch
 
     def concatenated_forward(
-        self, model: Module, batch: Dict[str, Union[List, torch.Tensor]]
-    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        self, model: Module, batch: dict[str, list | torch.Tensor]
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Run the given model on the given batch of inputs, concatenating the chosen and rejected inputs together.
 
         We do this to avoid doing two forward passes, because it's faster for FSDP.
@@ -110,7 +110,7 @@ class VLDPOTrainer(DPOTrainer):
         policy_rejected_logps: torch.FloatTensor,
         reference_chosen_logps: torch.FloatTensor,
         reference_rejected_logps: torch.FloatTensor,
-    ) -> Tuple[torch.FloatTensor, torch.FloatTensor, torch.FloatTensor]:
+    ) -> tuple[torch.FloatTensor, torch.FloatTensor, torch.FloatTensor]:
         """Compute the DPO loss for a batch of policy and reference model log probabilities.
 
         Args:
@@ -219,7 +219,7 @@ class VLDPOTrainer(DPOTrainer):
     def get_batch_loss_metrics(
         self,
         model,
-        batch: Dict[str, Union[List, torch.LongTensor]],
+        batch: dict[str, list | torch.LongTensor],
         train_eval: Literal["train", "eval"] = "train",
     ):
         """Compute the DPO loss and other metrics for the given batch of inputs for train or test."""

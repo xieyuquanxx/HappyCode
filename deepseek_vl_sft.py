@@ -12,8 +12,9 @@ from transformers import (
     TrainingArguments,
 )
 
+from conf import HappyCodeConfig
 from dataset import make_sft_data_modlue
-from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor
+from model import MultiModalityCausalLM, VLChatProcessor
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 

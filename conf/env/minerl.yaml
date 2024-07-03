@@ -1,0 +1,7 @@
+
+
+name: MineRL-v0
+
+max_episode_steps: 1200
+preferred_spawn_biome: "plains"
+inventory: []

@@ -2,11 +2,11 @@ import gym
 
 from minerl.env import _fake, _singleagent
 from minerl.herobraine.env_specs.human_survival_specs import HumanSurvival
-from minerl.herobraine.hero.handlers.translation import TranslationHandler
-from minerl.herobraine.hero.handler import Handler
 from minerl.herobraine.hero import handlers
+from minerl.herobraine.hero.handler import Handler
+from minerl.herobraine.hero.handlers.translation import TranslationHandler
 from minerl.herobraine.hero.mc import ALL_ITEMS
-from typing import List
+
 
 TIMEOUT = 18000
 DIAMOND_ITEMS = [
@@ -63,9 +63,7 @@ class ObtainDiamondShovelWrapper(gym.Wrapper):
             if not self.seen[i]:
                 for item in item_list:
                     if observation["inventory"][item] > 0:
-                        if (
-                            i == len(self.rewarded_items) - 1
-                        ):  # achieved last item in rewarded item list
+                        if i == len(self.rewarded_items) - 1:  # achieved last item in rewarded item list
                             done = True
                         reward += rew
                         self.seen[i] = 1
@@ -139,11 +137,11 @@ class ObtainDiamondShovelEnvSpec(HumanSurvival):
     def _entry_point(self, fake: bool) -> str:
         return OBTAIN_DIAMOND_SHOVEL_ENTRY_POINT
 
-    def create_observables(self) -> List[Handler]:
+    def create_observables(self) -> list[Handler]:
         return [
             handlers.POVObservation(self.resolution),
             handlers.FlatInventoryObservation(ALL_ITEMS),
         ]
 
-    def create_monitors(self) -> List[TranslationHandler]:
+    def create_monitors(self) -> list[TranslationHandler]:
         return []

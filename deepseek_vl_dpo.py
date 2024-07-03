@@ -11,8 +11,9 @@ from transformers import (
 )
 from trl import DPOConfig
 
+from conf import HappyCodeConfig
 from dataset import make_dpo_data_modlue
-from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
+from model import MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
@@ -48,16 +49,12 @@ def main(cfg: HappyCodeConfig) -> None:
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
-        attn_implementation=None
-        if cfg.model.attn_implementation == "none"
-        else cfg.model.attn_implementation,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
     )
     ref_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
-        attn_implementation=None
-        if cfg.model.attn_implementation == "none"
-        else cfg.model.attn_implementation,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
     )
     ref_model.eval()
 

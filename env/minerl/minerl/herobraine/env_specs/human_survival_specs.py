@@ -1,12 +1,7 @@
+import minerl.herobraine.hero.handlers as handlers
 from minerl.herobraine.env_specs.human_controls import HumanControlEnvSpec
-from minerl.herobraine.hero.mc import MS_PER_STEP, STEPS_PER_MS, ALL_ITEMS
 from minerl.herobraine.hero.handler import Handler
-import minerl.herobraine.hero.handlers as handlers
-from typing import List
-
-import minerl.herobraine
-import minerl.herobraine.hero.handlers as handlers
-from minerl.herobraine.env_spec import EnvSpec
+from minerl.herobraine.hero.mc import ALL_ITEMS
 
 
 class HumanSurvival(HumanControlEnvSpec):
@@ -16,7 +11,7 @@ class HumanSurvival(HumanControlEnvSpec):
         self.load_filename = load_filename
         super().__init__(*args, **kwargs)
 
-    def create_observables(self) -> List[Handler]:
+    def create_observables(self) -> list[Handler]:
         return super().create_observables() + [
             handlers.EquippedItemObservation(
                 items=ALL_ITEMS,
@@ -40,31 +35,31 @@ class HumanSurvival(HumanControlEnvSpec):
             handlers.ObserveFromFullStats(None),
         ]
 
-    def create_rewardables(self) -> List[Handler]:
+    def create_rewardables(self) -> list[Handler]:
         return []
 
-    def create_agent_start(self) -> List[Handler]:
+    def create_agent_start(self) -> list[Handler]:
         retval = super().create_agent_start()
         if self.load_filename is not None:
             retval.append(handlers.LoadWorldAgentStart(self.load_filename))
         return retval
 
-    def create_agent_handlers(self) -> List[Handler]:
+    def create_agent_handlers(self) -> list[Handler]:
         return []
 
-    def create_server_world_generators(self) -> List[Handler]:
+    def create_server_world_generators(self) -> list[Handler]:
         return [handlers.DefaultWorldGenerator(force_reset=True)]
 
-    def create_server_quit_producers(self) -> List[Handler]:
+    def create_server_quit_producers(self) -> list[Handler]:
         return [
             # handlers.ServerQuitFromTimeUp((EPISODE_LENGTH * MS_PER_STEP)),
             handlers.ServerQuitWhenAnyAgentFinishes(),
         ]
 
-    def create_server_decorators(self) -> List[Handler]:
+    def create_server_decorators(self) -> list[Handler]:
         return []
 
-    def create_server_initial_conditions(self) -> List[Handler]:
+    def create_server_initial_conditions(self) -> list[Handler]:
         return [
             handlers.TimeInitialCondition(allow_passage_of_time=True),
             handlers.SpawningInitialCondition(allow_spawning=True),

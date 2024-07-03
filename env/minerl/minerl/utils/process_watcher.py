@@ -1,18 +1,18 @@
 # Copyright (c) 2020 All Rights Reserved
 # Author: William H. Guss, Brandon Houghton
 
-import coloredlogs
 import argparse
-import psutil
-import time
-import shutil
 import logging
-import psutil
-import subprocess
 import os
+import shutil
+import subprocess
 import sys
-import signal
+import time
+
+import coloredlogs
+import psutil
 from daemoniker import daemonize
+
 
 logger = logging.getLogger("process_watcher")
 MINERL_WATCHERS_DIR = os.path.join("logs", "minerl_watchers")
@@ -29,10 +29,9 @@ def parse_args():
     parser.add_argument("parent_pid", type=int, help="The PID of the parent process.")
     parser.add_argument("child_pid", type=int, help="The PID of the child process.")
     parser.add_argument(
-        "--{}".format(CHILD_DIR_ARG),
+        f"--{CHILD_DIR_ARG}",
         type=str,
-        help="Temporary directories which should be deleted "
-        "were the processes to terminate.",
+        help="Temporary directories which should be deleted " "were the processes to terminate.",
         nargs="+",
     )
     return parser.parse_args()
@@ -56,7 +55,7 @@ def launch(parent_pid, child_pid, *temp_dirs):
             "minerl.utils.process_watcher",
             str(parent_pid),
             str(child_pid),
-            "--{}".format(CHILD_DIR_ARG),
+            f"--{CHILD_DIR_ARG}",
         ]
         + list(temp_dirs)
     )
@@ -68,37 +67,31 @@ def reap_process_and_children(process, timeout=5):
 
     def on_process_wait_successful(proc):
         returncode = proc.returncode if hasattr(proc, "returncode") else None
-        logger.info("Process {} terminated with exit code {}".format(proc, returncode))
+        logger.info(f"Process {proc} terminated with exit code {returncode}")
 
     def get_process_info(proc):
-        return "{}:{}:{} i {}, owner {}".format(
-            proc.pid, proc.name(), proc.exe(), proc.status(), proc.ppid()
-        )
+        return f"{proc.pid}:{proc.name()}:{proc.exe()} i {proc.status()}, owner {proc.ppid()}"
 
     procs = process.children(recursive=True)[::-1] + [process]
     try:
         logger.info(
-            "About to reap process tree of {}, ".format(get_process_info(process))
+            f"About to reap process tree of {get_process_info(process)}, "
             + "printing process tree status in termination order:"
         )
         for p in procs:
-            logger.info("\t-{}".format(get_process_info(p)))
+            logger.info(f"\t-{get_process_info(p)}")
     except psutil.ZombieProcess:
         logger.info("Zombie process found in process tree.")
 
     for p in procs:
         try:
-            logger.info("Trying to SIGTERM {}".format(get_process_info(p)))
+            logger.info(f"Trying to SIGTERM {get_process_info(p)}")
             p.terminate()
             try:
                 p.wait(timeout=timeout)
                 on_process_wait_successful(p)
             except psutil.TimeoutExpired:
-                logger.info(
-                    "Process {} survived SIGTERM; trying SIGKILL on {}".format(
-                        p.pid, get_process_info(p)
-                    )
-                )
+                logger.info(f"Process {p.pid} survived SIGTERM; trying SIGKILL on {get_process_info(p)}")
                 p.kill()
 
                 try:
@@ -107,12 +100,10 @@ def reap_process_and_children(process, timeout=5):
                 except psutil.TimeoutExpired:
                     # Give up
                     logger.info(
-                        "Process {} survived SIGKILL; giving up (final status) {}, (owner) {}".format(
-                            p.pid, p.status(), p.ppid()
-                        )
+                        f"Process {p.pid} survived SIGKILL; giving up (final status) {p.status()}, (owner) {p.ppid()}"
                     )
         except (psutil.NoSuchProcess, psutil.ZombieProcess):
-            logger.info("Process {} does not exist or is zombie.".format(p))
+            logger.info(f"Process {p} does not exist or is zombie.")
 
 
 def main(args):
@@ -123,10 +114,7 @@ def main(args):
     """
 
     # Wait for processes to be launched
-    logger.info(
-        "Process watcher started between parent {}".format(args.parent_pid)
-        + " and child {} ".format(args.child_pid)
-    )
+    logger.info(f"Process watcher started between parent {args.parent_pid}" + f" and child {args.child_pid} ")
     time.sleep(1)
     try:
         child = psutil.Process(args.child_pid)
@@ -172,15 +160,13 @@ if __name__ == "__main__":
     os.makedirs(MINERL_WATCHERS_DIR, exist_ok=True)
 
     os_cur_dir = os.path.abspath(os.getcwd())
-    watcher_name = "watcher_{}-{}".format(args.parent_pid, args.child_pid)
+    watcher_name = f"watcher_{args.parent_pid}-{args.child_pid}"
 
     daemonize(os.path.join(os_cur_dir, MINERL_WATCHERS_DIR, watcher_name + ".pid"))
 
     coloredlogs.install(
         level=logging.DEBUG,
-        stream=open(
-            os.path.join(os_cur_dir, MINERL_WATCHERS_DIR, watcher_name + ".log"), "w"
-        ),
+        stream=open(os.path.join(os_cur_dir, MINERL_WATCHERS_DIR, watcher_name + ".log"), "w"),
     )
 
     main(args)

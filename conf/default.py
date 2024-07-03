@@ -26,15 +26,11 @@ class MultiModalityCausalLMBackboneConfig:
 @dataclass
 class BaseModelConfig:
     model_path: str = "model_repo/deepseek-vl-7b-chat"
-    freeze: MultiModalityCausalLMBackboneConfig = field(
-        default_factory=MultiModalityCausalLMBackboneConfig
-    )
+    freeze: MultiModalityCausalLMBackboneConfig = field(default_factory=MultiModalityCausalLMBackboneConfig)
     lora: LoraConfig = field(default_factory=LoraConfig)
     attn_implementation: str = field(
         default="none",
-        metadata={
-            "help": "Attention implementation. Can be 'none', 'flash_attention_2'"
-        },
+        metadata={"help": "Attention implementation. Can be 'none', 'flash_attention_2'"},
     )
 
 
@@ -97,6 +93,11 @@ class LogConfig:
 
 
 @dataclass
+class BaseEnvConfig:
+    name: str = "MineRL-v0"
+
+
+@dataclass
 class HappyCodeConfig(DictConfig):
     project: str = MISSING
     run_name: str = "HappyCode"
@@ -107,8 +108,17 @@ class HappyCodeConfig(DictConfig):
     model: BaseModelConfig = field(default_factory=BaseModelConfig)
     training: BaseTrainingConfig = field(default_factory=BaseTrainingConfig)  # type: ignore
     dataset: BaseDatasetConfig = field(default_factory=BaseDatasetConfig)
+    env: BaseEnvConfig = field(default_factory=BaseEnvConfig)
+
+
+@dataclass
+class MineRLEnvConfig(BaseEnvConfig):
+    max_episode_steps: int = 1200
+    preferred_spawn_biome: str = "plains"
+    inventory: list = field(default_factory=list)
 
 
 cs = ConfigStore.instance()
 
 cs.store(name="config", node=HappyCodeConfig)
+cs.store(name="mc", group="env", node=MineRLEnvConfig)

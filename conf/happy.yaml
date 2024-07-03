@@ -3,6 +3,7 @@ defaults:
   - dataset: hf
   - model: deepseek_vl
   - training: deepseek_vl_sft
+  - env: minerl
   
 project: ???
 
