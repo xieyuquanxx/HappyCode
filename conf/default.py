@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 from hydra.core.config_store import ConfigStore
-from omegaconf import MISSING, DictConfig
+from omegaconf import MISSING
 
 
 @dataclass
@@ -98,7 +98,7 @@ class BaseEnvConfig:
 
 
 @dataclass
-class HappyCodeConfig(DictConfig):
+class HappyCodeConfig:
     project: str = MISSING
     run_name: str = "HappyCode"
     ckpt_dir: str = "ckpt"

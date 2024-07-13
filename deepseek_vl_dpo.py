@@ -1,6 +1,5 @@
 import argparse
 import pathlib
-from dataclasses import asdict
 
 import torch
 from hydra import compose, initialize
@@ -14,6 +13,7 @@ from trl import DPOConfig
 from conf import HappyCodeConfig
 from dataset import make_dpo_data_modlue
 from model import MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
+from model.callback import LoggerLogCallback
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
@@ -105,7 +105,7 @@ def main(cfg: HappyCodeConfig) -> None:
         remove_unused_columns=False,
         load_best_model_at_end=False,
         padding_value=0,
-        **asdict(cfg.training),
+        **dict(cfg.training),
     )
 
     training_args.local_rank = local_rank
@@ -124,6 +124,7 @@ def main(cfg: HappyCodeConfig) -> None:
         tokenizer=processor.tokenizer,
         **data_module,
     )
+    trainer.add_callback(LoggerLogCallback(logger))
 
     ckpt_dir = f"{cfg.ckpt_dir}/{cfg.run_name}"
     if list(pathlib.Path(ckpt_dir).glob("checkpoint-*")):
@@ -162,7 +163,5 @@ if __name__ == "__main__":
 
     cfg = compose(config_name=args.config_name, overrides=args.overrides)
     local_rank = args.local_rank
-
-    # exit(0)
 
     main(cfg)  # type: ignore

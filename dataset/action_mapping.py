@@ -1,11 +1,11 @@
-import os
-import glob
-import pickle
-import numpy as np
 import json
-from collections import OrderedDict
+import os
+import pickle
 import random
 import re
+
+import numpy as np
+
 
 with open("dict_action.pkl", "rb") as f1:
     dic = pickle.load(f1)
@@ -57,7 +57,7 @@ def process_pkl_file(file_path):
         with open(file_path, "rb") as f:
             data = pickle.load(f)
         return data
-    except (pickle.UnpicklingError, FileNotFoundError, IOError) as e:
+    except (OSError, pickle.UnpicklingError, FileNotFoundError) as e:
         print(f"Error processing {file_path}: {e}")
         return None
 
@@ -70,13 +70,13 @@ def input_farmat_transfer(input_action_list):
             for a in actions:
                 if type(a) == dict:
                     a = a["camera"]
-                    x = "{:.2f}".format(a[0])
-                    y = "{:.2f}".format(a[1])
-                    action += "<x>{action}</x>".format(action=x)
-                    action += "<y>{action}</y>".format(action=y)
+                    x = f"{a[0]:.2f}"
+                    y = f"{a[1]:.2f}"
+                    action += f"<x>{x}</x>"
+                    action += f"<y>{y}</y>"
                 else:
                     action += a
-        action_sequence += "<a>{action}</a>".format(action=action)
+        action_sequence += f"<a>{action}</a>"
     return insert_placeholders(action_sequence)
 
 
@@ -88,13 +88,13 @@ def output_farmat_transfer(output_action_list):
             for a in actions:
                 if type(a) == dict:
                     a = a["camera"]
-                    x = "{:.2f}".format(a[0])
-                    y = "{:.2f}".format(a[1])
-                    action += "<x>{action}</x>".format(action=x)
-                    action += "<y>{action}</y>".format(action=y)
+                    x = f"{a[0]:.2f}"
+                    y = f"{a[1]:.2f}"
+                    action += f"<x>{x}</x>"
+                    action += f"<y>{y}</y>"
                 else:
                     action += a
-        action_sequence += "<a>{action}</a>".format(action=action)
+        action_sequence += f"<a>{action}</a>"
     return action_sequence
 
 

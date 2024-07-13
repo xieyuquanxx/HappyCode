@@ -1,8 +1,4 @@
-# total batch size 16:  50G
-#                  32:  75G
-
-# deepspeed: "scripts/deepspeed/zero3.json"
-deepspeed: 
+deepspeed:  # "scripts/deepspeed/zero3.json"
 
 per_device_train_batch_size: 1
 per_device_eval_batch_size: 1
@@ -33,7 +29,7 @@ logging_strategy: "steps"
 logging_steps: 1
 
 
-report_to: "wandb" # wandb/tensorboard
+report_to: "tensorboard" # wandb/tensorboard
 
 
 # ================== DPO training arguments =====================

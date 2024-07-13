@@ -50,7 +50,7 @@ class VLDPOTrainer(DPOTrainer):
 
         We do this to avoid doing two forward passes, because it's faster for FSDP.
         """
-        torch.cuda.empty_cache()
+        # torch.cuda.empty_cache()
         concatenated_batch = self.concatenated_inputs(
             batch,
             is_encoder_decoder=self.is_encoder_decoder,
@@ -93,8 +93,8 @@ class VLDPOTrainer(DPOTrainer):
         rejected_logits = all_logits[len_chosen:]
         chosen_logps_avg = all_logps[:len_chosen] / size_completion[:len_chosen]
 
-        del concatenated_batch, model_kwargs, output, all_logps, size_completion, final_labels, all_logits
-        torch.cuda.empty_cache()
+        # del concatenated_batch, model_kwargs, output, all_logps, size_completion, final_labels, all_logits
+        # torch.cuda.empty_cache()
 
         return (
             chosen_logps,
@@ -138,10 +138,13 @@ class VLDPOTrainer(DPOTrainer):
         # We ignore the reference model as beta -> 0. The label_smoothing parameter encodes our uncertainty about the labels and
         # calculates a conservative DPO loss.
         if self.loss_type == "sigmoid":
+            neg_number = policy_rejected_logps.shape[0]
             losses = (
                 -F.logsigmoid(self.beta * logits) * (1 - self.label_smoothing)
                 - F.logsigmoid(-self.beta * logits) * self.label_smoothing
-            ) + (reference_chosen_logps - policy_chosen_logps)
+            )
+            if neg_number > 1:
+                losses = losses + (reference_chosen_logps - policy_chosen_logps)
         elif self.loss_type == "robust":
             losses = (
                 -F.logsigmoid(self.beta * logits) * (1 - self.label_smoothing)

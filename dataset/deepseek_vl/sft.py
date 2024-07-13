@@ -1,25 +1,25 @@
 import json
 import os
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
 
 from torch.utils.data import Dataset
 
-from model import BaseDatasetConfig
+from conf.default import BaseDatasetConfig
 from model.deepseek_vl.models import VLChatProcessor
 from model.deepseek_vl.utils.io import load_pil_images
 
 
 class DeepSeekSftDataset(Dataset):
     def __init__(self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> None:
-        super(DeepSeekSftDataset, self).__init__()
+        super(__class__, self).__init__()
 
         self.chat_processor = vl_chat_processor
         self.dataset_cfg = dataset_cfg
 
         self.sft_file = os.path.join(dataset_cfg.data_dir, dataset_cfg.file)
 
-        self.sft_data = json.load(open(self.sft_file, "r"))[:1000]
+        self.sft_data = json.load(open(self.sft_file))
 
     def __len__(self):
         return len(self.sft_data)
@@ -44,14 +44,14 @@ class DeepSeekSftDataset(Dataset):
 
 
 @dataclass
-class SFTDataCollator(object):
+class SFTDataCollator:
     vl_chat_processor: VLChatProcessor
 
     def __call__(self, batch):
         return self.vl_chat_processor.batchify(batch)
 
 
-def make_sft_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> Dict[str, Any]:
+def make_sft_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> dict[str, Any]:
     """Make dataset and collator for supervised fine-tuning."""
     sft_dataset = DeepSeekSftDataset(vl_chat_processor, dataset_cfg)
     data_collator = SFTDataCollator(vl_chat_processor)

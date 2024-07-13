@@ -1,11 +1,7 @@
-import os
 import json
-import numpy as np
-import pickle
 
-with open(
-    "/data/Users/xyq/developer/happy_code/dataset/mc_dataset_v1_img4.json", "r", encoding="utf-8"
-) as load_f:
+
+with open("/data/Users/xyq/developer/happy_code/dataset/mc_dataset_v1_img4.json", encoding="utf-8") as load_f:
     datas = json.load(load_f)
 
 print(len(datas))

@@ -2,11 +2,11 @@ import itertools
 import json
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, Self
+from typing import Any, Self
 
 from torch.utils.data import Dataset
 
-from model import BaseDatasetConfig
+from conf.default import BaseDatasetConfig
 from model.deepseek_vl.models import VLChatProcessor
 from model.deepseek_vl.utils.io import load_pil_images
 
@@ -20,14 +20,14 @@ from model.deepseek_vl.utils.io import load_pil_images
 
 class DeepSeekDPODataset(Dataset):
     def __init__(self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> None:
-        super(DeepSeekDPODataset, self).__init__()
+        super(__class__, self).__init__()
 
         self.chat_processor = vl_chat_processor
         self.dataset_cfg = dataset_cfg
 
         self.file = os.path.join(dataset_cfg.data_dir, dataset_cfg.file)
 
-        self.data = json.load(open(self.file, "r"))[:1000]
+        self.data = json.load(open(self.file))
 
     def map(self, *args, **kargs) -> Self:
         return self
@@ -35,24 +35,10 @@ class DeepSeekDPODataset(Dataset):
     def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, index) -> Dict[str, Any]:
-        """
-        return format:
-        {
-            prompt_input_ids, prompt_attention_mask
-            chosen_input_ids, chosen_attention_mask, chosen_labels
-            rejected_input_ids, rejected_attention_mask, rejected_labels
-            pixel_values, images_seq_mask, images_emb_mask
-        }
-        """
+    def __getitem__(self, index) -> dict[str, Any]:
         data = self.data[index]["conversations"]
-        # assert len(data) == 9  # systerm + 输入输出各三个负样本 + 正样本输入输出
-        # system, input_chosen, output_chosen = data[0], data[1], data[5]
-        # input_rejected_1, input_rejected_2, input_rejected_3 = data[2], data[3], data[4]
-        # output_rejected_1, output_rejected_2, output_rejected_3 = data[6], data[7], data[8]
-        # prompt, chosen, rejected = data[0], data[1], data[2]
 
-        system, input_chosen, output_chosen = data[0], data[1], data[3]
+        system, input_chosen, output_chosen = data[0], data[1], data[2]
         rejected = list(filter(lambda x: x["role"] == "Assistant" and x["type"] == "rejected", data))
         prompt = input_chosen
 
@@ -76,10 +62,10 @@ class DeepSeekDPODataset(Dataset):
 
 
 @dataclass
-class DPODataCollator(object):
+class DPODataCollator:
     vl_chat_processor: VLChatProcessor
 
-    def __call__(self, batch) -> Dict[str, Any]:
+    def __call__(self, batch) -> dict[str, Any]:
         prompt_prepares = [sample["prompt_prepare"] for sample in batch]  # B*[]
         chosen_prepares = [sample["chosen_prepare"] for sample in batch]  # B*[prepare]
         # B*[3*[prepare]]
@@ -116,7 +102,7 @@ class DPODataCollator(object):
         }
 
 
-def make_dpo_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> Dict[str, Any]:
+def make_dpo_data_modlue(vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> dict[str, Any]:
     """Make dataset and collator for dpo."""
     dataset = DeepSeekDPODataset(vl_chat_processor, dataset_cfg)
     data_collator = DPODataCollator(vl_chat_processor)
