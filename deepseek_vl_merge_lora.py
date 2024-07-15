@@ -1,26 +1,35 @@
 import argparse
+import shutil
 
 import torch
 from peft.peft_model import PeftModel
 from transformers import AutoModelForCausalLM
 
-from model import MultiModalityCausalLM
+from model import MultiModalityCausalLM, VLChatProcessor
 
 
-def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "cuda:0") -> None:
+def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "cpu") -> None:
     device_arg = {"device_map": {"": device}}
 
     base_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         model_name, low_cpu_mem_usage=True, torch_dtype=torch.float16, **device_arg
     )
+    # 复制 processor_config.json和preprocessor_config.json to lora_path
+    for cp_file_name in ["processor_config.json", "preprocessor_config.json"]:
+        shutil.copy(f"{model_name}/{cp_file_name}", f"{lora_path}/{cp_file_name}")
+    processor: VLChatProcessor = VLChatProcessor.from_pretrained(lora_path)  # type: ignore
     adapter = PeftModel.from_pretrained(
         base_model,
         lora_path,
         ignore_mismatched_sizes=True,
     )
     model = adapter.merge_and_unload(progressbar=True)
-    model.save_pretrained(f"checkpoints/{new_model_name}")
 
+    model.save_pretrained(new_model_name)
+    processor.tokenizer.save_pretrained(new_model_name)
+    processor.save_pretrained(new_model_name)
+
+    shutil.copy(f"{model_name}/config.json", f"{new_model_name}/config.json")
     print("done :)")
 
 

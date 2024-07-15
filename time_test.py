@@ -38,19 +38,13 @@ def make_conversations(task: str, images: list[str]) -> list[dict[str, Any]]:
     ]
 
 
-device = "cuda:0"
-model_path = "model_repo/deepseek-vl-1.3b-chat"
+device = "cuda:7"
+model_path = "checkpoints/deepseek_vl_1.3b_sft_mc"
 processor: VLChatProcessor = VLChatProcessor.from_pretrained(model_path)  # type: ignore
 
-# todo: add special tokens
-processor.tokenizer.add_special_tokens({"additional_special_tokens": ["<a>", "</a>", "<action>"]})
-
-processor.tokenizer.save_pretrained("test/")
-processor.save_pretrained("test/")
 model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
     model_path, trust_remote_code=True, attn_implementation="flash_attention_2", torch_dtype=torch.bfloat16
-)
-model = model.to(device)
+).to(device)
 model = torch.compile(model)
 model.eval()
 print("Load Model")
@@ -77,6 +71,7 @@ for _ in range(50):
     # bf16: 3.6214s (gpu)
     # torch.compile + bf16: 3.4928s (gpu)
     # torch.compile + bf16 + flash-attn2: 3.4652s (gpu)
+    # sft: 1.8864s
     start = time.perf_counter()
     outputs = model.language_model.generate(
         inputs_embeds=inputs_embeds,
@@ -90,7 +85,7 @@ for _ in range(50):
     )
     end = time.perf_counter()
     times.append(end - start)
-    print(processor.tokenizer.decode(outputs[0].cpu().tolist(), skip_special_tokens=True))
+    print(processor.tokenizer.decode(outputs[0].cpu().tolist(), skip_special_tokens=False))
 
 t = np.mean(times)
 
