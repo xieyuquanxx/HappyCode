@@ -39,10 +39,10 @@ def insert_placeholders(text):
 
     for action in actions:
         # 每遍历十个 <a>{action}</a> 插入一个 <image_placeholder>
+        count += 1
         if count % 10 == 0 and count != 0:
             result += "<image_placeholder>"
         result += action
-        count += 1
 
     # 将多余的部分（非 <a>{action}</a> 的部分）添加到结果中
     remaining_text = re.split(r"(<a>.*?</a>)", text)

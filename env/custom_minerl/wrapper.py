@@ -6,31 +6,13 @@ import numpy as np
 from utils import write_video
 
 
-class BasaltTimeoutWrapper(gym.Wrapper):
-    """Timeout wrapper specifically crafted for the BASALT environments"""
-
-    def __init__(self, env):
-        super().__init__(env)
-        self.timeout = self.env.task.max_episode_steps
-        self.num_steps = 0
-
-    def reset(self):
-        self.timeout = self.env.task.max_episode_steps
-        self.num_steps = 0
-        return super().reset()
-
-    def step(self, action):
-        observation, reward, done, info = super().step(action)
-        self.num_steps += 1
-        if self.num_steps >= self.timeout:
-            done = True
-        return observation, reward, done, info
-
-
 class EnvRecorderWrapper(gym.Wrapper):
     def __init__(self, env, record_dir: str):
         super().__init__(env)
         self.record_dir = record_dir
+
+        self.timeout = self.env.task.max_episode_steps
+        self.num_steps = 0
 
         self.video_frames = []
         self.actions = []
@@ -39,6 +21,9 @@ class EnvRecorderWrapper(gym.Wrapper):
         os.makedirs(self.record_dir, exist_ok=True)
         self.video_frames.clear()
         self.actions.clear()
+
+        self.timeout = self.env.task.max_episode_steps
+        self.num_steps = 0
 
         return super().reset()
 
@@ -49,6 +34,9 @@ class EnvRecorderWrapper(gym.Wrapper):
         self.actions.append(action)
         self.video_frames.append(frame)
 
+        self.num_steps += 1
+        if self.num_steps >= self.timeout:
+            done = True
         return observation, reward, done, info
 
     def save(self, output_video_file_path: str):
@@ -65,4 +53,4 @@ class CustomEnvWrapper(gym.Wrapper):
 
     def save(self, output_video_file_path: str):
         if hasattr(self.env, "save"):
-            self.env.save(output_video_file_path)
+            self.env.save(output_video_file_path)  # type: ignore

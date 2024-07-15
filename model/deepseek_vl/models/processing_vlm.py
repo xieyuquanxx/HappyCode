@@ -18,7 +18,6 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from dataclasses import dataclass
-from typing import Dict, List
 
 import torch
 from PIL.Image import Image
@@ -30,7 +29,7 @@ from model.deepseek_vl.utils.conversation import get_conv_template
 from .image_processing_vlm import VLMImageProcessor
 
 
-class DictOutput(object):
+class DictOutput:
     def keys(self):
         return self.__dict__.keys()
 
@@ -78,7 +77,7 @@ class VLChatProcessorDPOTrainOutput(DictOutput):
 
 @dataclass
 class BatchedVLChatProcessorOutput(DictOutput):
-    sft_format: List[str]
+    sft_format: list[str]
     input_ids: torch.Tensor
     pixel_values: torch.Tensor
     attention_mask: torch.Tensor
@@ -181,7 +180,7 @@ class VLChatProcessor(ProcessorMixin):
 
     def process_batch_conv(
         self,
-        conversations: List[List[Dict[str, str]]],
+        conversations: list[list[dict[str, str]]],
         system_message: str | None = None,
         add_end_for_empty_value=False,
     ):
@@ -244,7 +243,7 @@ class VLChatProcessor(ProcessorMixin):
 
     def apply_sft_template_for_multi_turn_prompts(
         self,
-        conversations: List[Dict[str, str]],
+        conversations: list[dict[str, str]],
         sft_format: str = "deepseek",
         system_prompt: str = "",
     ):
@@ -303,7 +302,7 @@ class VLChatProcessor(ProcessorMixin):
 
     def add_image_token(
         self,
-        image_indices: List[int],
+        image_indices: list[int],
         input_ids: torch.LongTensor,
     ):
         """
@@ -345,8 +344,8 @@ class VLChatProcessor(ProcessorMixin):
     def process_one(
         self,
         prompt: str = None,
-        conversations: List[Dict[str, str]] = None,
-        images: List[Image] = None,
+        conversations: list[dict[str, str]] = None,
+        images: list[Image] = None,
         **kwargs,
     ):
         """
@@ -433,8 +432,8 @@ class VLChatProcessor(ProcessorMixin):
         self,
         *,
         prompt: str = None,
-        conversations: List[Dict[str, str]] = None,
-        images: List[Image] = None,
+        conversations: list[dict[str, str]] = None,
+        images: list[Image] = None,
         force_batchify: bool = True,
         **kwargs,
     ):
@@ -462,7 +461,7 @@ class VLChatProcessor(ProcessorMixin):
         return prepare
 
     def batchify(
-        self, prepare_list: List[VLChatProcessorOutput]
+        self, prepare_list: list[VLChatProcessorOutput]
     ) -> BatchedVLChatProcessorOutput | BatchedVLChatProcessorTrainOutput:
         """
         Preprocesses the inputs for multimodal inference.

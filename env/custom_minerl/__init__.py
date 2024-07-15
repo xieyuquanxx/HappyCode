@@ -1,5 +1,5 @@
 from .env_spec import CustomEnvSpec
-from .wrapper import BasaltTimeoutWrapper, CustomEnvWrapper, EnvRecorderWrapper
+from .wrapper import CustomEnvWrapper, EnvRecorderWrapper
 
 
-__all__ = ["CustomEnvSpec", "CustomEnvWrapper", "BasaltTimeoutWrapper", "EnvRecorderWrapper"]
+__all__ = ["CustomEnvSpec", "CustomEnvWrapper", "EnvRecorderWrapper"]

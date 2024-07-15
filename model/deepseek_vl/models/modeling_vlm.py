@@ -17,7 +17,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from typing import List, Optional
 
 import torch
 from attrdict import AttrDict
@@ -116,6 +115,8 @@ class MultiModalityPreTrainedModel(PreTrainedModel):
 
 
 class MultiModalityCausalLM(MultiModalityPreTrainedModel):
+    _supports_flash_attn_2: bool = True
+
     def __init__(self, config: MultiModalityConfig):
         super().__init__(config)
 
@@ -178,17 +179,17 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
         self,
         input_ids: torch.LongTensor,
         pixel_values: torch.FloatTensor,
-        images_seq_mask: Optional[torch.LongTensor] = None,
-        images_emb_mask: Optional[torch.LongTensor] = None,
-        attention_mask: Optional[torch.Tensor] = None,
-        position_ids: Optional[torch.LongTensor] = None,
-        past_key_values: Optional[List[torch.FloatTensor]] = None,
-        inputs_embeds: Optional[torch.FloatTensor] = None,
-        labels: Optional[torch.LongTensor] = None,
-        use_cache: Optional[bool] = None,
-        output_attentions: Optional[bool] = None,
-        output_hidden_states: Optional[bool] = None,
-        return_dict: Optional[bool] = None,
+        images_seq_mask: torch.LongTensor | None = None,
+        images_emb_mask: torch.LongTensor | None = None,
+        attention_mask: torch.Tensor | None = None,
+        position_ids: torch.LongTensor | None = None,
+        past_key_values: list[torch.FloatTensor] | None = None,
+        inputs_embeds: torch.FloatTensor | None = None,
+        labels: torch.LongTensor | None = None,
+        use_cache: bool | None = None,
+        output_attentions: bool | None = None,
+        output_hidden_states: bool | None = None,
+        return_dict: bool | None = None,
         **kargs,
     ):
         if inputs_embeds is None:

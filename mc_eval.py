@@ -3,9 +3,10 @@ from transformers import (
     AutoModelForCausalLM,
 )
 
-from conf import HappyCodeConfig
+from conf import HappyCodeConfig, MineRLEnvConfig
 from env import custom_env_register, make_custom_env
 from model import MultiModalityCausalLM, VLChatProcessor
+from model.deepseek_vl.utils.io import load_pil_images
 
 
 @hydra.main(version_base=None, config_name="happy", config_path="conf")
@@ -20,18 +21,32 @@ def main(cfg: HappyCodeConfig):
     model.eval()
     print("Load Model")
 
-    env_config = cfg.env
-    custom_env_register(
-        env_config.name, env_config.max_episode_steps, env_config.preferred_spawn_biome, env_config.inventory
-    )
+    env_config: MineRLEnvConfig = cfg.env  # type: ignore
+    custom_env_register(**dict(env_config))  # type: ignore
 
     env = make_custom_env(env_name=env_config.name)
 
-    task = "chop a tree"
+    # task = "chop a tree"
     done = False
     obs = env.reset()
     while not done:
-        action = model.generate()
+        pil_images = load_pil_images(conversation)
+        prepare_inputs = processor(conversations=conversation, images=pil_images, force_batchify=True).to(
+            model.device
+        )
+        inputs_embeds = model.prepare_inputs_embeds(**prepare_inputs)
+        outputs = model.language_model.generate(
+            inputs_embeds=inputs_embeds,
+            attention_mask=prepare_inputs.attention_mask,
+            pad_token_id=processor.tokenizer.eos_token_id,
+            bos_token_id=processor.tokenizer.bos_token_id,
+            eos_token_id=processor.tokenizer.eos_token_id,
+            max_new_tokens=128,
+            do_sample=False,
+            use_cache=True,
+        )
+
+        action = processor.tokenizer.decode(outputs[0].cpu().tolist(), skip_special_tokens=True)
         obs, reward, done, info = env.step(action)
 
     env.save("xxx.mp4")

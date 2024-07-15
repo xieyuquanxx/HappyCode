@@ -121,4 +121,3 @@ class MineRLEnvConfig(BaseEnvConfig):
 cs = ConfigStore.instance()
 
 cs.store(name="config", node=HappyCodeConfig)
-cs.store(name="mc", group="env", node=MineRLEnvConfig)

@@ -5,8 +5,6 @@ from minerl.herobraine.env_specs.human_survival_specs import HumanSurvival
 from minerl.herobraine.hero import handlers
 from minerl.herobraine.hero.mc import ALL_ITEMS
 
-from .wrapper import BasaltTimeoutWrapper
-
 
 def _custom_gym_entrypoint(
     env_spec: "CustomBaseEnvSpec",
@@ -18,7 +16,6 @@ def _custom_gym_entrypoint(
     else:
         env = _singleagent._SingleAgentEnv(env_spec=env_spec)
 
-    env = BasaltTimeoutWrapper(env)
     return env
 
 

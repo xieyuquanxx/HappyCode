@@ -1,6 +1,6 @@
 import argparse
 import pathlib
-from dataclasses import asdict
+import pickle
 
 import torch
 from hydra import compose, initialize
@@ -19,6 +19,13 @@ from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_ev
 
 
 local_rank = 0
+with open("/data/Users/xyq/developer/happy_code/dataset/dict_action.pkl", "rb") as f1:
+    dic = pickle.load(f1)
+
+
+special_tokens_list = []
+for key, value in dic.items():
+    special_tokens_list.append(value)
 
 
 def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:
@@ -46,6 +53,10 @@ def main(cfg: HappyCodeConfig) -> None:
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
+    processor.tokenizer.add_special_tokens(
+        {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]}
+    )
+    processor.tokenizer.add_special_tokens({"additional_special_tokens": special_tokens_list})
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
@@ -99,7 +110,7 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **asdict(cfg.training),
+        **dict(cfg.training),
     )
 
     training_args.local_rank = local_rank
@@ -131,6 +142,8 @@ def main(cfg: HappyCodeConfig) -> None:
         if training_args.local_rank == 0 or training_args.local_rank == -1:
             model.config.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir)
+            model.tokenizer.save_pretrained(training_args.output_dir)
+            processor.save_pretrained(training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
 

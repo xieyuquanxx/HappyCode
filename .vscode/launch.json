@@ -40,7 +40,14 @@
             "name": "minerl-test",
             "type": "debugpy",
             "request": "launch",
-            "program": "test_minerl.py",
+            "program": "mc_eval.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "time-test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "time_test.py",
             "console": "integratedTerminal"
         }
     ]

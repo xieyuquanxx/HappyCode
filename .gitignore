@@ -15,3 +15,5 @@ dataset/mc_dataset*
 *.pkl
 *.json
 *.log
+*.zip
+*.png

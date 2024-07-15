@@ -1,7 +1,7 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "python.languageServer": "Pylance",
-    "python.defaultInterpreterPath": ".venv/.mc/bin/python",
+    "python.defaultInterpreterPath": ".venv/.dpo/bin/python",
     "python.analysis.exclude": [
         "data",
         "**/mc_dataset**",
