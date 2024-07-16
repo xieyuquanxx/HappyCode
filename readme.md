@@ -32,7 +32,7 @@ uv clean
 
 ## DPO for Models
 对于每一个模型，都用`uv`为其创建一个虚拟环境，例如:`uv venv .deepseek`，`uv venv .mamba`，这样不同模型依赖不会相互破坏。
-- [x] [DeepSeek-VL-7B](https://github.com/deepseek-ai/DeepSeek-VL)
+- [x] [DeepSeek-VL](https://github.com/deepseek-ai/DeepSeek-VL)
 
 
 ## Tips
