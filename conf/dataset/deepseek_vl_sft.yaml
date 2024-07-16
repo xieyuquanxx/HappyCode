@@ -1,2 +1,2 @@
-data_dir: dataset
+data_dir: /data/Users/xyq/developer/happy_code/data/action_dpo/v1
 file: mc_dataset_sft_v1.json

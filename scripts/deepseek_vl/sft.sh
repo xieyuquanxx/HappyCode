@@ -22,3 +22,4 @@ deepspeed --include localhost:${gpus} --master_port=25999 deepseek_vl_sft.py \
     training.report_to=wandb \
     training.save_strategy="steps" \
     training.save_steps=100 \
+    run_name=2024-07-15-15-49

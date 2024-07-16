@@ -11,7 +11,7 @@ current_date = datetime.now().strftime("%Y%m%d")
 
 random.seed(42)
 
-dataset_path = "/data/Users/xyq/developer/happy_code/dataset"
+dataset_path = "/data/Users/xyq/developer/happy_code/data/action_dpo_v1"
 dpo_file = f"{dataset_path}/mc_dataset_v1_img4_3.json"
 
 img_dir = "mc_dataset_v1"
@@ -44,5 +44,5 @@ for data in tqdm(dpo_data):
     }
     data["conversations"].insert(2, input_neg)
 
-with open(f"{current_date}_mc_dataset_v1_img4_input_1neg_output_3neg.json", "w") as fo:
+with open(f"{dataset_path}/{current_date}_mc_dataset_v1_img4_input_1neg_output_3neg.json", "w") as fo:
     json.dump(dpo_data, fo)

@@ -25,7 +25,7 @@ eval_strategy: "no" # ['no', 'steps', 'epoch']
 
 save_strategy: "epoch" # ['no', 'steps', 'epoch']
 save_steps: 5
-save_total_limit: 5
+save_total_limit: -1
 
 log_level: "info"
 logging_strategy: "steps"

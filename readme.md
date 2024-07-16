@@ -28,6 +28,7 @@ uv clean
 ## Rules
 1. place model weights to `model_repo/`
 2. place data to `data/`
+3. 生成的数据集前面加上当前的日期, 如 `20240716_xxxx.json`
 
 
 ## DPO for Models
@@ -45,4 +46,11 @@ ln -s <模型权重> <软连接的目录>
 例如，`deepseek`权重在`/data1/Models/deepseek-vl-7b-chat`，本目录在`/data/Users/xyq/developer/happy_code`，项目的模型权重在`model_repo`下，那么命令为：
 ```bash
 ln -s /data1/Models/deepseek-vl-7b-chat /data/Users/xyq/developer/happy_code/model_repo
+```
+
+### Resume from checkpoint
+找到`checkpoints/project_name/run_name`，在训练代码处添加参数即可继续训练
+```shell
+
+deepspeed xxxx run_name=<yyyy>
 ```

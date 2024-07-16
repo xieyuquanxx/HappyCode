@@ -265,5 +265,5 @@ def process_all_subfolders(base_directory):
 
 
 if __name__ == "__main__":
-    base_directory = "/data/Users/xyq/developer/happy_code/dataset/mc_dataset_v2"  # 主文件夹路径
+    base_directory = "/data/Users/xyq/developer/happy_code/data/action_dpo/v1/mc_dataset_v2"  # 主文件夹路径
     process_all_subfolders(base_directory)
