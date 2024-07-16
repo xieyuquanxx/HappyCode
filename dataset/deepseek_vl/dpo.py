@@ -11,13 +11,6 @@ from model.deepseek_vl.models import VLChatProcessor
 from model.deepseek_vl.utils.io import load_pil_images
 
 
-"""
-#TODO:
-1. 1个正样本+3个负样本
-2. 3个正样本+3个负样本
-"""
-
-
 class DeepSeekDPODataset(Dataset):
     def __init__(self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> None:
         super(__class__, self).__init__()
@@ -38,26 +31,35 @@ class DeepSeekDPODataset(Dataset):
     def __getitem__(self, index) -> dict[str, Any]:
         data = self.data[index]["conversations"]
 
-        system, input_chosen, output_chosen = data[0], data[1], data[2]
+        system, input_chosen = data[0], data[1]
+
+        input_neg = list(filter(lambda x: x["role"] == "User" and x["type"] == "rejected", data))[0]
+        output_chosen = list(filter(lambda x: x["role"] == "Assistant" and x["type"] == "chosen", data))[0]
         rejected = list(filter(lambda x: x["role"] == "Assistant" and x["type"] == "rejected", data))
         prompt = input_chosen
 
-        raw_prompt = [input_chosen, {"role": "Assistant", "content": ""}]
+        # raw_prompt = [input_chosen, {"role": "Assistant", "content": ""}]
         chosen_data = [input_chosen, output_chosen]
         rejected_data = [[prompt, reject] for reject in rejected]
         pil_images = load_pil_images(data)
 
         self.chat_processor.system_prompt = system["content"]
-        prompt_prepare = self.chat_processor(conversations=raw_prompt, images=pil_images, force_batchify=False)
+        # prompt_prepare = self.chat_processor(conversations=raw_prompt, images=pil_images, force_batchify=False)
         chosen_prepare = self.chat_processor(conversations=chosen_data, images=pil_images, force_batchify=False)
         rejected_prepare = [
             self.chat_processor(conversations=rejected_dt, images=pil_images, force_batchify=False)
             for rejected_dt in rejected_data
         ]
+        # 输入增加负样本
+        input_neg_data = [input_neg, output_chosen]
+        input_neg_prepare = self.chat_processor(
+            conversations=input_neg_data, images=load_pil_images(input_neg_data), force_batchify=False
+        )
         return {
-            "prompt_prepare": prompt_prepare,
+            # "prompt_prepare": prompt_prepare,
             "chosen_prepare": chosen_prepare,
             "rejected_prepare": rejected_prepare,
+            "input_neg_prepare": input_neg_prepare,
         }
 
 
@@ -66,25 +68,25 @@ class DPODataCollator:
     vl_chat_processor: VLChatProcessor
 
     def __call__(self, batch) -> dict[str, Any]:
-        prompt_prepares = [sample["prompt_prepare"] for sample in batch]  # B*[]
+        # prompt_prepares = [sample["prompt_prepare"] for sample in batch]  # B*[]
         chosen_prepares = [sample["chosen_prepare"] for sample in batch]  # B*[prepare]
+        input_neg_prepares = [sample["input_neg_prepare"] for sample in batch]
         # B*[3*[prepare]]
         rejected_prepares = [sample["rejected_prepare"] for sample in batch]
+        for bs in range(len(rejected_prepares)):
+            rejected_prepares[bs].append(input_neg_prepares[bs])
+        # rejected_prepares.extend(input_neg_prepares)
         # rejected_neg_num = len(rejected_prepares[0])
         # bs = len(batch)
         # prompts = [sample.sft_format for sample in prompt_prepares]
 
-        prompt_batch = self.vl_chat_processor.batchify(prompt_prepares)  # B
+        # prompt_batch = self.vl_chat_processor.batchify(prompt_prepares)  # B
         chosen_batch = self.vl_chat_processor.batchify(chosen_prepares)  # B
+        # input_neg_batch = self.vl_chat_processor.batchify(input_neg_prepares)
         # flatten List[List]
         rejected_prepares = list(itertools.chain(*rejected_prepares))
-        rejected_batch = self.vl_chat_processor.batchify(rejected_prepares)  # 3B
-        # pixel_size = prompt_batch.pixel_values.shape[1:]
+        rejected_batch = self.vl_chat_processor.batchify(rejected_prepares)  # B* (3+input_neg)
         return {
-            # =====no reponse=====
-            # "prompt": prompts,
-            # "prompt_input_ids": prompt_batch.input_ids,
-            # "prompt_attention_mask": prompt_batch.attention_mask,
             # ====chosen response=====
             "chosen_input_ids": chosen_batch.input_ids,
             "chosen_attention_mask": chosen_batch.attention_mask,
@@ -94,10 +96,11 @@ class DPODataCollator:
             "rejected_attention_mask": rejected_batch.attention_mask,
             "rejected_labels": rejected_batch.labels,
             # ===== image ====
-            "pixel_values": prompt_batch.pixel_values,
-            "chosen_images_seq_mask": chosen_batch.images_seq_mask,
+            "pixel_values": chosen_batch.pixel_values,
+            "reject_pixel_values": rejected_batch.pixel_values,
+            # "chosen_images_seq_mask": chosen_batch.images_seq_mask,
             "chosen_images_emb_mask": chosen_batch.images_emb_mask,
-            "rejected_images_seq_mask": rejected_batch.images_seq_mask,
+            # "rejected_images_seq_mask": rejected_batch.images_seq_mask,
             "rejected_images_emb_mask": rejected_batch.images_emb_mask,
         }
 

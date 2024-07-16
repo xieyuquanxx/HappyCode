@@ -24,7 +24,7 @@
             "program": "deepseek_vl_dpo.py",
             "console": "integratedTerminal",
             "env": {
-                "CUDA_VISIBLE_DEVICES": "0"
+                "CUDA_VISIBLE_DEVICES": "4"
             },
             "args": [
                 "project=deepseek_vl_1.3b_dpo",
@@ -32,7 +32,8 @@
                 "dataset=deepseek_vl_dpo",
                 "training=deepseek_vl_dpo",
                 "model.lora.lora_enable=True",
-                "dataset.file=vanlia_dpo.json",
+                "model.lora.lora_r=2",
+                "dataset.file=dataset_test_input_neg.json",
                 "training.per_device_train_batch_size=1"
             ]
         },

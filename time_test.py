@@ -55,12 +55,13 @@ print("Load Model")
 # env = make_custom_env(env_name=env_config.name)
 
 task = "chop a tree<image_placeholder><a><chat></a><a><chat></a><a><chat></a><a><attack><forward><x>-1.61</x><y>-1.61</y></a><a><attack><forward><x>-10.00</x><y>-10.00</y></a><a><attack><forward><right><x>-10.00</x><y>-10.00</y></a><a><x>1.61</x><y>-5.81</y></a><a><x>5.81</x><y>-3.22</y></a><a><x>3.22</x><y>-5.81</y></a><a><forward><x>0.62</x><y>-0.62</y></a><image_placeholder><a><forward><x>1.61</x><y>-3.22</y></a><a><forward><sprint><x>3.22</x><y>-5.81</y></a><a><forward><sprint><x>0.62</x><y>-10.00</y></a><a><forward><sprint><x>-0.62</x><y>-10.00</y></a><a><forward><sprint><x>0.00</x><y>-10.00</y></a><a><forward><sprint><x>0.62</x><y>-3.22</y></a><a><forward><sprint></a><a><forward><sprint></a><a><forward><sprint><x>-0.62</x><y>10.00</y></a><a><forward><jump><sprint><x>0.00</x><y>10.00</y></a><image_placeholder><a><forward><jump><sprint><x>-0.62</x><y>5.81</y></a><a><forward><jump><sprint></a><a><forward><jump><sprint></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><a><forward><sprint><x>0.62</x><y>-0.62</y></a><a><forward><sprint><x>1.61</x><y>-3.22</y></a><a><forward><sprint><x>0.00</x><y>-5.81</y></a><a><forward><sprint><x>0.62</x><y>-10.00</y></a><a><forward><sprint><x>0.62</x><y>-5.81</y></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><image_placeholder>"
+task = "Current goal: chop_a_tree\nPredict the next five actions based on historical observations actions. <a><forward><jump><sprint><x>-0.62</x><y>5.81</y></a><a><forward><jump><sprint></a><a><forward><jump><sprint></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><a><action></a><a><forward><sprint><x>1.61</x><y>-3.22</y></a><a><action></a><a><action></a><a><action></a><a><action></a><image_placeholder><image_placeholder>"
 done = False
 
 # obs = env.reset()
 # save_obs(obs["pov"], "test.png")
 print("Go!")
-conversation = make_conversations(task, ["test.png"] * 4)
+conversation = make_conversations(task, ["test.png"] * 2)
 pil_images = load_pil_images(conversation)
 prepare_inputs = processor(conversations=conversation, images=pil_images, force_batchify=True).to(device)
 inputs_embeds = model.prepare_inputs_embeds(**prepare_inputs)
@@ -71,7 +72,7 @@ for _ in range(50):
     # bf16: 3.6214s (gpu)
     # torch.compile + bf16: 3.4928s (gpu)
     # torch.compile + bf16 + flash-attn2: 3.4652s (gpu)
-    # sft: 1.8864s
+    # sft: 1.8864s(4 imgs)  1.5278(1 img)   1.2579(2 imgs)1.4358
     start = time.perf_counter()
     outputs = model.language_model.generate(
         inputs_embeds=inputs_embeds,
@@ -80,6 +81,7 @@ for _ in range(50):
         bos_token_id=processor.tokenizer.bos_token_id,
         eos_token_id=processor.tokenizer.eos_token_id,
         max_new_tokens=128,
+        # temperature=0.5,
         do_sample=False,
         use_cache=True,
     )

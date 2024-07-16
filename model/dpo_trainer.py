@@ -16,23 +16,29 @@ class VLDPOTrainer(DPOTrainer):
         padding_value: int | None = 0,
         device: torch.device | None = None,
     ) -> dict[str, torch.LongTensor]:
-        if padding_value is None:
-            padding_value = 0
+        # if padding_value is None:
+        #     padding_value = 0
         concatenated_batch = super().concatenated_inputs(
             batch, is_encoder_decoder, label_pad_token_id, padding_value, device
         )
         if "pixel_values" in batch:
             # duplicate img_input in batchsize dimension
-            v, rejected_neg_number = batch["pixel_values"], batch["rejected_input_ids"].shape[0]
-            bs, pixel_shape = v.shape[0], v.shape[1:]
-            rejected_neg_number //= bs  # =3
-            b = v.repeat(1, rejected_neg_number, 1, 1, 1).reshape(bs * rejected_neg_number, *pixel_shape)
-            concatenated_batch["concatenated_pixel_values"] = torch.cat([v, b], dim=0)  # type: ignore
+            # v, rejected_neg_number = batch["pixel_values"], batch["rejected_input_ids"].shape[0]
+            # bs, pixel_shape = v.shape[0], v.shape[1:]
+            # rejected_neg_number //= bs  # =3
+            # b = v.repeat(1, rejected_neg_number, 1, 1, 1).reshape(bs * rejected_neg_number, *pixel_shape)
 
-            if "chosen_images_emb_mask" in batch:
-                concatenated_batch["concatenated_images_seq_mask"] = (
-                    concatenated_batch["concatenated_input_ids"] == 100015
-                )
+            # # input_neg sample concatenated
+            # input_neg_images = batch["input_neg_pixel_values"]
+
+            # concatenated_batch["concatenated_pixel_values"] = torch.cat([v, b, input_neg_images], dim=0)  # type: ignore
+            concatenated_batch["concatenated_pixel_values"] = torch.cat(
+                [batch["pixel_values"], batch["reject_pixel_values"]], dim=0
+            )
+            # if "chosen_images_seq_mask" in batch:
+            concatenated_batch["concatenated_images_seq_mask"] = (
+                concatenated_batch["concatenated_input_ids"] == 100015
+            )
             if "chosen_images_emb_mask" in batch:
                 concatenated_batch["concatenated_images_emb_mask"] = torch.cat(
                     [
@@ -75,7 +81,7 @@ class VLDPOTrainer(DPOTrainer):
             labels=concatenated_batch["concatenated_labels"],
             **model_kwargs,
         )
-        all_logits = output.logits  # [chosen B+ rejected B, T, 102400]
+        all_logits = output.logits  # [chosen B+ rejected B + input neg B, Length, 102400]
         final_labels = concatenated_batch["concatenated_labels"]
 
         all_logps, size_completion = self.get_batch_logps(
@@ -84,7 +90,6 @@ class VLDPOTrainer(DPOTrainer):
             is_encoder_decoder=self.is_encoder_decoder,
             label_pad_token_id=self.label_pad_token_id,
         )
-        # all_logps: [B+B]
 
         chosen_logps = all_logps[:len_chosen]
         rejected_logps = all_logps[len_chosen:]
@@ -92,9 +97,6 @@ class VLDPOTrainer(DPOTrainer):
         chosen_logits = all_logits[:len_chosen]
         rejected_logits = all_logits[len_chosen:]
         chosen_logps_avg = all_logps[:len_chosen] / size_completion[:len_chosen]
-
-        # del concatenated_batch, model_kwargs, output, all_logps, size_completion, final_labels, all_logits
-        # torch.cuda.empty_cache()
 
         return (
             chosen_logps,
@@ -125,10 +127,7 @@ class VLDPOTrainer(DPOTrainer):
             The chosen_rewards and rejected_rewards tensors contain the rewards for the chosen and rejected responses, respectively.
         """
         pi_logratios = policy_chosen_logps - policy_rejected_logps
-        if self.reference_free:
-            ref_logratios = torch.tensor([0], dtype=pi_logratios.dtype, device=pi_logratios.device)
-        else:
-            ref_logratios = reference_chosen_logps - reference_rejected_logps
+        ref_logratios = reference_chosen_logps - reference_rejected_logps
 
         pi_logratios = pi_logratios.to(self.accelerator.device)
         ref_logratios = ref_logratios.to(self.accelerator.device)
@@ -144,6 +143,7 @@ class VLDPOTrainer(DPOTrainer):
                 - F.logsigmoid(-self.beta * logits) * self.label_smoothing
             )
             if neg_number > 1:
+                # todo: anchor loss design
                 losses = losses + (reference_chosen_logps - policy_chosen_logps)
         elif self.loss_type == "robust":
             losses = (
@@ -246,29 +246,6 @@ class VLDPOTrainer(DPOTrainer):
         ) = self.concatenated_forward(model, batch)
 
         bs = policy_chosen_logps.shape[0]
-        # rejected_number = policy_rejected_logps.shape[0] // bs
-
-        # loss_list = []
-        # chosen_rewards_list = []
-        # rejected_rewards_list = []
-        # reward_accuracies_list = []
-        # for i in range(bs):
-        #     losses, chosen_rewards, rejected_rewards = self.dpo_loss(
-        #         policy_chosen_logps[i],
-        #         policy_rejected_logps[i * rejected_number : (i + 1) * rejected_number],
-        #         reference_chosen_logps[i],
-        #         reference_rejected_logps[i * rejected_number : (i + 1) * rejected_number],
-        #     )
-        #     reward_accuracies = (chosen_rewards > rejected_rewards).float()
-
-        #     loss_list.append(losses)
-        #     chosen_rewards_list.append(chosen_rewards)
-        #     rejected_rewards_list.append(rejected_rewards)
-        #     reward_accuracies_list.append(reward_accuracies)
-        # losses = torch.cat(loss_list, dim=0)
-        # chosen_rewards = torch.tensor(chosen_rewards_list, device=losses.device)
-        # rejected_rewards = torch.cat(rejected_rewards_list, dim=0)
-        # reward_accuracies = torch.cat(reward_accuracies_list, dim=0)
 
         losses, chosen_rewards, rejected_rewards = self.dpo_loss(
             policy_chosen_logps.reshape(bs, -1),

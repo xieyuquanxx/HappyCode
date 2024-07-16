@@ -169,12 +169,9 @@ class VLChatProcessor(ProcessorMixin):
         conv.set_system_message(self.system_prompt)
         return conv
 
-    def make_single_turn_conv(self, prompt: str, response: str):
+    def make_single_turn_conv(self, prompt: str, response: str, image_list: list[str] | None = None):
         return [
-            {
-                "role": "User",
-                "content": prompt,
-            },
+            {"role": "User", "content": prompt, "images": image_list if image_list is not None else []},
             {"role": "Assistant", "content": response},
         ]
 

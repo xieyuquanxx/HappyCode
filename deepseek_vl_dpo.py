@@ -53,7 +53,7 @@ def main(cfg: HappyCodeConfig) -> None:
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
-    # todo: add special tokens
+    # add special tokens
     processor.tokenizer.add_special_tokens(
         {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]}
     )
@@ -135,6 +135,7 @@ def main(cfg: HappyCodeConfig) -> None:
         ref_model=ref_model,
         args=training_args,
         tokenizer=processor.tokenizer,
+        padding_value=0,
         **data_module,
     )
     trainer.add_callback(LoggerLogCallback(logger))

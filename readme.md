@@ -4,6 +4,7 @@ DPO for MLLM.
 ## Modern Tools
 - [Ruff](https://github.com/astral-sh/ruff)
 - [uv](https://github.com/astral-sh/uv)
+- [rye](https://github.com/astral-sh/rye)
 
 
 ## Install for DPO
@@ -12,7 +13,7 @@ DPO for MLLM.
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 uv venv .venv/.dpo
-source .venv/.dpo/bin/activate
+source .venv/.dpo/bin/activate  # if you want to exit the env, just type deactivate
 uv pip install -r  requirements.txt
 uv pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118
 
