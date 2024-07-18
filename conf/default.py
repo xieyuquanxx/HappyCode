@@ -21,6 +21,7 @@ class MultiModalityCausalLMBackboneConfig:
     vision_model: bool = True
     language_model: bool = True
     aligner: bool = True
+    qformer: bool = True
 
 
 @dataclass

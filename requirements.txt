@@ -16,6 +16,7 @@ scikit-learn
 tensorboard
 rich
 ruff
+torchsummary
 # from deepseek-vl
 timm
 sentencepiece

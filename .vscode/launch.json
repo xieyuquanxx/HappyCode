@@ -10,11 +10,32 @@
             "request": "launch",
             "program": "deepseek_vl_sft.py",
             "console": "integratedTerminal",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3"
+            },
             "args": [
-                "project=deepseek_vl_7b_sft",
-                "model=deepseek_vl",
+                "project=deepseek_vl_test_sft",
+                "model=ds_vl_memory_bank",
                 "dataset=deepseek_vl_sft",
-                "training=deepseek_vl"
+                "training=deepseek_vl_sft"
+            ]
+        },
+        {
+            "name": "memory-bank-sft",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "memory_bank_sft.py",
+            "console": "integratedTerminal",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3"
+            },
+            "args": [
+                "project=deepseek_vl_test_sft",
+                "model=ds_vl_memory_bank",
+                "dataset=deepseek_vl_sft",
+                "training=deepseek_vl_sft",
+                "training.per_device_train_batch_size=2",
+                "model.lora.lora_enable=True",
             ]
         },
         {

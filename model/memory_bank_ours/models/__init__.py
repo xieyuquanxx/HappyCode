@@ -17,16 +17,16 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from .image_processing_vlm import VLMImageProcessor
+from .modeling_vlm import MemoryBankQformerConfig, MultiModalityCausalLM
+from .processing_vlm import VLChatProcessor
+from .qformer import apply_memory_bank
 
-# check if python version is above 3.10
-import sys
 
-
-if sys.version_info >= (3, 10):
-    print("Python version is above 3.10, patching the collections module.")
-    # Monkey patch collections
-    import collections
-    import collections.abc
-
-    for type_name in collections.abc.__all__:
-        setattr(collections, type_name, getattr(collections.abc, type_name))
+__all__ = [
+    "VLMImageProcessor",
+    "VLChatProcessor",
+    "MultiModalityCausalLM",
+    "apply_memory_bank",
+    "MemoryBankQformerConfig",
+]
