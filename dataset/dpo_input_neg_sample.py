@@ -11,10 +11,10 @@ current_date = datetime.now().strftime("%Y%m%d")
 
 random.seed(42)
 
-dataset_path = "/data/Users/xyq/developer/happy_code/data/action_dpo_v1"
+dataset_path = "/data/Users/xyq/developer/happy_code/data/action_dpo/v1"
 dpo_file = f"{dataset_path}/mc_dataset_v1_img4_3.json"
 
-img_dir = "mc_dataset_v1"
+img_dir = f"{dataset_path}/mc_dataset_v1"
 all_tasks = os.listdir(img_dir)
 task_dirs = {task: os.listdir(os.path.join(img_dir, task)) for task in all_tasks}
 
@@ -24,7 +24,7 @@ with open(dpo_file) as f:
 
 print(len(dpo_data))  # 238873
 
-for data in tqdm(dpo_data):
+for data in dpo_data:
     chosen = data["conversations"][1]
     images = chosen["images"]
     # /data/Users/xyq/developer/happy_code/dataset/mc_dataset_v1/craft_sticks_2522/craft_sticks_2522_frame_0.jpg
@@ -32,7 +32,7 @@ for data in tqdm(dpo_data):
     filter_tasks = [t for t in all_tasks if task not in t]
 
     seleted_task = random.choice(filter_tasks)
-    seleted_task_imgs = task_dirs[seleted_task]
+    seleted_task_imgs = list(filter(lambda x: x.endswith(".jpg"), task_dirs[seleted_task]))
 
     images = random.choices(seleted_task_imgs, k=4)
     images = [os.path.join(dataset_path, img_dir, seleted_task, img) for img in images]

@@ -21,6 +21,7 @@
 import torch
 from attrdict import AttrDict
 from einops import rearrange
+from torch import nn
 from transformers import (
     AutoConfig,
     AutoModelForCausalLM,
@@ -30,9 +31,11 @@ from transformers import (
 )
 from transformers.configuration_utils import PretrainedConfig
 from transformers.models.blip_2 import Blip2QFormerConfig
+from transformers.models.blip_2.modeling_blip_2 import Blip2QFormerModel
 
 from .clip_encoder import CLIPVisionTower, HybridVisionTower
 from .projector import MlpProjector
+from .qformer import apply_memory_bank
 
 
 def model_name_to_cls(cls_name):
@@ -116,7 +119,7 @@ class MultiModalityConfig(PretrainedConfig):
         self.language_config = LlamaConfig(**language_config)
         self.qformer_config = MemoryBankQformerConfig(**kwargs.get("qformer_config", {}))
 
-        self.config = self.language_config
+        self.is_sft = kwargs.get("is_sft", False)
 
 
 class MultiModalityPreTrainedModel(PreTrainedModel):
@@ -148,6 +151,17 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
         self.language_model = LlamaForCausalLM(language_config)
 
         self.config = language_config
+
+        if not config.is_sft:
+            self.query_tokens = nn.Parameter(
+                torch.zeros(1, config.qformer_config.num_query_tokens, config.qformer_config.hidden_size)
+            )
+            self.query_tokens.data.normal_(mean=0.0, std=config.qformer_config.initializer_range)
+
+            self.qformer = Blip2QFormerModel(config.qformer_config).to(torch.bfloat16)
+            self.qformer.encoder = apply_memory_bank(
+                self.qformer.encoder, config.qformer_config.memory_bank_length, config.qformer_config.num_frames
+            )
 
     def freeze_module(self, module_name: str) -> None:
         assert module_name in self._module_names, f"module_name {module_name} is invalid."
@@ -195,7 +209,7 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
         )
 
         query_tokens = self.query_tokens.expand(images_features.shape[0], -1, -1).to(
-            images_features.device, torch.bfloat16
+            images_features.device, images_features.dtype
         )  # [bs*n, 32, hidden_size]
         query_outputs = self.qformer(
             query_embeds=query_tokens,
@@ -207,7 +221,7 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
         )
         query_output = query_outputs[0]
 
-        # todo: aligne是1个MLP，是否需要改成Linear
+        # aligne是1个MLP，是否需要改成Linear
         images_embeds = self.aligner(query_output)  # [bs*n, num_query_token, 2048]
         images_embeds = rearrange(
             images_embeds, "(b n) t d -> (b n t) d", b=bs, n=n

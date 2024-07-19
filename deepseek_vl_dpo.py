@@ -151,7 +151,7 @@ def main(cfg: HappyCodeConfig) -> None:
     if lora_cfg.lora_enable:
         if training_args.local_rank == 0 or training_args.local_rank == -1:
             model.config.save_pretrained(training_args.output_dir)
-            model.tokenizer.save_pretrained(training_args.output_dir)
+            processor.tokenizer.save_pretrained(training_args.output_dir)
             processor.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir)
     else:
