@@ -38,8 +38,8 @@ class MemoryBankBlip2QFormerMultiHeadAttention(Blip2QFormerMultiHeadAttention):
             if hasattr(self, "query_memory_bank"):
                 B, T, N, C = self.query_memory_bank.shape
                 query_memory_bank = self.query_memory_bank.view(B, -1, C)  # [B, T*32, C]
-                query_memory_bank_k = torch.cat([self.key(query_memory_bank), k], dim=1)  # [B, (T+1)*32, C]
-                query_memory_bank_v = torch.cat([self.value(query_memory_bank), v], dim=1)  # [B, (T+1)*32, C]
+                query_memory_bank_k = torch.cat([self.key(query_memory_bank.to(self.key.weight.dtype)), k], dim=1)  # [B, (T+1)*32, C]
+                query_memory_bank_v = torch.cat([self.value(query_memory_bank.to(self.key.weight.dtype)), v], dim=1)  # [B, (T+1)*32, C]
                 key_layer = self.transpose_for_scores(query_memory_bank_k)
                 value_layer = self.transpose_for_scores(query_memory_bank_v)
             else:

@@ -1,5 +1,5 @@
 {
-    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.typeCheckingMode": "off",
     "python.languageServer": "Pylance",
     "python.defaultInterpreterPath": ".venv/.dpo/bin/python",
     "python.analysis.exclude": [

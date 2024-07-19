@@ -5,7 +5,7 @@ import torch
 from peft.peft_model import PeftModel
 from transformers import AutoModelForCausalLM
 
-from model import MultiModalityCausalLM, VLChatProcessor
+from model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
 
 
 def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "cpu") -> None:

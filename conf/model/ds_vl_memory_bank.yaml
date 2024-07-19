@@ -1,11 +1,11 @@
-model_path: model_repo/deepseek-vl-1.3b-base
+model_path: model_repo/deepseek_vl_1.3b_sft_mc
 
 
 
 freeze:
   vision_model: True
   language_model: True
-  aligner: True
+  aligner: False
   qformer: False
 
 
@@ -22,7 +22,7 @@ qformer:
   hidden_size: 1024
   num_attention_heads: 16
   num_query_tokens: 32
-  memory_bank_length: 100
   num_frames: 100
+  memory_bank_length: 20
 
 attn_implementation: "none" # [none, flash_attention_2]

@@ -25,10 +25,21 @@ class MultiModalityCausalLMBackboneConfig:
 
 
 @dataclass
+class QformerConfig:
+    encoder_hidden_size: int = 1024
+    hidden_size: int = 1024
+    num_attention_heads: int = 16
+    num_query_tokens: int = 32
+    memory_bank_length: int = 100
+    num_frames: int = 100
+
+
+@dataclass
 class BaseModelConfig:
     model_path: str = "model_repo/deepseek-vl-7b-chat"
     freeze: MultiModalityCausalLMBackboneConfig = field(default_factory=MultiModalityCausalLMBackboneConfig)
     lora: LoraConfig = field(default_factory=LoraConfig)
+    qformer: QformerConfig = field(default_factory=QformerConfig)
     attn_implementation: str = field(
         default="none",
         metadata={"help": "Attention implementation. Can be 'none', 'flash_attention_2'"},

@@ -112,9 +112,7 @@ class MultiModalityConfig(PretrainedConfig):
         self.aligner_config = AlignerConfig(**aligner_config)
 
         language_config = kwargs.get("language_config", {})
-        # if isinstance(language_config, LlamaConfig):
-        #     self.language_config = language_config
-        # else:
+
         self.language_config = LlamaConfig(**language_config)
         self.qformer_config = MemoryBankQformerConfig(**kwargs.get("qformer_config", {}))
 
@@ -132,10 +130,12 @@ class MultiModalityPreTrainedModel(PreTrainedModel):
 
 class MultiModalityCausalLM(MultiModalityPreTrainedModel):
     _supports_flash_attn_2: bool = True
+    _module_names: list[str] = ["vision_model", "aligner", "language_model", "qformer"]
+    model_config: MultiModalityConfig
 
-    def __init__(self, config: MultiModalityConfig, **kargs):
+    def __init__(self, config: MultiModalityConfig):
         super().__init__(config)
-
+        self.model_config = config
         vision_config = config.vision_config
         vision_cls = model_name_to_cls(vision_config.cls)
         self.vision_model = vision_cls(**vision_config.params)
@@ -148,29 +148,14 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
         self.language_model = LlamaForCausalLM(language_config)
 
         self.config = language_config
-        self.model_config = config
 
-        # qformer_config = kargs.get("qformer_config", None)
-        # # todo: hyperparameter设置
-        # if qformer_config is None:
-        #     self.qformer_config = MemoryBankQformerConfig(
-        #         encoder_hidden_size=1024,
-        #         hidden_size=1024,
-        #         vocab_size=language_config.vocab_size,
-        #         num_attention_heads=16,
-        #     )
-        # else:
-        #     self.qformer_config = MemoryBankQformerConfig(**qformer_config)
-
-        #! add qformer
-        # self.query_tokens = nn.Parameter(
-        #     torch.zeros(1, self.qformer_config.num_query_tokens, self.qformer_config.hidden_size)
-        # )
-        # self.qformer = Blip2QFormerModel(self.qformer_config)
-        # self.qformer.encoder = apply_memory_bank(
-        #     self.qformer.encoder, self.qformer_config.memory_bank_length, self.qformer_config.num_frames
-        # )
-        # self.query_tokens.data.normal_(mean=0.0, std=self.qformer_config.initializer_range)
+    def freeze_module(self, module_name: str) -> None:
+        assert module_name in self._module_names, f"module_name {module_name} is invalid."
+        for module in self._module_names:
+            if module == module_name:
+                module_var = getattr(self, module)
+                for param in module_var.parameters():
+                    param.requires_grad = False
 
     def prepare_inputs_embeds(
         self,
@@ -214,7 +199,7 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
         )  # [bs*n, 32, hidden_size]
         query_outputs = self.qformer(
             query_embeds=query_tokens,
-            encoder_hidden_states=images_features.to(torch.bfloat16),
+            encoder_hidden_states=images_features,
             encoder_attention_mask=image_attention_mask,
             # output_attentions=output_attentions,
             # output_hidden_states=output_hidden_states,
@@ -274,4 +259,3 @@ AutoConfig.register("mb_vision", VisionConfig)
 AutoConfig.register("mb_aligner", AlignerConfig)
 AutoConfig.register("mb_multi_modality", MultiModalityConfig)
 AutoModelForCausalLM.register(MultiModalityConfig, MultiModalityCausalLM)
-print("Yes")

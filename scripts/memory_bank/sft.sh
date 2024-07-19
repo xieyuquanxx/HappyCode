@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # gpus=4,5,6,7
-gpus=2,3
+gpus=0,1,2,3
 
-project_name=memory_bank_1.3b_sft
+project_name=memory_bank_1.3b_based_on_sft
 model=ds_vl_memory_bank
 dataset=memory_bank_sft
 training=deepseek_vl_sft
@@ -17,8 +17,9 @@ deepspeed --include localhost:${gpus} --master_port=25999 memory_bank_sft.py \
     dataset=${dataset} \
     training=${training} \
     training.num_train_epochs=10 \
-    training.per_device_train_batch_size=12 \
-    model.lora.lora_enable=True \
+    training.per_device_train_batch_size=32 \
+    model.lora.lora_enable=False \
     training.report_to=wandb \
-    training.save_strategy="steps" \
-    training.save_steps=100
+    training.save_strategy="epoch" \
+    training.save_steps=500 \
+    training.learning_rate=4e-6
