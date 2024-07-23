@@ -17,7 +17,7 @@ from transformers.models.blip_2.modeling_blip_2 import Blip2QFormerModel
 from conf import HappyCodeConfig
 from dataset import make_sft_data_modlue
 from model.callback import LoggerLogCallback
-from model.memory_bank_ours.models import (
+from model.memory_bank.models import (
     MemoryBankQformerConfig,
     MultiModalityCausalLM,
     VLChatProcessor,

@@ -13,8 +13,9 @@ from trl import DPOConfig
 
 from conf import HappyCodeConfig
 from dataset import make_dpo_data_modlue
-from model import MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
+from model import MultiModalityCausalLM, VLChatProcessor
 from model.callback import LoggerLogCallback
+from trainer import VLDPOTrainer
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 

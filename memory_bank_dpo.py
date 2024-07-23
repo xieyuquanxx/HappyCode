@@ -13,11 +13,11 @@ from trl import DPOConfig
 from conf import HappyCodeConfig
 from dataset import make_dpo_data_modlue
 from model.callback import LoggerLogCallback
-from model.dpo_trainer import VLDPOTrainer
-from model.memory_bank_ours.models import (
+from model.memory_bank.models import (
     MultiModalityCausalLM,
     VLChatProcessor,
 )
+from trainer import VLDPOTrainer
 from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
@@ -43,29 +43,19 @@ def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
-    # with open("dataset/dict_action.pkl", "rb") as f1:
-    #     dic = pickle.load(f1)
 
-    # special_tokens_list = list(dic.values())
     logger = get_logger(__name__, cfg.log)
     seed_everything(cfg.training.seed)
 
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
-    # add special tokens
-    processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
-    # processor.tokenizer.add_special_tokens(
-    #     {
-    #         "additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]
-    #         + special_tokens_list
-    #     }
-    # )
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         trust_remote_code=True,
         attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
+        is_dpo=True,
     )
     ref_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
@@ -124,10 +114,6 @@ def main(cfg: HappyCodeConfig) -> None:
         **dict(cfg.training),  # type: ignore
     )
 
-    # model.vision_model = model.vision_model.to(training_args.device)
-    # model.aligner = model.aligner.to(device=training_args.device)
-    # model.qformer = model.qformer.to(training_args.device)
-
     # data module
     data_module = make_dpo_data_modlue(processor, cfg.dataset)
 
@@ -157,7 +143,8 @@ def main(cfg: HappyCodeConfig) -> None:
             model.model_config.save_pretrained(training_args.output_dir)
             processor.tokenizer.save_pretrained(training_args.output_dir)
             processor.save_pretrained(training_args.output_dir)
-            model.save_pretrained(training_args.output_dir)
+            # model.save_pretrained(training_args.output_dir)
+            trainer.save_model(training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
         if training_args.local_rank == 0 or training_args.local_rank == -1:

@@ -17,7 +17,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from typing import List, Tuple, Union
+from typing import Union
 
 import numpy as np
 import torch
@@ -28,6 +28,7 @@ from transformers import AutoImageProcessor, PretrainedConfig
 from transformers.image_processing_utils import BaseImageProcessor, BatchFeature
 from transformers.image_utils import to_numpy_array
 from transformers.utils import logging
+
 
 logger = logging.get_logger(__name__)
 
@@ -56,8 +57,8 @@ class VLMImageProcessorConfig(PretrainedConfig):
     model_type = "deepseek_vlm"
     image_size: int
     min_size: int
-    image_mean: Union[Tuple[float, float, float], List[float]]
-    image_std: Union[Tuple[float, float, float], List[float]]
+    image_mean: tuple[float, float, float] | list[float]
+    image_std: tuple[float, float, float] | list[float]
     rescale_factor: float
     do_normalize: bool
 
@@ -65,12 +66,12 @@ class VLMImageProcessorConfig(PretrainedConfig):
         self,
         image_size: int,
         min_size: int = 14,
-        image_mean: Union[Tuple[float, float, float], List[float]] = (
+        image_mean: tuple[float, float, float] | list[float] = (
             0.48145466,
             0.4578275,
             0.40821073,
         ),
-        image_std: Union[Tuple[float, float, float], List[float]] = (
+        image_std: tuple[float, float, float] | list[float] = (
             0.26862954,
             0.26130258,
             0.27577711,
@@ -96,12 +97,12 @@ class VLMImageProcessor(BaseImageProcessor):
         self,
         image_size: int,
         min_size: int = 14,
-        image_mean: Union[Tuple[float, float, float], List[float]] = (
+        image_mean: tuple[float, float, float] | list[float] = (
             0.48145466,
             0.4578275,
             0.40821073,
         ),
-        image_std: Union[Tuple[float, float, float], List[float]] = (
+        image_std: tuple[float, float, float] | list[float] = (
             0.26862954,
             0.26130258,
             0.27577711,
@@ -164,7 +165,7 @@ class VLMImageProcessor(BaseImageProcessor):
     def preprocess(self, images, return_tensors: str = "pt", **kwargs) -> BatchFeature:
         # resize and pad to [self.image_size, self.image_size]
         # then convert from [H, W, 3] to [3, H, W]
-        images: List[np.ndarray] = [self.resize(image) for image in images]
+        images: list[np.ndarray] = [self.resize(image) for image in images]
 
         # resacle from [0, 255] -> [0, 1]
         images = [

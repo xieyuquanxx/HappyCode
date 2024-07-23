@@ -1,10 +1,15 @@
+import argparse
 import json
 import os
 import pickle
 import random
 import re
+from datetime import datetime
 
 import numpy as np
+
+
+current_date = datetime.now().strftime("%Y%m%d")
 
 
 with open("dict_action.pkl", "rb") as f1:
@@ -14,9 +19,13 @@ with open("dict_action.pkl", "rb") as f1:
     new_dic = pickle.load(f1)
 
 
-del new_dic["chat"]
-del new_dic["pickItem"]
-del new_dic["swapHands"]
+unused_action_key = ["chat", "pickItem", "swapHands"]
+for uk in unused_action_key:
+    del new_dic[uk]
+
+# del new_dic["chat"]
+# del new_dic["pickItem"]
+# del new_dic["swapHands"]
 action_types = list(new_dic.values())
 
 
@@ -68,7 +77,7 @@ def input_farmat_transfer(input_action_list):
         action = ""
         if actions and actions != []:
             for a in actions:
-                if type(a) == dict:
+                if isinstance(a, dict):
                     a = a["camera"]
                     x = f"{a[0]:.2f}"
                     y = f"{a[1]:.2f}"
@@ -98,8 +107,10 @@ def output_farmat_transfer(output_action_list):
     return action_sequence
 
 
-def get_image_dir(base_directory, subfolder_path, index, group_size=4):
+def get_image_dir(base_directory, subfolder_path, index, group_size=4, begin_null_action_number: int = 0):
     start_id = index * group_size
+    if index == 0 and begin_null_action_number > 0:
+        start_id += begin_null_action_number
     end_id = start_id + group_size
     image_group = []
 
@@ -122,19 +133,21 @@ def camera_mapping(camera_value):
     return camera_float
 
 
-def adjust_sequence_length(action_sequence):
+def adjust_sequence_length(action_sequence, clip_number: int = 80):
     length = len(action_sequence)
-    if length > 400:
-        return action_sequence[:401]
+    if length > clip_number * 10:
+        return action_sequence[: clip_number * 10 + 1]
     else:
-        adjusted_length = (length // 40) * 40 + 1
+        adjusted_length = (length // clip_number) * clip_number + 1
         return action_sequence[:adjusted_length]
 
 
 def action_mapping(actions):
     action_list = []
     for action in actions:
-        non_zero_keys = [key for key, value in action.items() if np.any(value != 0)]
+        non_zero_keys = [
+            key for key, value in action.items() if np.any(value != 0) and key not in unused_action_key
+        ]
 
         act = [dic[key] for key in non_zero_keys if key != "camera"]
         if "camera" in non_zero_keys:
@@ -168,34 +181,59 @@ def create_conversation(task, input_action_list, chosen_action_list, rejected_ac
     }
 
 
-def create_negative_samples(action_sequence, action_types):
-    action_sequence = adjust_sequence_length(action_sequence)
+def create_conversation_v2(task, input_action_list, chosen_action_list, rejected_action_list, images_dir):
+    input_action_list = input_farmat_transfer(input_action_list).split("<image_placeholder>")[1:]
+    chosen_action_list = output_farmat_transfer(chosen_action_list)
+    rejected_action_list_1 = output_farmat_transfer(rejected_action_list[0])
+    rejected_action_list_2 = output_farmat_transfer(rejected_action_list[1])
+    rejected_action_list_3 = output_farmat_transfer(rejected_action_list[2])
+    return {
+        "conversations": [
+            {
+                "role": "User",
+                "type": "chosen",
+                "content": "Current observations <image_placeholder>. Current goal: "
+                + task
+                + "\nPredict the next ten actions based on historical observations and actions.",
+                "images": [images_dir[-1]],
+                "history": {"images": images_dir[:-1], "actions": input_action_list[:8]},
+            },
+            {"role": "Assistant", "type": "chosen", "content": chosen_action_list},
+            {"role": "Assistant", "type": "rejected", "content": rejected_action_list_1},
+            {"role": "Assistant", "type": "rejected", "content": rejected_action_list_2},
+            {"role": "Assistant", "type": "rejected", "content": rejected_action_list_3},
+        ]
+    }
+
+
+def create_negative_samples(action_sequence, action_types, clip_number: int = 40):
+    action_sequence = adjust_sequence_length(action_sequence, clip_number)
     negative_samples = []
     original_group_samples = []
     input_group_samples = []
     # 去掉第一个子列表
     action_sequence = action_sequence[1:]
 
-    # 每40个子列表为一组
-    num_groups = len(action_sequence) // 40
+    # 每40/80个子列表为一组
+    num_groups = len(action_sequence) // clip_number
 
     for group_idx in range(num_groups):
-        group_start = group_idx * 40
-        group_end = group_start + 40
+        group_start = group_idx * clip_number
+        group_end = group_start + clip_number
         group = action_sequence[group_start:group_end]
 
         group_negative_samples = []
 
         # 保存原始组的最后十个action
-        input_group_samples.append(group[:30])
+        input_group_samples.append(group[:-10])
 
-        original_group_samples.append(group[30:40])
+        original_group_samples.append(group[-10:])
 
         # 只对每组子列表的最后十个action取样为负样本
         for _ in range(3):  # 每组序列取三组对应的负样本
             group_negative_sample = []
-            for idx in range(30, 40):
-                original_actions = group[idx]
+            for idx in range(len(group) - 10, len(group)):
+                # original_actions = group[idx]
                 negative_action = []
                 num_actions = random.choices([1, 2, 3], weights=[0.6, 0.3, 0.1], k=1)[0]  # 非等概率取1到3个action
 
@@ -219,7 +257,9 @@ def create_negative_samples(action_sequence, action_types):
     return num_groups, input_group_samples, original_group_samples, negative_samples
 
 
-def process_all_subfolders(base_directory):
+def process_all_subfolders(base_directory, args):
+    # from tqdm import tqdm
+
     action_data = []
     action_dataset = []
     for subfolder in os.listdir(base_directory):
@@ -230,8 +270,18 @@ def process_all_subfolders(base_directory):
                 datas = process_pkl_file(pkl_file_path)
                 if datas is not None:
                     action_list = action_mapping(datas)
+
+                    # 去除开头空的action，并记录个数
+                    null_action_number = 0
+                    for action in action_list:
+                        if len(action) == 0:
+                            null_action_number += 1
+                        else:
+                            break
+                    action_list = action_list[null_action_number:]
+
                     num_groups, input_action_list, chosen_action_list, rejected_action_list = (
-                        create_negative_samples(action_list, action_types)
+                        create_negative_samples(action_list, action_types, clip_number=args.clip_number)
                     )
                     for i in range(num_groups):
                         dic = {}
@@ -246,9 +296,17 @@ def process_all_subfolders(base_directory):
                         dic["rejected_2"] = rejected_action_list[i][1]
                         dic["rejected_3"] = rejected_action_list[i][2]
                         action_data.append(dic)
-                        images_dir = get_image_dir(base_directory, subfolder, i, group_size=4)
+                        images_dir = get_image_dir(
+                            base_directory,
+                            subfolder,
+                            i,
+                            group_size=args.group_image_num,
+                            begin_null_action_number=null_action_number,
+                        )
+                        if len(images_dir) < 9:
+                            continue
                         action_dataset.append(
-                            create_conversation(
+                            create_conversation_v2(
                                 task,
                                 input_action_list[i],
                                 chosen_action_list[i],
@@ -258,12 +316,27 @@ def process_all_subfolders(base_directory):
                         )
             else:
                 print(f"No .pkl file found in {subfolder_path}")
-    with open("mc_dataset_v2_img4_actions.json", "w", encoding="utf-8") as f:
+
+    print(f"Dataset Len: {len(action_dataset)}")
+    with open(
+        f"{args.output_dir}/{current_date}_{args.output}".replace(".json", "_action.json"), "w", encoding="utf-8"
+    ) as f:
         json.dump(action_data, f, ensure_ascii=False)
-    with open("mc_dataset_v2_img4.json", "w", encoding="utf-8") as f:
+    with open(f"{args.output_dir}/{current_date}_{args.output}", "w", encoding="utf-8") as f:
         json.dump(action_dataset, f, ensure_ascii=False)
 
 
 if __name__ == "__main__":
-    base_directory = "/data/Users/xyq/developer/happy_code/data/action_dpo/v1/mc_dataset_v2"  # 主文件夹路径
-    process_all_subfolders(base_directory)
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--group_image_num", default=9, type=int)
+    parser.add_argument("--output", type=str, default="mc_dataset_v2_img8.json")
+    parser.add_argument("--output_dir", default="/data/Users/xyq/developer/happy_code/data/action_dpo/v2")
+    parser.add_argument("--clip_number", default=80, type=int)
+    parser.add_argument(
+        "--base_dir", default="/data/Users/xyq/developer/happy_code/data/action_dpo/mc_dataset_v2", type=str
+    )
+    args = parser.parse_args()
+
+    # base_directory = "/data/Users/xyq/developer/happy_code/data/action_dpo/v1/mc_dataset_v2"  # 主文件夹路径
+    process_all_subfolders(args.base_dir, args)

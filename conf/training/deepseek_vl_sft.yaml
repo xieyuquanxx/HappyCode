@@ -3,6 +3,8 @@
 
 deepspeed: "scripts/deepspeed/zero3.json"
 
+do_train: True
+
 per_device_train_batch_size: 4
 per_device_eval_batch_size: 1
 

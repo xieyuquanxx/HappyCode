@@ -1,3 +1,9 @@
+from .action_dpo import (
+    ActionDPODataset,
+    ActionSftDataset,
+    make_action_dpo_data_modlue,
+    make_action_sft_data_modlue,
+)
 from .deepseek_vl import (
     DeepSeekDPODataset,
     DeepSeekSftDataset,
@@ -11,4 +17,8 @@ __all__ = [
     "make_sft_data_modlue",
     "DeepSeekDPODataset",
     "make_dpo_data_modlue",
+    "ActionSftDataset",
+    "ActionDPODataset",
+    "make_action_sft_data_modlue",
+    "make_action_dpo_data_modlue",
 ]

@@ -1,10 +1,10 @@
 import itertools
 import json
 import os
-from dataclasses import dataclass
 from typing import Any, Self
 
 from torch.utils.data import Dataset
+from trl.trainer.utils import DPODataCollatorWithPadding
 
 from conf.default import BaseDatasetConfig
 from model.deepseek_vl.models import VLChatProcessor
@@ -63,8 +63,7 @@ class DeepSeekDPODataset(Dataset):
         }
 
 
-@dataclass
-class DPODataCollator:
+class DPODataCollator(DPODataCollatorWithPadding):
     vl_chat_processor: VLChatProcessor
 
     def __call__(self, batch) -> dict[str, Any]:

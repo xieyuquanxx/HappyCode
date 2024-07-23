@@ -4,6 +4,7 @@ from typing import Any
 import cv2
 import numpy as np
 import torch
+from tqdm import tqdm
 from transformers import (
     AutoModelForCausalLM,
 )
@@ -38,8 +39,8 @@ def make_conversations(task: str, images: list[str]) -> list[dict[str, Any]]:
     ]
 
 
-device = "cuda:7"
-model_path = "checkpoints/deepseek_vl_1.3b_sft_mc"
+device = "cuda:0"
+model_path = "/data/Users/xyq/developer/happy_code/checkpoints/memory_bank_1.3b_based_on_sft/2024-07-18-22-20"
 processor: VLChatProcessor = VLChatProcessor.from_pretrained(model_path)  # type: ignore
 
 model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
@@ -54,25 +55,27 @@ print("Load Model")
 
 # env = make_custom_env(env_name=env_config.name)
 
-task = "chop a tree<image_placeholder><a><chat></a><a><chat></a><a><chat></a><a><attack><forward><x>-1.61</x><y>-1.61</y></a><a><attack><forward><x>-10.00</x><y>-10.00</y></a><a><attack><forward><right><x>-10.00</x><y>-10.00</y></a><a><x>1.61</x><y>-5.81</y></a><a><x>5.81</x><y>-3.22</y></a><a><x>3.22</x><y>-5.81</y></a><a><forward><x>0.62</x><y>-0.62</y></a><image_placeholder><a><forward><x>1.61</x><y>-3.22</y></a><a><forward><sprint><x>3.22</x><y>-5.81</y></a><a><forward><sprint><x>0.62</x><y>-10.00</y></a><a><forward><sprint><x>-0.62</x><y>-10.00</y></a><a><forward><sprint><x>0.00</x><y>-10.00</y></a><a><forward><sprint><x>0.62</x><y>-3.22</y></a><a><forward><sprint></a><a><forward><sprint></a><a><forward><sprint><x>-0.62</x><y>10.00</y></a><a><forward><jump><sprint><x>0.00</x><y>10.00</y></a><image_placeholder><a><forward><jump><sprint><x>-0.62</x><y>5.81</y></a><a><forward><jump><sprint></a><a><forward><jump><sprint></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><a><forward><sprint><x>0.62</x><y>-0.62</y></a><a><forward><sprint><x>1.61</x><y>-3.22</y></a><a><forward><sprint><x>0.00</x><y>-5.81</y></a><a><forward><sprint><x>0.62</x><y>-10.00</y></a><a><forward><sprint><x>0.62</x><y>-5.81</y></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><image_placeholder>"
+task = "chop a tree<a><chat></a><a><chat></a><a><chat></a><a><attack><forward><x>-1.61</x><y>-1.61</y></a><a><attack><forward><x>-10.00</x><y>-10.00</y></a><a><attack><forward><right><x>-10.00</x><y>-10.00</y></a><a><x>1.61</x><y>-5.81</y></a><a><x>5.81</x><y>-3.22</y></a><a><x>3.22</x><y>-5.81</y></a><a><forward><x>0.62</x><y>-0.62</y></a><image_placeholder><a><forward><x>1.61</x><y>-3.22</y></a><a><forward><sprint><x>3.22</x><y>-5.81</y></a><a><forward><sprint><x>0.62</x><y>-10.00</y></a><a><forward><sprint><x>-0.62</x><y>-10.00</y></a><a><forward><sprint><x>0.00</x><y>-10.00</y></a><a><forward><sprint><x>0.62</x><y>-3.22</y></a><a><forward><sprint></a><a><forward><sprint></a><a><forward><sprint><x>-0.62</x><y>10.00</y></a><a><forward><jump><sprint><x>0.00</x><y>10.00</y></a><image_placeholder><a><forward><jump><sprint><x>-0.62</x><y>5.81</y></a><a><forward><jump><sprint></a><a><forward><jump><sprint></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><a><forward><sprint><x>0.62</x><y>-0.62</y></a><a><forward><sprint><x>1.61</x><y>-3.22</y></a><a><forward><sprint><x>0.00</x><y>-5.81</y></a><a><forward><sprint><x>0.62</x><y>-10.00</y></a><a><forward><sprint><x>0.62</x><y>-5.81</y></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><image_placeholder><image_placeholder><image_placeholder><image_placeholder><image_placeholder><image_placeholder><image_placeholder><image_placeholder><image_placeholder>"
 task = "Current goal: chop_a_tree\nPredict the next five actions based on historical observations actions. <a><forward><jump><sprint><x>-0.62</x><y>5.81</y></a><a><forward><jump><sprint></a><a><forward><jump><sprint></a><a><forward><jump><sprint><x>0.00</x><y>-0.62</y></a><a><action></a><a><forward><sprint><x>1.61</x><y>-3.22</y></a><a><action></a><a><action></a><a><action></a><a><action></a><image_placeholder><image_placeholder>"
 done = False
 
 # obs = env.reset()
 # save_obs(obs["pov"], "test.png")
 print("Go!")
-conversation = make_conversations(task, ["test.png"] * 2)
+conversation = make_conversations(task, ["data/test.png"] * 9)
 pil_images = load_pil_images(conversation)
 prepare_inputs = processor(conversations=conversation, images=pil_images, force_batchify=True).to(device)
 inputs_embeds = model.prepare_inputs_embeds(**prepare_inputs)
 times = []
-for _ in range(50):
+for _ in tqdm(range(50)):
     # raw: 32.1606 s (cpu)
     # torch.compile: 21.0886 (cpu)
     # bf16: 3.6214s (gpu)
     # torch.compile + bf16: 3.4928s (gpu)
     # torch.compile + bf16 + flash-attn2: 3.4652s (gpu)
     # sft: 1.8864s(4 imgs)  1.5278(1 img)   1.2579(2 imgs)1.4358
+
+    # add memory bank+qformer: 1 img: 675ms  2 imgs: 650ms   4 imgs: 739ms
     start = time.perf_counter()
     outputs = model.language_model.generate(
         inputs_embeds=inputs_embeds,
@@ -87,7 +90,7 @@ for _ in range(50):
     )
     end = time.perf_counter()
     times.append(end - start)
-    print(processor.tokenizer.decode(outputs[0].cpu().tolist(), skip_special_tokens=False))
+    # print(processor.tokenizer.decode(outputs[0].cpu().tolist(), skip_special_tokens=False))
 
 t = np.mean(times)
 

@@ -20,7 +20,6 @@
 import base64
 import io
 import json
-from typing import Dict, List
 
 import PIL.Image
 import torch
@@ -39,7 +38,7 @@ def load_pretrained_model(model_path: str):
     return tokenizer, vl_chat_processor, vl_gpt
 
 
-def load_pil_images(conversations: List[Dict[str, str]]) -> List[PIL.Image.Image]:
+def load_pil_images(conversations: list[dict[str, str]]) -> list[PIL.Image.Image]:
     """
 
     Support file path or base64 images.
@@ -82,6 +81,6 @@ def load_pil_images(conversations: List[Dict[str, str]]) -> List[PIL.Image.Image
 
 
 def load_json(filepath):
-    with open(filepath, "r") as f:
+    with open(filepath) as f:
         data = json.load(f)
         return data

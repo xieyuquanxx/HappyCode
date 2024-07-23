@@ -8,7 +8,8 @@
         "checkpoints",
         "model_repo",
         "wandb",
-        "**/MCP**"
+        "**/MCP**",
+        "videos"
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.ruff": "explicit",

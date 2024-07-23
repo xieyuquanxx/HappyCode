@@ -2,6 +2,6 @@
 
 
 CUDA_VISIBLE_DEVICES=3 python deepseek_vl_merge_lora.py \
-    --model_name model_repo/deepseek-vl-1.3b-base \
-    --lora_path checkpoints/deepseek_vl_1.3b_sft_lora_mc/2024-07-15-15-49/checkpoint-72500 \
-    --new_model_name model_repo/deepseek_vl_1.3b_sft_mc
+    --model_name checkpoints/memory_bank_1.3b_based_on_sft/2024-07-18-22-20 \
+    --lora_path checkpoints/memory_bank_1.3b_dpo/2024-07-19-14-23/checkpoint-1400 \
+    --new_model_name model_repo/memory_bank_1.3b_action_dpo

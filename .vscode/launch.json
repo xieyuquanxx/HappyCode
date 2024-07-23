@@ -59,6 +59,28 @@
             ]
         },
         {
+            "name": "action-sft-stage2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "action_sft_stage2.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "6"
+            },
+            "args": [
+                "project=test_action_sft_stage2",
+                "model=action_vlm",
+                "dataset=action_dpo_sft",
+                "training=deepseek_vl_sft",
+                "model.lora.lora_enable=False",
+                "training.deepspeed=''",
+                "training.per_device_train_batch_size=1",
+                "model.model_path=model_repo/deepseek_vl_1.3b_sft_mc",
+                "dataset.file=20240722_mc_dataset_v2_img8_18782.json"
+            ]
+        },
+        {
             "name": "minerl-test",
             "type": "debugpy",
             "request": "launch",
@@ -71,6 +93,18 @@
             "request": "launch",
             "program": "time_test.py",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "data-generation",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "action_mapping.py",
+            "cwd": "${workspaceFolder}/dataset",
+            "console": "integratedTerminal",
+            "args": [
+                "--group_image_num",
+                "8"
+            ]
         }
     ]
 }

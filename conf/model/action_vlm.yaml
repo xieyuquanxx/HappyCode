@@ -1,0 +1,31 @@
+model_path: model_repo/deepseek_vl_1.3b_sft_mc
+
+
+
+freeze:
+  vision_model: True
+  language_model: True
+  aligner: True
+  qformer: False
+  qformer_fc: False
+
+
+lora:
+  lora_enable: False
+  lora_r: 128
+  lora_alpha: 256
+  lora_dropout: 0.05
+  lora_bias: "none"
+
+
+qformer:
+  encoder_hidden_size: 1024
+  hidden_size: 1024
+  num_attention_heads: 16
+  num_query_tokens: 32
+  num_frames: 100
+  memory_bank_length: 20
+  fc_input_dim: 1024
+  fc_output_dim: 2048
+
+attn_implementation: "none" # [none, flash_attention_2]

@@ -1,10 +1,11 @@
-# from .deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
-from .dpo_trainer import VLDPOTrainer
-from .memory_bank_ours.models import MultiModalityCausalLM, VLChatProcessor
+from .action_dpo import ActionMultiModalityCausalLM
+from .deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
+from .memory_bank.models import MemoryBankMultiModalityCausalLM
 
 
 __all__ = [
     "MultiModalityCausalLM",
+    "MemoryBankMultiModalityCausalLM",
     "VLChatProcessor",
-    "VLDPOTrainer",
+    "ActionMultiModalityCausalLM",
 ]
