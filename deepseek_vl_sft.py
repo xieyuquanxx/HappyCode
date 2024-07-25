@@ -1,41 +1,31 @@
 import argparse
 import dataclasses
 import pathlib
-from typing import List
+import pickle
 
 import torch
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from transformers import (
-    AutoModelForCausalLM,
-    LlamaForCausalLM,
-    Trainer,
+    AutoModelForCausalLM,    Trainer,
     TrainingArguments,
 )
 
-from dataset import make_sft_data_modlue
-from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor
-from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
+from conf import HappyCodeConfig
+from happycode.dataset import make_sft_data_modlue
+from happycode.model import find_all_linear_names_of_llm
+from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
+from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
 local_rank = 0
+with open("/data/Users/xyq/developer/happy_code/dataset/dict_action.pkl", "rb") as f1:
+    dic = pickle.load(f1)
 
 
-def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
-    """
-    gate_proj, up_proj, down_proj don't need to be trained in LoRA Fine-tuning
-    """
-    cls = torch.nn.Linear
-    lora_module_names = set()
-    for name, module in model.named_modules():
-        if isinstance(module, cls):
-            names = name.split(".")
-            if "gate" in names[-1] or "up" in names[-1] or "down" in names[-1]:
-                continue
-            lora_module_names.add(names[0] if len(names) == 1 else names[-1])
-    if "lm_head" in lora_module_names:  # ? needed for 16-bit
-        lora_module_names.remove("lm_head")
-    return list(lora_module_names)
+special_tokens_list = []
+for key, value in dic.items():
+    special_tokens_list.append(value)
 
 
 def main(cfg: HappyCodeConfig) -> None:
@@ -46,6 +36,10 @@ def main(cfg: HappyCodeConfig) -> None:
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
+    processor.tokenizer.add_special_tokens(
+        {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]}
+    )
+    processor.tokenizer.add_special_tokens({"additional_special_tokens": special_tokens_list})
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
@@ -131,6 +125,8 @@ def main(cfg: HappyCodeConfig) -> None:
         if training_args.local_rank == 0 or training_args.local_rank == -1:
             model.config.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir)
+            processor.tokenizer.save_pretrained(training_args.output_dir)
+            processor.save_pretrained(training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
 

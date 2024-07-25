@@ -1,8 +1,9 @@
 defaults:
   - _self_
   - dataset: hf
-  - model: vit-base-patch16-224
-  - training: vit-base-oxford-iiit-pets
+  - model: deepseek_vl
+  - training: deepseek_vl_sft
+  - env: minerl
   
 project: ???
 

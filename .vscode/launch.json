@@ -10,11 +10,32 @@
             "request": "launch",
             "program": "deepseek_vl_sft.py",
             "console": "integratedTerminal",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3"
+            },
             "args": [
-                "project=deepseek_vl_7b_sft",
-                "model=deepseek_vl",
+                "project=deepseek_vl_test_sft",
+                "model=ds_vl_memory_bank",
                 "dataset=deepseek_vl_sft",
-                "training=deepseek_vl"
+                "training=deepseek_vl_sft"
+            ]
+        },
+        {
+            "name": "memory-bank-sft",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "memory_bank_sft.py",
+            "console": "integratedTerminal",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3"
+            },
+            "args": [
+                "project=deepseek_vl_test_sft",
+                "model=ds_vl_memory_bank",
+                "dataset=deepseek_vl_sft",
+                "training=deepseek_vl_sft",
+                "training.per_device_train_batch_size=2",
+                "model.lora.lora_enable=True",
             ]
         },
         {
@@ -27,11 +48,62 @@
                 "CUDA_VISIBLE_DEVICES": "4"
             },
             "args": [
-                "project=deepseek_vl_7b_dpo",
+                "project=deepseek_vl_1.3b_dpo",
                 "model=deepseek_vl",
                 "dataset=deepseek_vl_dpo",
                 "training=deepseek_vl_dpo",
-                "model.lora.lora_enable=True"
+                "model.lora.lora_enable=True",
+                "model.lora.lora_r=2",
+                "dataset.file=dataset_test_input_neg.json",
+                "training.per_device_train_batch_size=1"
+            ]
+        },
+        {
+            "name": "action-sft-stage2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "action_sft_stage2.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "6"
+            },
+            "args": [
+                "project=test_action_sft_stage2",
+                "model=action_vlm",
+                "dataset=action_vlm_sft",
+                "training=deepseek_vl_sft",
+                "model.lora.lora_enable=False",
+                "training.deepspeed=''",
+                "training.per_device_train_batch_size=1",
+                "model.model_path=model_repo/deepseek_vl_1.3b_sft_mc",
+                "dataset.file=20240722_mc_dataset_v2_img8_18782.json"
+            ]
+        },
+        {
+            "name": "minerl-test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mc_eval.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "time-test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "time_test.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "data-generation",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "action_mapping.py",
+            "cwd": "${workspaceFolder}/dataset",
+            "console": "integratedTerminal",
+            "args": [
+                "--group_image_num",
+                "8"
             ]
         }
     ]

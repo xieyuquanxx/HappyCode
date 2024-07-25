@@ -1,40 +1,32 @@
 import argparse
 import dataclasses
 import pathlib
-from typing import List
+import pickle
 
 import torch
 from hydra import compose, initialize
 from omegaconf import OmegaConf
-from transformers import (
-    AutoModelForCausalLM,
-    LlamaForCausalLM,
-)
+from transformers import AutoModelForCausalLM
+
 from trl import DPOConfig
 
-from dataset import make_dpo_data_modlue
-from model import HappyCodeConfig, MultiModalityCausalLM, VLChatProcessor, VLDPOTrainer
-from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
+from conf import HappyCodeConfig
+from happycode.dataset import make_dpo_data_modlue
+from happycode.model import MultiModalityCausalLM, VLChatProcessor, find_all_linear_names_of_llm
+from happycode.model.callback import LoggerLogCallback
+from happycode.trainer import VLDPOTrainer
+from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
 local_rank = 0
+with open("/data/Users/xyq/developer/happy_code/dataset/dict_action.pkl", "rb") as f1:
+    dic = pickle.load(f1)
 
 
-def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> List[str]:
-    """
-    gate_proj, up_proj, down_proj don't need to be trained in LoRA Fine-tuning
-    """
-    cls = torch.nn.Linear
-    lora_module_names = set()
-    for name, module in model.named_modules():
-        if isinstance(module, cls):
-            names = name.split(".")
-            if "gate" in names[-1] or "up" in names[-1] or "down" in names[-1]:
-                continue
-            lora_module_names.add(names[0] if len(names) == 1 else names[-1])
-    if "lm_head" in lora_module_names:  # ? needed for 16-bit
-        lora_module_names.remove("lm_head")
-    return list(lora_module_names)
+special_tokens_list = []
+for key, value in dic.items():
+    special_tokens_list.append(value)
+
 
 
 def main(cfg: HappyCodeConfig) -> None:
@@ -45,6 +37,11 @@ def main(cfg: HappyCodeConfig) -> None:
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
+    # add special tokens
+    processor.tokenizer.add_special_tokens(
+        {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]}
+    )
+    processor.tokenizer.add_special_tokens({"additional_special_tokens": special_tokens_list})
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
@@ -104,8 +101,8 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        local_rank=local_rank,
-        **dataclasses.asdict(cfg.training),
+        padding_value=0,
+        **dict(cfg.training),  # type: ignore
     )
 
     model.vision_model = model.vision_model.to(
@@ -121,8 +118,10 @@ def main(cfg: HappyCodeConfig) -> None:
         ref_model=ref_model,
         args=training_args,
         tokenizer=processor.tokenizer,
+        padding_value=0,
         **data_module,
     )
+    trainer.add_callback(LoggerLogCallback(logger))
 
     ckpt_dir = f"{cfg.ckpt_dir}/{cfg.run_name}"
     if list(pathlib.Path(ckpt_dir).glob("checkpoint-*")):
@@ -134,7 +133,9 @@ def main(cfg: HappyCodeConfig) -> None:
 
     if lora_cfg.lora_enable:
         if training_args.local_rank == 0 or training_args.local_rank == -1:
-            model.multi_model_config.save_pretrained(training_args.output_dir)
+            model.config.save_pretrained(training_args.output_dir)
+            processor.tokenizer.save_pretrained(training_args.output_dir)
+            processor.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
@@ -161,7 +162,5 @@ if __name__ == "__main__":
 
     cfg = compose(config_name=args.config_name, overrides=args.overrides)
     local_rank = args.local_rank
-
-    # exit(0)
 
     main(cfg)  # type: ignore
