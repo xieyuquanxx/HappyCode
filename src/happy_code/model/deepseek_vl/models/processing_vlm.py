@@ -491,10 +491,22 @@ class VLChatProcessor(ProcessorMixin):
         batched_images_seq_mask = torch.zeros((batch_size, input_token_max_len)).bool()
         batched_images_emb_mask = torch.zeros((batch_size, max_n_images, self.num_image_tokens)).bool()
 
-        batched_history = {
-            "images": torch.cat([p["history"]["images"].unsqueeze(0) for p in prepare_list], dim=0),
-            "actions": [p["history"]["actions"] for p in prepare_list],
-        }
+        batched_history = None
+        if prepare_list[0].history is not None:
+            history_actions = [p["history"]["actions"] for p in prepare_list]
+            history_action_lens = [288] # make max_len to 288 -> 288*2 = 576
+            for ha in history_actions:
+                history_action_lens.extend([len(h) for h in ha])
+            history_actions_input_ids = torch.full(
+                (batch_size, len(history_actions[0]), max(history_action_lens)), self.pad_id
+            ).long()
+            for bs in range(batch_size):
+                for i, ha in enumerate(history_actions[bs]):
+                    history_actions_input_ids[bs, i, -len(ha) :] = torch.LongTensor(ha)
+            batched_history = {
+                "images": torch.cat([p["history"]["images"].unsqueeze(0) for p in prepare_list], dim=0),
+                "actions": history_actions_input_ids,
+            }
 
         for i, prepare in enumerate(prepare_list):
             input_ids = prepare.input_ids

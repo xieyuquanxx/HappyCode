@@ -1,4 +1,4 @@
-from .action_dpo import (
+from .action_vlm import (
     ActionDPODataset,
     ActionSftDataset,
     make_action_dpo_data_modlue,

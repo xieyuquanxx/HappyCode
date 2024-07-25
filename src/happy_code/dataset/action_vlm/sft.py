@@ -32,7 +32,7 @@ class ActionSftDataset(Dataset):
 
         self.sft_file = os.path.join(dataset_cfg.data_dir, dataset_cfg.file)
 
-        self.sft_data = json.load(open(self.sft_file))[:20]
+        self.sft_data = json.load(open(self.sft_file))
 
     def __len__(self):
         return len(self.sft_data)
@@ -54,7 +54,7 @@ class ActionSftDataset(Dataset):
         pil_images = load_pil_images(data)
 
         prepare = self.chat_processor(conversations=data, images=pil_images, force_batchify=False)
-        # todo: history["actions"] -> input_ids(list -> tensor)
+        # todo: history["actions"] -> input_ids(list)
         history_action_input_ids = [self.chat_processor.tokenizer.encode(action) for action in history["actions"]]
 
         prepare["history"] = {

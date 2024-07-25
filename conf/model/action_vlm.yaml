@@ -23,8 +23,8 @@ qformer:
   hidden_size: 1024
   num_attention_heads: 16
   num_query_tokens: 32
-  num_frames: 100
-  memory_bank_length: 20
+  num_frames: 8 # history frames length
+  memory_bank_length: 5 # memory bank to store history frames
   fc_input_dim: 1024
   fc_output_dim: 2048
 

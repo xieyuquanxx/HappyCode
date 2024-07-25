@@ -172,6 +172,8 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
                 self.qformer.encoder, config.qformer_config.memory_bank_length, config.qformer_config.num_frames
             )
             self.qformer_fc = nn.Linear(config.qformer_config.fc_input_dim, config.qformer_config.fc_output_dim)
+            self.qformer_fc.weight.data.normal_(mean=0.0, std=config.qformer_config.initializer_range)
+            self.qformer_fc.bias.data.zero_()
 
     def freeze_module(self, module_name: str) -> None:
         assert module_name in self._module_names, f"module_name {module_name} is invalid."
@@ -207,59 +209,65 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
 
         bs, n = pixel_values.shape[0:2]
         images = rearrange(pixel_values, "b n c h w -> (b n) c h w")
-        history_images = history["images"]
+        # actions shape: [bs, 8, max_action_len] -> [bs*8, max_action_len]
+        history_images, history_actions = (history["images"], history["actions"])
         history_images = rearrange(history_images, "b n c h w -> (b n) c h w")
+        history_actions = rearrange(history_actions, "b n t -> (b n) t")
         history_images_num = history_images.shape[0]
-        # [b x n, T2, D]
-        # images_embeds = self.aligner(self.vision_model(images))
-        images_features = self.vision_model(images)  # [b*n, 576, 1024]
-        history_images_features = self.vision_model(history_images.to(images.device))  # [b*n, 576, 1024]
 
-        # [b x n, T2, D] -> [b, n x T2, D]
-        # images_embeds = rearrange(images_features, "(b n) t d -> b (n t) d", b=bs, n=n)
-        # [b, n, T2] -> [b, n x T2]
-        # images_emb_mask = rearrange(images_emb_mask, "b n t -> b (n t)")
+        images_features = self.vision_model(images)  # [b*n, 576, 1024]
+        history_images_features = self.vision_model(
+            history_images.to(images.device, images.dtype)
+        )  # [b*n, 576, 1024]
+        history_images_features = rearrange(history_images_features, "(b n) t d -> b n t d", b=bs, n=8)
 
         image_attention_mask = torch.ones(
             history_images_features.size()[:-1], dtype=torch.long, device=history_images_features.device
         )
-        # [bs*n, 32, hidden_size]
+        # [b*n, max_len/288, 2048] -> 最后一维度需要变成1024
+        history_action_embeds = self.language_model.get_input_embeddings()(history_actions.to(images.device))
+        history_action_embeds = history_action_embeds.reshape(*history_images_features.shape)  # [b, n, 576, 1024]
+
+        # [bs, 32, hidden_size]
         query_tokens = self.query_tokens.expand(history_images_features.shape[0], -1, -1).to(
             history_images_features.device, history_images_features.dtype
         )
-        query_outputs = self.qformer(
-            query_embeds=query_tokens,
-            encoder_hidden_states=history_images_features,
-            encoder_attention_mask=image_attention_mask,
-            # output_attentions=output_attentions,
-            # output_hidden_states=output_hidden_states,
-            # return_dict=return_dict,
-        )
-        query_output = query_outputs[0]  # [bs*n, 32, 1024]
+        for history_size in range(min(history_images_num, history_images_features.shape[1])):
+            query_outputs = self.qformer(
+                query_embeds=query_tokens,
+                encoder_hidden_states=[
+                    history_images_features[:, history_size, ...],
+                    history_action_embeds[:, history_size, ...],
+                ],
+                encoder_attention_mask=image_attention_mask,
+                # output_attentions=output_attentions,
+                # output_hidden_states=output_hidden_states,
+                # return_dict=return_dict,
+            )
+        query_output = query_outputs[0]  # [bs, 32, 1024]
 
-        images_embeds_vision = self.aligner(images_features)  # [bs*n, 576, 2048]
-        images_embeds2_qformer = self.qformer_fc(query_output)  # [bs*n, num_query_token, 2048]
+        images_embeds_vision = self.aligner(images_features)  # [bs, 576, 2048]
+        images_embeds2_qformer = self.qformer_fc(query_output)  # [bs, num_query_token, 2048]
 
-        images_embeds = rearrange(images_embeds_vision, "(b n) t d -> (b n t) d", b=bs, n=n)  # [bs* n*576, 2048]
-        # [bs, history_images_num *num_query_token, 2048]
-        images_qformer_embeds = rearrange(
-            images_embeds2_qformer, "(b n) t d -> b (n t) d", b=bs, n=history_images_num
-        )
+        images_embeds = rearrange(images_embeds_vision, "b t d -> (b t) d", b=bs)  # [bs*576, 2048]
+        # [bs*num_query_token, 2048]
+        # images_qformer_embeds = rearrange(
+        #     images_embeds2_qformer, "b t d -> (b t) d", b=bs
+        # )
         # [b, T, D]
         input_ids[input_ids < 0] = 0  # ignore the image embeddings
-        # select 32 tokens from the image embeddings
 
         inputs_embeds = self.language_model.get_input_embeddings()(input_ids)
 
         inputs_embeds[images_seq_mask] = images_embeds.to(dtype=inputs_embeds.dtype)
 
-        inputs_embeds = torch.cat([images_qformer_embeds, inputs_embeds], dim=1)
+        inputs_embeds = torch.cat([images_embeds2_qformer, inputs_embeds], dim=1)
 
         labels = kwargs.get("labels", None)
 
         if labels is not None:
             ignore_qformer_embeds = torch.tensor(
-                [[-100] * images_qformer_embeds.shape[1]], device=images_qformer_embeds.device
+                [[-100] * images_embeds2_qformer.shape[1]], device=images_embeds2_qformer.device
             )
             labels = torch.cat([ignore_qformer_embeds.repeat(bs, 1), labels], dim=1)
 
@@ -292,7 +300,7 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
                 labels=labels,
             )
         return self.language_model.forward(
-            attention_mask=attention_mask,
+            attention_mask=torch.ones(labels.shape),
             position_ids=position_ids,
             past_key_values=past_key_values,
             inputs_embeds=inputs_embeds,

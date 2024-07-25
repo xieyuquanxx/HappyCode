@@ -10,15 +10,15 @@ from transformers import (
 )
 from trl import DPOConfig
 
-from conf import HappyCodeConfig
-from dataset import make_dpo_data_modlue
-from model.callback import LoggerLogCallback
-from model.memory_bank.models import (
+from happycode.conf import HappyCodeConfig
+from happycode.dataset import make_dpo_data_modlue
+from happycode.model.callback import LoggerLogCallback
+from happycode.model.memory_bank.models import (
     MultiModalityCausalLM,
     VLChatProcessor,
 )
-from trainer import VLDPOTrainer
-from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
+from happycode.trainer import VLDPOTrainer
+from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
 local_rank = 0

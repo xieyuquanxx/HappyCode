@@ -24,9 +24,13 @@ class MemoryBankBlip2QFormerMultiHeadAttention(Blip2QFormerMultiHeadAttention):
         # such that the encoder's padding tokens are not attended to.
         is_cross_attention = encoder_hidden_states is not None
 
-        if is_cross_attention:
-            key_layer = self.transpose_for_scores(self.key(encoder_hidden_states))
-            value_layer = self.transpose_for_scores(self.value(encoder_hidden_states))
+        if is_cross_attention: # todo: add history action
+            if isinstance(encoder_hidden_states, list):
+                key_layer = self.transpose_for_scores(self.key(encoder_hidden_states[0]))  # [bs,16,576,64]
+                value_layer = self.transpose_for_scores(self.value(encoder_hidden_states[1]))  # [bs,16,576,64]
+            else:
+                key_layer = self.transpose_for_scores(self.key(encoder_hidden_states))  # [bs,16,576,64]
+                value_layer = self.transpose_for_scores(self.value(encoder_hidden_states))  # [bs,16,576,64]
             attention_mask = encoder_attention_mask
         elif past_key_value is not None:
             key_layer = self.transpose_for_scores(self.key(hidden_states))
@@ -50,14 +54,14 @@ class MemoryBankBlip2QFormerMultiHeadAttention(Blip2QFormerMultiHeadAttention):
             else:
                 key_layer = self.transpose_for_scores(k)
                 value_layer = self.transpose_for_scores(v)
-        mixed_query_layer = self.query(hidden_states)
+        mixed_query_layer = self.query(hidden_states) #[bs,32, 1024]
 
-        query_layer = self.transpose_for_scores(mixed_query_layer)
+        query_layer = self.transpose_for_scores(mixed_query_layer) # [bs, 16, 32, 64]
 
         past_key_value = (key_layer, value_layer)
 
         # Take the dot product between "query" and "key" to get the raw attention scores.
-        attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))
+        attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2)) # [bs, 16, 32, 32/576]
 
         if self.position_embedding_type == "relative_key" or self.position_embedding_type == "relative_key_query":
             seq_length = hidden_states.size()[1]

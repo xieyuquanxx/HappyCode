@@ -8,11 +8,11 @@ from transformers import AutoModelForCausalLM
 
 def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "cpu") -> None:
     if "deepseek" in model_name:
-        from model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
+        from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
 
         print("deepseek")
     else:
-        from model.memory_bank.models import MultiModalityCausalLM, VLChatProcessor
+        from happycode.model.memory_bank.models import MultiModalityCausalLM, VLChatProcessor
 
         print("memory bank")
     device_arg = {"device_map": {"": device}}

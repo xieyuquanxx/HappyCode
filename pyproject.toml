@@ -3,7 +3,7 @@ index-url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 [tool.ruff]
 target-version = "py312"
-line-length = 114
+line-length = 119
 indent-width = 4
 exclude = [
     ".bzr",

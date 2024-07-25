@@ -3,6 +3,16 @@ import pathlib
 import pickle
 
 import torch
+from happycode.conf import HappyCodeConfig
+from happycode.dataset import make_sft_data_modlue
+from happycode.model.callback import LoggerLogCallback
+from happycode.model.memory_bank.models import (
+    MemoryBankQformerConfig,
+    MultiModalityCausalLM,
+    VLChatProcessor,
+    apply_memory_bank,
+)
+from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from torch import nn
@@ -13,17 +23,6 @@ from transformers import (
     TrainingArguments,
 )
 from transformers.models.blip_2.modeling_blip_2 import Blip2QFormerModel
-
-from conf import HappyCodeConfig
-from dataset import make_sft_data_modlue
-from model.callback import LoggerLogCallback
-from model.memory_bank.models import (
-    MemoryBankQformerConfig,
-    MultiModalityCausalLM,
-    VLChatProcessor,
-    apply_memory_bank,
-)
-from utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
 local_rank = 0
@@ -60,10 +59,7 @@ def main(cfg: HappyCodeConfig) -> None:
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
     processor.tokenizer.add_special_tokens(
-        {
-            "additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]
-            + special_tokens_list
-        }
+        {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"] + special_tokens_list}
     )
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
@@ -81,9 +77,7 @@ def main(cfg: HappyCodeConfig) -> None:
     query_tokens.data.normal_(mean=0.0, std=qformer_config.initializer_range)
 
     qformer = Blip2QFormerModel(qformer_config).to(torch.bfloat16)
-    qformer.encoder = apply_memory_bank(
-        qformer.encoder, qformer_config.memory_bank_length, qformer_config.num_frames
-    )
+    qformer.encoder = apply_memory_bank(qformer.encoder, qformer_config.memory_bank_length, qformer_config.num_frames)
     model.qformer = qformer
     model.query_tokens = query_tokens
     rank0_log(local_rank, logger, f"Load Qformer+Memory Bank with config {qformer_config}")
@@ -145,9 +139,7 @@ def main(cfg: HappyCodeConfig) -> None:
         tokenizer=processor.tokenizer,
         **data_module,
     )
-    rank0_log(
-        local_rank, logger, f"Total parameters (M): {trainer.get_num_trainable_parameters() / 1_000_000:.2f}M"
-    )
+    rank0_log(local_rank, logger, f"Total parameters (M): {trainer.get_num_trainable_parameters() / 1_000_000:.2f}M")
     trainer.add_callback(LoggerLogCallback(logger))
 
     ckpt_dir = f"{cfg.ckpt_dir}/{cfg.run_name}"
