@@ -24,7 +24,7 @@ from PIL.Image import Image
 from transformers import LlamaTokenizerFast
 from transformers.processing_utils import ProcessorMixin
 
-from model.deepseek_vl.utils.conversation import get_conv_template
+from ..utils.conversation import get_conv_template
 
 from .image_processing_vlm import VLMImageProcessor
 
@@ -34,10 +34,7 @@ class DictOutput:
         return self.__dict__.keys()
 
     def __getitem__(self, item):
-        try:
-            return self.__dict__[item]
-        except KeyError:
-            return 0
+        return self.__dict__[item]
 
     def __setitem__(self, key, value):
         self.__dict__[key] = value
@@ -57,6 +54,7 @@ class VLChatProcessorOutput(DictOutput):
 @dataclass
 class VLChatProcessorTrainOutput(VLChatProcessorOutput):
     labels: torch.Tensor  # answer
+    history: dict | None = None
 
     def __len__(self):
         return len(self.input_ids)
@@ -99,6 +97,7 @@ class BatchedVLChatProcessorOutput(DictOutput):
 @dataclass
 class BatchedVLChatProcessorTrainOutput(BatchedVLChatProcessorOutput):
     labels: torch.Tensor
+    history: dict | None = None
 
     def to(self, device, dtype=torch.bfloat16):
         super().to(device, dtype)
@@ -492,6 +491,23 @@ class VLChatProcessor(ProcessorMixin):
         batched_images_seq_mask = torch.zeros((batch_size, input_token_max_len)).bool()
         batched_images_emb_mask = torch.zeros((batch_size, max_n_images, self.num_image_tokens)).bool()
 
+        batched_history = None
+        if prepare_list[0].history is not None:
+            history_actions = [p["history"]["actions"] for p in prepare_list]
+            history_action_lens = [288] # make max_len to 288 -> 288*2 = 576
+            for ha in history_actions:
+                history_action_lens.extend([len(h) for h in ha])
+            history_actions_input_ids = torch.full(
+                (batch_size, len(history_actions[0]), max(history_action_lens)), self.pad_id
+            ).long()
+            for bs in range(batch_size):
+                for i, ha in enumerate(history_actions[bs]):
+                    history_actions_input_ids[bs, i, -len(ha) :] = torch.LongTensor(ha)
+            batched_history = {
+                "images": torch.cat([p["history"]["images"].unsqueeze(0) for p in prepare_list], dim=0),
+                "actions": history_actions_input_ids,
+            }
+
         for i, prepare in enumerate(prepare_list):
             input_ids = prepare.input_ids
             labels = prepare.labels
@@ -528,8 +544,8 @@ class VLChatProcessor(ProcessorMixin):
                 images_seq_mask=batched_images_seq_mask,
                 images_emb_mask=batched_images_emb_mask,
                 sft_format=sft_format,
+                history=batched_history,
             )
-
         return batched_prepares
 
     def _tokenizer_and_add_image_token(self, prompt: str):

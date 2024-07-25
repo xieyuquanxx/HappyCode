@@ -35,9 +35,9 @@ from transformers.configuration_utils import PretrainedConfig
 from transformers.models.blip_2 import Blip2QFormerConfig
 from transformers.models.blip_2.modeling_blip_2 import Blip2QFormerModel
 
-from model.deepseek_vl.models.clip_encoder import CLIPVisionTower, HybridVisionTower
-from model.deepseek_vl.models.projector import MlpProjector
-from model.memory_bank.models.qformer import apply_memory_bank
+from ..deepseek_vl.models.clip_encoder import CLIPVisionTower, HybridVisionTower
+from ..deepseek_vl.models.projector import MlpProjector
+from ..memory_bank.models.qformer import apply_memory_bank
 
 
 def model_name_to_cls(cls_name):

@@ -6,7 +6,7 @@ from typing import Any
 from torch.utils.data import Dataset
 
 from conf.default import BaseDatasetConfig
-from model.deepseek_vl.utils.io import load_pil_images
+from happycode.model.deepseek_vl.utils.io import load_pil_images
 
 
 class DeepSeekSftDataset(Dataset):

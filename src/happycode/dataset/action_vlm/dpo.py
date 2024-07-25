@@ -7,8 +7,8 @@ from torch.utils.data import Dataset
 from trl.trainer.utils import DPODataCollatorWithPadding
 
 from conf.default import BaseDatasetConfig
-from model.deepseek_vl.models import VLChatProcessor
-from model.deepseek_vl.utils.io import load_pil_images
+from happycode.model.deepseek_vl.models import VLChatProcessor
+from happycode.model.deepseek_vl.utils.io import load_pil_images
 
 
 class ActionDPODataset(Dataset):

@@ -6,14 +6,13 @@ import torch
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from transformers import (
-    AutoModelForCausalLM,
-    LlamaForCausalLM,
-    Trainer,
+    AutoModelForCausalLM,    Trainer,
     TrainingArguments,
 )
 
-from happycode.conf import HappyCodeConfig
+from conf import HappyCodeConfig
 from happycode.dataset import make_sft_data_modlue
+from happycode.model import find_all_linear_names_of_llm
 from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
 from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
@@ -26,23 +25,6 @@ with open("/data/Users/xyq/developer/happy_code/dataset/dict_action.pkl", "rb") 
 special_tokens_list = []
 for key, value in dic.items():
     special_tokens_list.append(value)
-
-
-def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:
-    """
-    gate_proj, up_proj, down_proj don't need to be trained in LoRA Fine-tuning
-    """
-    cls = torch.nn.Linear
-    lora_module_names = set()
-    for name, module in model.named_modules():
-        if isinstance(module, cls):
-            names = name.split(".")
-            if "gate" in names[-1] or "up" in names[-1] or "down" in names[-1]:
-                continue
-            lora_module_names.add(names[0] if len(names) == 1 else names[-1])
-    if "lm_head" in lora_module_names:  # ? needed for 16-bit
-        lora_module_names.remove("lm_head")
-    return list(lora_module_names)
 
 
 def main(cfg: HappyCodeConfig) -> None:

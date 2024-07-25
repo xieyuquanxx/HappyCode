@@ -25,7 +25,7 @@ import PIL.Image
 import torch
 from transformers import AutoModelForCausalLM
 
-from model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
+from ..models import MultiModalityCausalLM, VLChatProcessor
 
 
 def load_pretrained_model(model_path: str):

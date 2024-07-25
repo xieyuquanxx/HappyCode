@@ -16,9 +16,9 @@ uv venv .venv/.dpo
 source .venv/.dpo/bin/activate  # if you want to exit the env, just type deactivate
 uv pip install -r  requirements.txt
 uv pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118
-
+uv pip install -e .
 # install minerl from source
-uv pip install env/minerl --no-cache-dir --no-build-isolation
+#uv pip install env/minerl --no-cache-dir --no-build-isolation
 # install flash-attention2
 uv pip install flash-attn --no-build-isolation
 # clean cache

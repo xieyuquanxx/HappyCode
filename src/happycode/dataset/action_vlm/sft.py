@@ -7,7 +7,7 @@ import PIL
 from torch.utils.data import Dataset
 
 from conf.default import BaseDatasetConfig
-from model.deepseek_vl.utils.io import load_pil_images
+from happycode.model.deepseek_vl.utils.io import load_pil_images
 
 
 def load_pil_images_from_path(image_list: list[str]) -> list[PIL.Image.Image]:
@@ -32,7 +32,7 @@ class ActionSftDataset(Dataset):
 
         self.sft_file = os.path.join(dataset_cfg.data_dir, dataset_cfg.file)
 
-        self.sft_data = json.load(open(self.sft_file))
+        self.sft_data = json.load(open(self.sft_file))[:20]
 
     def __len__(self):
         return len(self.sft_data)

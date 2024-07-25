@@ -39,7 +39,6 @@ def main():
         packages=find_packages("src"),
         python_requires=">=3.11.0",
         # install_requires=get_requires(),
-        entry_points={"console_scripts": ["llamafactory-cli = llamafactory.cli:main"]},
         classifiers=[
             "Development Status :: 4 - Beta",
             "Intended Audience :: Developers",

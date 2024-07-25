@@ -71,7 +71,7 @@
             "args": [
                 "project=test_action_sft_stage2",
                 "model=action_vlm",
-                "dataset=action_dpo_sft",
+                "dataset=action_vlm_sft",
                 "training=deepseek_vl_sft",
                 "model.lora.lora_enable=False",
                 "training.deepspeed=''",
