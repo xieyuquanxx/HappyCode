@@ -17,5 +17,6 @@ dataset/mc_dataset*
 *.log
 *.zip
 *.png
+*.ipynb
 
 env/
