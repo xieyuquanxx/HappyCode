@@ -6,7 +6,7 @@ gpus=0,1,2,3
 project_name=memory_bank_1.3b_dpo
 model=ds_vl_memory_bank
 dataset=memory_bank_dpo
-training=deepseek_vl_dpo
+training=dpo
 
 export WANDB_API_KEY=debbae3ca343becc30f4d50fdb90cf36786b166e
 export WANDB_PROJECT=${project_name}

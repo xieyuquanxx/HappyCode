@@ -126,11 +126,7 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
 
         self.config = language_config
 
-<<<<<<< HEAD:model/deepseek_vl/models/modeling_vlm.py
-        self.multi_model_config = config
-=======
-        print("hello ds")
->>>>>>> action_dpo:src/happycode/model/deepseek_vl/models/modeling_vlm.py
+        self.model_config = config
 
     def prepare_inputs_embeds(
         self,

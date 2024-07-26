@@ -6,7 +6,7 @@ gpus=4,5,6,7
 project_name=action_vlm
 model=action_vlm
 dataset=action_vlm_sft
-training=deepseek_vl_sft
+training=sft
 
 export WANDB_API_KEY=debbae3ca343becc30f4d50fdb90cf36786b166e
 export WANDB_PROJECT=${project_name}

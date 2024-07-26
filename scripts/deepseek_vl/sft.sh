@@ -5,13 +5,8 @@ gpus=0,1,2,3
 
 project_name=deepseek_vl_1.3b_sft_lora_mc
 model=deepseek_vl
-<<<<<<< HEAD
 dataset=sft
-training=deepseek_vl
-=======
-dataset=deepseek_vl_sft
-training=deepseek_vl_sft
->>>>>>> action_dpo
+training=sft
 
 export WANDB_API_KEY=debbae3ca343becc30f4d50fdb90cf36786b166e
 export WANDB_PROJECT=${project_name}

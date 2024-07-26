@@ -8,20 +8,7 @@ from torch.utils.data import Dataset
 
 from conf.default import BaseDatasetConfig
 from happycode.model.deepseek_vl.utils.io import load_pil_images
-
-
-def load_pil_images_from_path(image_list: list[str]) -> list[PIL.Image.Image]:
-    """
-    Support file path or base64 images.
-
-    Args:
-        image_list (List[str]): the list of image paths.
-    Returns:
-        pil_images (List[PIL.Image.Image]): the list of PIL images.
-    """
-
-    return [PIL.Image.open(image_data).convert("RGB") for image_data in image_list]
-
+from happycode.utils.image import load_pil_images_from_path
 
 class ActionSftDataset(Dataset):
     def __init__(self, vl_chat_processor, dataset_cfg: BaseDatasetConfig) -> None:

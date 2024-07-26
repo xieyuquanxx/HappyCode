@@ -51,7 +51,7 @@
                 "project=deepseek_vl_1.3b_dpo",
                 "model=deepseek_vl",
                 "dataset=deepseek_vl_dpo",
-                "training=deepseek_vl_dpo",
+                "training=dpo",
                 "model.lora.lora_enable=True",
                 "model.lora.lora_r=2",
                 "dataset.file=dataset_test_input_neg.json",
@@ -72,12 +72,33 @@
                 "project=test_action_sft_stage2",
                 "model=action_vlm",
                 "dataset=action_vlm_sft",
-                "training=deepseek_vl_sft",
+                "training=sft",
                 "model.lora.lora_enable=False",
                 "training.deepspeed=''",
                 "training.per_device_train_batch_size=1",
                 "model.model_path=model_repo/deepseek_vl_1.3b_sft_mc",
                 "dataset.file=20240722_mc_dataset_v2_img8_18782.json"
+            ]
+        },
+        {
+            "name": "action-dpo",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "action_dpo.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "6"
+            },
+            "args": [
+                "project=test_action_dpo",
+                "model=action_vlm",
+                "dataset=action_vlm_dpo",
+                "training=dpo",
+                "model.lora.lora_enable=True",
+                "training.deepspeed=''",
+                "training.per_device_train_batch_size=1",
+                "model.model_path=/data/Users/xyq/developer/happy_code/checkpoints/action_vlm/2024-07-24-22-42",
             ]
         },
         {

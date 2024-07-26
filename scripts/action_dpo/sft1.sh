@@ -6,7 +6,7 @@ gpus=0,1,2,3
 project_name=action_dpo_v2
 model=ds_vl_memory_bank
 dataset=action_dpo_sft
-training=deepseek_vl_sft
+training=sft
 
 export WANDB_API_KEY=debbae3ca343becc30f4d50fdb90cf36786b166e
 export WANDB_PROJECT=${project_name}

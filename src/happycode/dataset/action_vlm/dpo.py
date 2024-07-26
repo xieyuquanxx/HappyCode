@@ -9,7 +9,7 @@ from trl.trainer.utils import DPODataCollatorWithPadding
 from conf.default import BaseDatasetConfig
 from happycode.model.deepseek_vl.models import VLChatProcessor
 from happycode.model.deepseek_vl.utils.io import load_pil_images
-
+from happycode.utils.image import load_pil_images_from_path
 
 class ActionDPODataset(Dataset):
     def __init__(self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> None:
@@ -31,8 +31,8 @@ class ActionDPODataset(Dataset):
     def __getitem__(self, index) -> dict[str, Any]:
         data = self.data[index]["conversations"]
 
-        system, input_chosen = data[0], data[1]
-
+        # system, input_chosen = data[0], data[1]
+        input_chosen = data[0]
         input_neg = list(filter(lambda x: x["role"] == "User" and x["type"] == "rejected", data))[0]
         output_chosen = list(filter(lambda x: x["role"] == "Assistant" and x["type"] == "chosen", data))[0]
         rejected = list(filter(lambda x: x["role"] == "Assistant" and x["type"] == "rejected", data))
@@ -43,11 +43,11 @@ class ActionDPODataset(Dataset):
         rejected_data = [[prompt, reject] for reject in rejected]
         pil_images = load_pil_images(data)
 
-        self.chat_processor.system_prompt = system["content"]
+        # self.chat_processor.system_prompt = system["content"]
         # prompt_prepare = self.chat_processor(conversations=raw_prompt, images=pil_images, force_batchify=False)
-        chosen_prepare = self.chat_processor(conversations=chosen_data, images=pil_images, force_batchify=False)
+        chosen_prepare = self.chat_processor(conversations=chosen_data, images=[pil_images[0]], force_batchify=False)
         rejected_prepare = [
-            self.chat_processor(conversations=rejected_dt, images=pil_images, force_batchify=False)
+            self.chat_processor(conversations=rejected_dt, images=[pil_images[0]], force_batchify=False)
             for rejected_dt in rejected_data
         ]
         # 输入增加负样本
@@ -55,6 +55,26 @@ class ActionDPODataset(Dataset):
         input_neg_prepare = self.chat_processor(
             conversations=input_neg_data, images=load_pil_images(input_neg_data), force_batchify=False
         )
+        
+        history_action_input_ids = [self.chat_processor.tokenizer.encode(action) for action in input_chosen["history"]["actions"]]
+
+        chosen_prepare["history"] = {
+            "images": self.chat_processor.image_processor(
+                load_pil_images_from_path(input_chosen["history"]["images"]), return_tensors="pt"
+            ).pixel_values,
+            "actions": history_action_input_ids,
+        }
+        for rejected in rejected_prepare:
+            rejected["history"] = chosen_prepare["history"]
+        
+        history_action_input_ids = [self.chat_processor.tokenizer.encode(action) for action in input_neg["history"]["actions"]]
+
+        input_neg_prepare["history"] = {
+            "images": self.chat_processor.image_processor(
+                load_pil_images_from_path(input_neg["history"]["images"]), return_tensors="pt"
+            ).pixel_values,
+            "actions": history_action_input_ids,
+        }
         return {
             # "prompt_prepare": prompt_prepare,
             "chosen_prepare": chosen_prepare,
@@ -65,6 +85,9 @@ class ActionDPODataset(Dataset):
 
 class DPODataCollator(DPODataCollatorWithPadding):
     vl_chat_processor: VLChatProcessor
+    def __init__(self, processor: VLChatProcessor):
+        self.vl_chat_processor = processor
+        super().__init__()
 
     def __call__(self, batch) -> dict[str, Any]:
         # prompt_prepares = [sample["prompt_prepare"] for sample in batch]  # B*[]
@@ -101,6 +124,8 @@ class DPODataCollator(DPODataCollatorWithPadding):
             "chosen_images_emb_mask": chosen_batch.images_emb_mask,
             # "rejected_images_seq_mask": rejected_batch.images_seq_mask,
             "rejected_images_emb_mask": rejected_batch.images_emb_mask,
+            "history_chosen": chosen_batch["history"],
+            "history_rejected": rejected_batch["history"],
         }
 
 
