@@ -331,10 +331,10 @@ if __name__ == "__main__":
 
     parser.add_argument("--group_image_num", default=9, type=int)
     parser.add_argument("--output", type=str, default="mc_dataset_v2_img8.json")
-    parser.add_argument("--output_dir", default="/data/Users/xyq/developer/happy_code/data/action_dpo/v2")
+    parser.add_argument("--output_dir", default="/data/Users/xyq/developer/happy_code/data/action_vlm")
     parser.add_argument("--clip_number", default=80, type=int)
     parser.add_argument(
-        "--base_dir", default="/data/Users/xyq/developer/happy_code/data/action_dpo/mc_dataset_v2", type=str
+        "--base_dir", default="/data/Users/xyq/developer/happy_code/data/mc_dataset/mc_dataset_v2", type=str
     )
     args = parser.parse_args()
 

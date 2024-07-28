@@ -9,10 +9,10 @@ current_date = datetime.now().strftime("%Y%m%d")
 
 random.seed(42)
 
-dataset_path = "/data/Users/xyq/developer/happy_code/data/action_dpo/v2"
-dpo_file = f"{dataset_path}/20240722_mc_dataset_v2_img8.json_18782.json"
+dataset_path = "/data/Users/xyq/developer/happy_code/data/action_vlm"
+dpo_file = f"{dataset_path}/20240728_mc_dataset_v2_img8_18782.json"
 
-img_dir = "/data/Users/xyq/developer/happy_code/data/action_dpo/mc_dataset_v2"
+img_dir = "/data/Users/xyq/developer/happy_code/data/mc_dataset/mc_dataset_v2"
 all_tasks = os.listdir(img_dir)
 task_dirs = {task: os.listdir(os.path.join(img_dir, task)) for task in all_tasks}
 
