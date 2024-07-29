@@ -16,6 +16,7 @@ tensorboard==2.17.0
 rich==13.7.1
 ruff==0.5.5
 torchsummary
+seaborn==0.13.2
 # from deepseek-vl
 timm
 sentencepiece

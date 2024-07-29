@@ -11,7 +11,6 @@ videos/
 
 *.egg-info
 
-dataset/mc_dataset*
 *.pkl
 *.json
 *.log
