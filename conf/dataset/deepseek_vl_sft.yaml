@@ -1,2 +1,2 @@
-data_dir: /data/Users/xyq/developer/happy_code/data/action_dpo/v1
-file: mc_dataset_sft_v1.json
+data_dir: /data/Users/xyq/developer/happy_code/data/vpt
+file: 20240730_vpt_video_test.json

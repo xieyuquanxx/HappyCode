@@ -101,9 +101,7 @@ class ImageEncoderViT(nn.Module):
         self.pos_embed: Optional[nn.Parameter] = None
         if use_abs_pos:
             # Initialize absolute positional embedding with pretrain image size.
-            self.pos_embed = nn.Parameter(
-                torch.zeros(1, img_size // patch_size, img_size // patch_size, embed_dim)
-            )
+            self.pos_embed = nn.Parameter(torch.zeros(1, img_size // patch_size, img_size // patch_size, embed_dim))
 
         self.blocks = nn.ModuleList()
         for i in range(depth):
@@ -529,9 +527,7 @@ def create_sam_vit(
     ckpt_path: str = "",
     **kwargs,
 ):
-    assert (
-        model_name in SAM_MODEL_CONFIG.keys()
-    ), f"model name: {model_name} should be in {SAM_MODEL_CONFIG.keys()}"
+    assert model_name in SAM_MODEL_CONFIG.keys(), f"model name: {model_name} should be in {SAM_MODEL_CONFIG.keys()}"
 
     sam_cfg = SAMViTCfg(**SAM_MODEL_CONFIG[model_name])
     image_encoder = ImageEncoderViT(

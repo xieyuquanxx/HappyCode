@@ -7,7 +7,9 @@ from tqdm import tqdm
 with open("/data/Users/xyq/developer/happy_code/data/action_dpo/v1/mc_dataset_v1_img4_3.json", "rb") as f:
     datas = json.load(f)
 
-system_prompt = "Based on current task, historical observations and actions, predict the four actions that masked as <action>.\n"
+system_prompt = (
+    "Based on current task, historical observations and actions, predict the four actions that masked as <action>.\n"
+)
 
 
 def process_prompt(data_string):
@@ -69,9 +71,7 @@ def process_data(data):
             "conversations": [
                 {
                     "role": "User",
-                    "content": process_prompt(data["conversations"][0]["content"])
-                    + system_prompt
-                    + action_inputs[i],
+                    "content": process_prompt(data["conversations"][0]["content"]) + system_prompt + action_inputs[i],
                     "images": img_lists[i],
                 },
                 {"role": "Assistant", "content": action_outputs[i]},

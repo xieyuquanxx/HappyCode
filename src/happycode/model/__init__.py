@@ -5,6 +5,7 @@ from .memory_bank.models import MemoryBankMultiModalityCausalLM
 
 from transformers import LlamaForCausalLM
 
+
 def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:
     """
     gate_proj, up_proj, down_proj don't need to be trained in LoRA Fine-tuning
@@ -20,6 +21,7 @@ def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:
     if "lm_head" in lora_module_names:  # ? needed for 16-bit
         lora_module_names.remove("lm_head")
     return list(lora_module_names)
+
 
 __all__ = [
     "MultiModalityCausalLM",

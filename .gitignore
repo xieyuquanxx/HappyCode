@@ -12,6 +12,7 @@ videos/
 *.egg-info
 
 *.pkl
+*.jpg
 *.json
 *.log
 *.zip

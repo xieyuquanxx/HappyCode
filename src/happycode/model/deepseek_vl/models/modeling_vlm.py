@@ -18,6 +18,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from typing import Any
 import torch
 from attrdict import AttrDict
 from einops import rearrange
@@ -119,7 +120,7 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
 
         aligner_config = config.aligner_config
         aligner_cls = model_name_to_cls(aligner_config.cls)
-        self.aligner = aligner_cls(aligner_config.params) # type: ignore
+        self.aligner = aligner_cls(aligner_config.params)  # type: ignore
 
         language_config = config.language_config
         self.language_model = LlamaForCausalLM(language_config)
@@ -201,7 +202,8 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
-
+    def floating_point_ops(self, input_dict: dict[str, torch.Tensor | Any], exclude_embeddings: bool = True) -> int:
+        return 0
 
 AutoConfig.register("vision", VisionConfig)
 AutoConfig.register("aligner", AlignerConfig)

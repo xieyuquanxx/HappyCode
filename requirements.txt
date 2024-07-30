@@ -1,7 +1,7 @@
 wheel==0.43.0
 # === hugging face ===
 transformers==4.43.3
-accelerate==0.33.0
+accelerate==0.31.0
 datasets==2.20.0
 trl==0.9.6
 bitsandbytes

@@ -205,9 +205,7 @@ class MemoryBankMultiModalityCausalLM(MemoryBankMultiModalityPreTrainedModel):
         # [b, n, T2] -> [b, n x T2]
         # images_emb_mask = rearrange(images_emb_mask, "b n t -> b (n t)")
 
-        image_attention_mask = torch.ones(
-            images_features.size()[:-1], dtype=torch.long, device=images_features.device
-        )
+        image_attention_mask = torch.ones(images_features.size()[:-1], dtype=torch.long, device=images_features.device)
 
         query_tokens = self.query_tokens.expand(images_features.shape[0], -1, -1).to(
             images_features.device, images_features.dtype
@@ -224,9 +222,7 @@ class MemoryBankMultiModalityCausalLM(MemoryBankMultiModalityPreTrainedModel):
 
         # aligne是1个MLP，是否需要改成Linear
         images_embeds = self.aligner(query_output)  # [bs*n, num_query_token, 2048]
-        images_embeds = rearrange(
-            images_embeds, "(b n) t d -> (b n t) d", b=bs, n=n
-        )  # [bs* n*num_query_token, 2048]
+        images_embeds = rearrange(images_embeds, "(b n) t d -> (b n t) d", b=bs, n=n)  # [bs* n*num_query_token, 2048]
         # [b, T, D]
         input_ids[input_ids < 0] = 0  # ignore the image embeddings
         # select 32 tokens from the image embeddings

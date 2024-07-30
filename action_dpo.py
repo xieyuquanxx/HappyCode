@@ -104,9 +104,7 @@ def main(cfg: HappyCodeConfig) -> None:
         padding_value=0,
         **data_module,
     )
-    rank0_log(
-        local_rank, logger, f"Total parameters (M): {trainer.get_num_trainable_parameters() / 1_000_000:.2f}M"
-    )
+    rank0_log(local_rank, logger, f"Total parameters (M): {trainer.get_num_trainable_parameters() / 1_000_000:.2f}M")
     trainer.add_callback(LoggerLogCallback(logger))
 
     ckpt_dir = f"{cfg.ckpt_dir}/{cfg.run_name}"

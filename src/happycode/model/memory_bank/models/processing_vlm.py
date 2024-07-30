@@ -203,9 +203,7 @@ class VLChatProcessor(ProcessorMixin):
                 begin = role_begin[sentence["role"]]
                 end = role_end[sentence["role"]]
                 extend_text = (
-                    begin
-                    + sentence["content"]
-                    + (end if sentence["content"] != "" or add_end_for_empty_value else "")
+                    begin + sentence["content"] + (end if sentence["content"] != "" or add_end_for_empty_value else "")
                 )
                 __raw_text += extend_text
                 text_tokens = self.tokenizer(sentence["content"], padding=False, add_special_tokens=(idx == 0))
@@ -362,9 +360,7 @@ class VLChatProcessor(ProcessorMixin):
                 - num_image_tokens (List[int]): the number of image tokens
         """
 
-        assert (
-            prompt is None or conversations is None
-        ), "prompt and conversations cannot be used at the same time."
+        assert prompt is None or conversations is None, "prompt and conversations cannot be used at the same time."
 
         if prompt is None:
             # apply sft format
@@ -486,9 +482,7 @@ class VLChatProcessor(ProcessorMixin):
         batched_labels = torch.full((batch_size, input_token_max_len), self.ignore_id).long()
 
         batched_attention_mask = torch.zeros((batch_size, input_token_max_len)).long()
-        batched_pixel_values = torch.zeros(
-            (batch_size, max_n_images, *self.image_processor.default_shape)
-        ).float()
+        batched_pixel_values = torch.zeros((batch_size, max_n_images, *self.image_processor.default_shape)).float()
         batched_images_seq_mask = torch.zeros((batch_size, input_token_max_len)).bool()
         batched_images_emb_mask = torch.zeros((batch_size, max_n_images, self.num_image_tokens)).bool()
 

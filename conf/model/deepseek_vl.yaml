@@ -10,8 +10,8 @@ freeze:
 
 lora:
   lora_enable: False
-  lora_r: 8
-  lora_alpha: 32
+  lora_r: 128
+  lora_alpha: 256
   lora_dropout: 0.05
   lora_bias: "none"
 

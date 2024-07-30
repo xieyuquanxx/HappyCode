@@ -145,9 +145,7 @@ def adjust_sequence_length(action_sequence, clip_number: int = 80):
 def action_mapping(actions):
     action_list = []
     for action in actions:
-        non_zero_keys = [
-            key for key, value in action.items() if np.any(value != 0) and key not in unused_action_key
-        ]
+        non_zero_keys = [key for key, value in action.items() if np.any(value != 0) and key not in unused_action_key]
 
         act = [dic[key] for key in non_zero_keys if key != "camera"]
         if "camera" in non_zero_keys:
@@ -243,9 +241,7 @@ def create_negative_samples(action_sequence, action_types, clip_number: int = 40
                     while new_action in negative_action:
                         new_action = random.choice(action_types)
                     if new_action == "<camera>":
-                        new_action = {
-                            "camera": [round(random.uniform(-10, 10), 3), round(random.uniform(-10, 10), 3)]
-                        }
+                        new_action = {"camera": [round(random.uniform(-10, 10), 3), round(random.uniform(-10, 10), 3)]}
                     negative_action.append(new_action)
 
                 group_negative_sample.append(negative_action)
@@ -280,8 +276,8 @@ def process_all_subfolders(base_directory, args):
                             break
                     action_list = action_list[null_action_number:]
 
-                    num_groups, input_action_list, chosen_action_list, rejected_action_list = (
-                        create_negative_samples(action_list, action_types, clip_number=args.clip_number)
+                    num_groups, input_action_list, chosen_action_list, rejected_action_list = create_negative_samples(
+                        action_list, action_types, clip_number=args.clip_number
                     )
                     for i in range(num_groups):
                         dic = {}

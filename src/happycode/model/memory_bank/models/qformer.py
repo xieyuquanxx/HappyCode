@@ -24,7 +24,7 @@ class MemoryBankBlip2QFormerMultiHeadAttention(Blip2QFormerMultiHeadAttention):
         # such that the encoder's padding tokens are not attended to.
         is_cross_attention = encoder_hidden_states is not None
 
-        if is_cross_attention: # todo: add history action
+        if is_cross_attention:  # todo: add history action
             if isinstance(encoder_hidden_states, list):
                 key_layer = self.transpose_for_scores(self.key(encoder_hidden_states[0]))  # [bs,16,576,64]
                 value_layer = self.transpose_for_scores(self.value(encoder_hidden_states[1]))  # [bs,16,576,64]
@@ -54,14 +54,14 @@ class MemoryBankBlip2QFormerMultiHeadAttention(Blip2QFormerMultiHeadAttention):
             else:
                 key_layer = self.transpose_for_scores(k)
                 value_layer = self.transpose_for_scores(v)
-        mixed_query_layer = self.query(hidden_states) #[bs,32, 1024]
+        mixed_query_layer = self.query(hidden_states)  # [bs,32, 1024]
 
-        query_layer = self.transpose_for_scores(mixed_query_layer) # [bs, 16, 32, 64]
+        query_layer = self.transpose_for_scores(mixed_query_layer)  # [bs, 16, 32, 64]
 
         past_key_value = (key_layer, value_layer)
 
         # Take the dot product between "query" and "key" to get the raw attention scores.
-        attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2)) # [bs, 16, 32, 32/576]
+        attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))  # [bs, 16, 32, 32/576]
 
         if self.position_embedding_type == "relative_key" or self.position_embedding_type == "relative_key_query":
             seq_length = hidden_states.size()[1]
@@ -77,9 +77,7 @@ class MemoryBankBlip2QFormerMultiHeadAttention(Blip2QFormerMultiHeadAttention):
             elif self.position_embedding_type == "relative_key_query":
                 relative_position_scores_query = torch.einsum("bhld,lrd->bhlr", query_layer, positional_embedding)
                 relative_position_scores_key = torch.einsum("bhrd,lrd->bhlr", key_layer, positional_embedding)
-                attention_scores = (
-                    attention_scores + relative_position_scores_query + relative_position_scores_key
-                )
+                attention_scores = attention_scores + relative_position_scores_query + relative_position_scores_key
 
         attention_scores = attention_scores / math.sqrt(self.attention_head_size)
         if attention_mask is not None and not is_cross_attention:
@@ -128,9 +126,7 @@ class MemoryBankBlip2QFormerMultiHeadAttention(Blip2QFormerMultiHeadAttention):
                 self.query_memory_bank = torch.cat(
                     [self.query_memory_bank, hidden_states[:, None, :, :].detach()], dim=1
                 )  # [B, t+1, 32, C]
-                self.compression_size = torch.cat(
-                    [self.compression_size, self.size_constant], dim=1
-                )  # [B, t+1, 32]
+                self.compression_size = torch.cat([self.compression_size, self.size_constant], dim=1)  # [B, t+1, 32]
 
             # if it is the last frame, delete the query_memory_bank and compression_size
             # else if the current length of the query_memory_bank exceeds the threshold, compress the query_memory_bank

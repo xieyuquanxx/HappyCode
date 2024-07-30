@@ -33,9 +33,7 @@ class VLDPOTrainer(DPOTrainer):
             concatenated_batch["concatenated_pixel_values"] = torch.cat(
                 [batch["pixel_values"], batch["reject_pixel_values"]], dim=0
             )
-            concatenated_batch["concatenated_images_seq_mask"] = (
-                concatenated_batch["concatenated_input_ids"] == 100015
-            )
+            concatenated_batch["concatenated_images_seq_mask"] = concatenated_batch["concatenated_input_ids"] == 100015
             if "chosen_images_emb_mask" in batch:
                 concatenated_batch["concatenated_images_emb_mask"] = torch.cat(
                     [
@@ -74,12 +72,15 @@ class VLDPOTrainer(DPOTrainer):
         if "history_rejected" in batch and "history_chosen" in batch:
             chosen_history = batch["history_chosen"]
             rejected_history = batch["history_rejected"]
-            model_kwargs.update({"history": {
-                "images": torch.cat([chosen_history["images"], rejected_history["images"]], dim=0),
-                "actions": torch.cat([chosen_history["actions"], rejected_history["actions"]], dim=0)
-            }})
-        
-        
+            model_kwargs.update(
+                {
+                    "history": {
+                        "images": torch.cat([chosen_history["images"], rejected_history["images"]], dim=0),
+                        "actions": torch.cat([chosen_history["actions"], rejected_history["actions"]], dim=0),
+                    }
+                }
+            )
+
         output = model(
             input_ids=concatenated_batch["concatenated_input_ids"],
             attention_mask=concatenated_batch["concatenated_attention_mask"],
@@ -88,10 +89,14 @@ class VLDPOTrainer(DPOTrainer):
         )
         all_logits = output.logits  # [chosen B+ rejected B + input neg B, Length, 102400]
         # final_labels = concatenated_batch["concatenated_labels"]
-        ignore_qformer_embeds = torch.tensor(
-                        [[-100] * 32], device=all_logits.device
-                    )
-        final_labels = torch.cat([ignore_qformer_embeds.repeat(concatenated_batch["concatenated_input_ids"].size(0), 1), concatenated_batch["concatenated_labels"]], dim=1)
+        ignore_qformer_embeds = torch.tensor([[-100] * 32], device=all_logits.device)
+        final_labels = torch.cat(
+            [
+                ignore_qformer_embeds.repeat(concatenated_batch["concatenated_input_ids"].size(0), 1),
+                concatenated_batch["concatenated_labels"],
+            ],
+            dim=1,
+        )
         all_logps, size_completion = self.get_batch_logps(
             all_logits,
             final_labels,
@@ -213,8 +218,7 @@ class VLDPOTrainer(DPOTrainer):
         chosen_rewards = (
             self.beta
             * (
-                policy_chosen_logps.to(self.accelerator.device)
-                - reference_chosen_logps.to(self.accelerator.device)
+                policy_chosen_logps.to(self.accelerator.device) - reference_chosen_logps.to(self.accelerator.device)
             ).detach()
         )
         rejected_rewards = (

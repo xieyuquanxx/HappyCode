@@ -11,6 +11,7 @@ from happycode.model.deepseek_vl.models import VLChatProcessor
 from happycode.model.deepseek_vl.utils.io import load_pil_images
 from happycode.utils.image import load_pil_images_from_path
 
+
 class ActionDPODataset(Dataset):
     def __init__(self, vl_chat_processor: VLChatProcessor, dataset_cfg: BaseDatasetConfig) -> None:
         super(__class__, self).__init__()
@@ -55,8 +56,10 @@ class ActionDPODataset(Dataset):
         input_neg_prepare = self.chat_processor(
             conversations=input_neg_data, images=load_pil_images(input_neg_data), force_batchify=False
         )
-        
-        history_action_input_ids = [self.chat_processor.tokenizer.encode(action) for action in input_chosen["history"]["actions"]]
+
+        history_action_input_ids = [
+            self.chat_processor.tokenizer.encode(action) for action in input_chosen["history"]["actions"]
+        ]
 
         chosen_prepare["history"] = {
             "images": self.chat_processor.image_processor(
@@ -66,8 +69,10 @@ class ActionDPODataset(Dataset):
         }
         for rejected in rejected_prepare:
             rejected["history"] = chosen_prepare["history"]
-        
-        history_action_input_ids = [self.chat_processor.tokenizer.encode(action) for action in input_neg["history"]["actions"]]
+
+        history_action_input_ids = [
+            self.chat_processor.tokenizer.encode(action) for action in input_neg["history"]["actions"]
+        ]
 
         input_neg_prepare["history"] = {
             "images": self.chat_processor.image_processor(
@@ -85,6 +90,7 @@ class ActionDPODataset(Dataset):
 
 class DPODataCollator(DPODataCollatorWithPadding):
     vl_chat_processor: VLChatProcessor
+
     def __init__(self, processor: VLChatProcessor):
         self.vl_chat_processor = processor
         super().__init__()

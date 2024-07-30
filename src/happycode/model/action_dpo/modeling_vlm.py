@@ -177,9 +177,7 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
                     config.qformer_config.hidden_size,
                 )
             )
-            self.query_tokens.data.normal_(
-                mean=0.0, std=config.qformer_config.initializer_range
-            )
+            self.query_tokens.data.normal_(mean=0.0, std=config.qformer_config.initializer_range)
 
             self.qformer = Blip2QFormerModel(config.qformer_config).to(torch.bfloat16)
             self.qformer.encoder = apply_memory_bank(
@@ -187,18 +185,12 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
                 config.qformer_config.memory_bank_length,
                 config.qformer_config.num_frames,
             )
-            self.qformer_fc = nn.Linear(
-                config.qformer_config.fc_input_dim, config.qformer_config.fc_output_dim
-            )
-            self.qformer_fc.weight.data.normal_(
-                mean=0.0, std=config.qformer_config.initializer_range
-            )
+            self.qformer_fc = nn.Linear(config.qformer_config.fc_input_dim, config.qformer_config.fc_output_dim)
+            self.qformer_fc.weight.data.normal_(mean=0.0, std=config.qformer_config.initializer_range)
             self.qformer_fc.bias.data.zero_()
 
     def freeze_module(self, module_name: str) -> None:
-        assert (
-            module_name in self._module_names
-        ), f"module_name {module_name} is invalid."
+        assert module_name in self._module_names, f"module_name {module_name} is invalid."
         for module in self._module_names:
             if module == module_name:
                 module_var = getattr(self, module)
@@ -238,9 +230,7 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
         history_images_num = history_images.shape[0]
 
         images_features = self.vision_model(images)  # [b*n, 576, 1024]
-        history_images_features = self.vision_model(
-            history_images.to(images.device, images.dtype)
-        )  # [b*n, 576, 1024]
+        history_images_features = self.vision_model(history_images.to(images.device, images.dtype))  # [b*n, 576, 1024]
         history_images_features = rearrange(
             history_images_features, "(b n) t d -> b n t d", b=bs, n=history_images_num
         )
@@ -251,20 +241,14 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
             device=history_images_features.device,
         )
         # [b*n, max_len/288, 2048] -> 最后一维度需要变成1024
-        history_action_embeds = self.language_model.get_input_embeddings()(
-            history_actions.to(images.device)
-        )
-        history_action_embeds = history_action_embeds.reshape(
-            *history_images_features.shape
-        )  # [b, n, 576, 1024]
+        history_action_embeds = self.language_model.get_input_embeddings()(history_actions.to(images.device))
+        history_action_embeds = history_action_embeds.reshape(*history_images_features.shape)  # [b, n, 576, 1024]
 
         # [bs, 32, hidden_size]
-        query_tokens = self.query_tokens.expand(
-            history_images_features.shape[0], -1, -1
-        ).to(history_images_features.device, history_images_features.dtype)
-        for history_size in range(
-            min(history_images_num, history_images_features.shape[1])
-        ):
+        query_tokens = self.query_tokens.expand(history_images_features.shape[0], -1, -1).to(
+            history_images_features.device, history_images_features.dtype
+        )
+        for history_size in range(min(history_images_num, history_images_features.shape[1])):
             query_outputs = self.qformer(
                 query_embeds=query_tokens,
                 encoder_hidden_states=[
@@ -279,13 +263,9 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
         query_output = query_outputs[0]  # [bs, 32, 1024]
 
         images_embeds_vision = self.aligner(images_features)  # [bs, 576, 2048]
-        images_embeds2_qformer = self.qformer_fc(
-            query_output
-        )  # [bs, num_query_token, 2048]
+        images_embeds2_qformer = self.qformer_fc(query_output)  # [bs, num_query_token, 2048]
 
-        images_embeds = rearrange(
-            images_embeds_vision, "b t d -> (b t) d", b=bs
-        )  # [bs*576, 2048]
+        images_embeds = rearrange(images_embeds_vision, "b t d -> (b t) d", b=bs)  # [bs*576, 2048]
         # [bs*num_query_token, 2048]
         # images_qformer_embeds = rearrange(
         #     images_embeds2_qformer, "b t d -> (b t) d", b=bs
@@ -348,13 +328,9 @@ class ActionMultiModalityCausalLM(ActionMultiModalityPreTrainedModel):
             return_dict=return_dict,
         )
 
-    def floating_point_ops(
-        self, input_dict: dict[str, torch.Tensor | Any], exclude_embeddings: bool = True
-    ) -> int:
+    def floating_point_ops(self, input_dict: dict[str, torch.Tensor | Any], exclude_embeddings: bool = True) -> int:
         return (
-            6
-            * input_dict[self.main_input_name].numel()
-            * self.num_parameters(exclude_embeddings=exclude_embeddings)
+            6 * input_dict[self.main_input_name].numel() * self.num_parameters(exclude_embeddings=exclude_embeddings)
         )
 
 

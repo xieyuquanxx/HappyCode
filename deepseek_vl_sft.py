@@ -7,7 +7,8 @@ import torch
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from transformers import (
-    AutoModelForCausalLM,    Trainer,
+    AutoModelForCausalLM,
+    Trainer,
     TrainingArguments,
 )
 

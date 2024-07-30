@@ -10,6 +10,7 @@ from conf.default import BaseDatasetConfig
 from happycode.model.deepseek_vl.utils.io import load_pil_images
 from happycode.utils.image import load_pil_images_from_path
 
+
 class ActionSftDataset(Dataset):
     def __init__(self, vl_chat_processor, dataset_cfg: BaseDatasetConfig) -> None:
         super(__class__, self).__init__()

@@ -1,4 +1,3 @@
-
 import pickle
 
 
@@ -8,7 +7,6 @@ import pickle
 # print(len(datas))
 
 # print(datas[0])
-
 
 
 # for data in datas:
@@ -35,8 +33,6 @@ with open("dict_action.pkl", "rb") as f1:
     dic = pickle.load(f1)
 
 
-special_tokens_list=[]
-for key,value in dic.items():
+special_tokens_list = []
+for key, value in dic.items():
     special_tokens_list.append(value)
-
-

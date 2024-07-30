@@ -8,4 +8,3 @@ __all__ = [
     "ActionSftDataset",
     "make_action_sft_data_modlue",
 ]
-
