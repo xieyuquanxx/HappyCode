@@ -1,7 +1,6 @@
 import argparse
-import dataclasses
+import os
 import pathlib
-import pickle
 
 import torch
 from hydra import compose, initialize
@@ -11,23 +10,19 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
-
 from conf import HappyCodeConfig
 from happycode.dataset import make_sft_data_modlue
 from happycode.model import find_all_linear_names_of_llm
 from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
-from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
-
-
+from happycode.utils import (
+    get_logger,
+    rank0_log,
+    safe_save_model_for_hf_trainer,
+    seed_everything,
+    get_peft_state_maybe_zero_3,
+    get_peft_state_non_lora_maybe_zero_3,
+)
 local_rank = 0
-with open("/data/Users/xyq/developer/happy_code/dataset/dict_action.pkl", "rb") as f1:
-    dic = pickle.load(f1)
-
-
-special_tokens_list = []
-for key, value in dic.items():
-    special_tokens_list.append(value)
-
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
@@ -37,16 +32,12 @@ def main(cfg: HappyCodeConfig) -> None:
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
-    processor.tokenizer.add_special_tokens(
-        {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]}
-    )
-    processor.tokenizer.add_special_tokens({"additional_special_tokens": special_tokens_list})
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
-        trust_remote_code=True,
         attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
     )
+    model.language_model.resize_token_embeddings(len(processor.tokenizer))
 
     rank0_log(local_rank, logger, f"Load Model from {cfg.model.model_path}")
 
@@ -94,7 +85,7 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **dataclasses.asdict(cfg.training),
+        **dict(cfg.training),
     )
 
     training_args.local_rank = local_rank
@@ -123,11 +114,14 @@ def main(cfg: HappyCodeConfig) -> None:
     trainer.save_state()
 
     if lora_cfg.lora_enable:
+        state_dict = get_peft_state_maybe_zero_3(model.named_parameters(), lora_cfg.lora_bias)
+        non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(model.named_parameters())
         if training_args.local_rank == 0 or training_args.local_rank == -1:
-            model.config.save_pretrained(training_args.output_dir)
-            model.save_pretrained(training_args.output_dir)
+            model.model_config.save_pretrained(training_args.output_dir)
             processor.tokenizer.save_pretrained(training_args.output_dir)
             processor.save_pretrained(training_args.output_dir)
+            model.save_pretrained(training_args.output_dir, state_dict=state_dict)
+            torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, "non_lora_trainables.bin"))
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
 

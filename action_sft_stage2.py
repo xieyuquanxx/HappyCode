@@ -5,7 +5,7 @@ import torch
 from conf import HappyCodeConfig
 from happycode.dataset import make_action_sft_data_modlue
 from happycode.model import ActionMultiModalityCausalLM, VLChatProcessor
-from happycode.model.action_dpo.modeling_vlm import ActionQformerConfig
+from happycode.model.action_vlm.modeling_vlm import ActionQformerConfig
 from happycode.model.callback import LoggerLogCallback
 from happycode.model.memory_bank.models import (
     apply_memory_bank,

@@ -17,7 +17,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Literal
 
 import torch
 import torch.nn as nn
@@ -32,13 +32,13 @@ class CLIPVisionTower(nn.Module):
     def __init__(
         self,
         model_name: str = "siglip_large_patch16_384",
-        image_size: Union[Tuple[int, int], int] = 336,
+        image_size: tuple[int, int] | int = 336,
         select_feature: str = "patch",
         select_layer: int = -2,
         select_layers: list = None,
         ckpt_path: str = "",
-        pixel_mean: Optional[List[float]] = None,
-        pixel_std: Optional[List[float]] = None,
+        pixel_mean: list[float] | None = None,
+        pixel_std: list[float] | None = None,
         **kwargs,
     ):
         super().__init__()
@@ -122,8 +122,8 @@ class CLIPVisionTower(nn.Module):
 class HybridVisionTower(nn.Module):
     def __init__(
         self,
-        high_res_cfg: Dict,
-        low_res_cfg: Dict,
+        high_res_cfg: dict,
+        low_res_cfg: dict,
         freeze_high: bool = False,
         freeze_low: bool = False,
         concat_type: Literal["feature", "sequence", "add", "tuple"] = "tuple",

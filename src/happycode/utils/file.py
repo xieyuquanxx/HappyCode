@@ -6,5 +6,5 @@ def read_file(file_path: str):
     elif file_path.endswith(".json"):
         import json
 
-        data = json.load(open(file_path, "r"))
+        data = json.load(open(file_path))
     return data

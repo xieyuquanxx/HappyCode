@@ -17,9 +17,11 @@ deepspeed --include localhost:${gpus} --master_port=25999 try_action_mask.py \
     dataset=${dataset} \
     training=${training} \
     training.num_train_epochs=10 \
-    training.per_device_train_batch_size=16 \
+    training.per_device_train_batch_size=8 \
     model.lora.lora_enable=True \
+    model.attn_implementation="flash_attention_2" \
     training.report_to=wandb \
     training.save_strategy="epoch" \
+    
     # training.save_steps=500 \
     # run_name=2024-07-15-15-49

@@ -1,6 +1,6 @@
 from .image import image_bytes2PIL
 from .logger import get_logger, rank0_log
-from .save import safe_save_model_for_hf_trainer
+from .save import get_peft_state_maybe_zero_3, get_peft_state_non_lora_maybe_zero_3, safe_save_model_for_hf_trainer
 from .seed import seed_everything
 from .videos import write_video
 
@@ -12,4 +12,6 @@ __all__ = [
     "rank0_log",
     "seed_everything",
     "write_video",
+    "get_peft_state_maybe_zero_3",
+    "get_peft_state_non_lora_maybe_zero_3",
 ]

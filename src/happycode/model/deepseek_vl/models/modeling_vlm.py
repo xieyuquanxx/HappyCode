@@ -19,6 +19,7 @@
 
 
 from typing import Any
+
 import torch
 from attrdict import AttrDict
 from einops import rearrange
@@ -202,8 +203,10 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
+
     def floating_point_ops(self, input_dict: dict[str, torch.Tensor | Any], exclude_embeddings: bool = True) -> int:
         return 0
+
 
 AutoConfig.register("vision", VisionConfig)
 AutoConfig.register("aligner", AlignerConfig)

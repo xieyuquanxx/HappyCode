@@ -22,12 +22,15 @@ def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "c
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(lora_path)  # type: ignore
     base_model.language_model.resize_token_embeddings(len(processor.tokenizer))
-    
-    non_lora_trainables = torch.load(os.path.join(lora_path, 'non_lora_trainables.bin'), map_location='cpu')
-    non_lora_trainables = {(k[11:] if k.startswith('base_model.') else k): v for k, v in non_lora_trainables.items()}
-    if any(k.startswith('model.model.') for k in non_lora_trainables):
-        non_lora_trainables = {(k[6:] if k.startswith('model.') else k): v for k, v in non_lora_trainables.items()}
-    base_model.load_state_dict(non_lora_trainables, strict=False)
+
+    try:
+        non_lora_trainables = torch.load(os.path.join(lora_path, "non_lora_trainables.bin"), map_location="cpu")
+        non_lora_trainables = {(k[11:] if k.startswith("base_model.") else k): v for k, v in non_lora_trainables.items()}
+        if any(k.startswith("model.model.") for k in non_lora_trainables):
+            non_lora_trainables = {(k[6:] if k.startswith("model.") else k): v for k, v in non_lora_trainables.items()}
+        base_model.load_state_dict(non_lora_trainables, strict=False)
+    except FileNotFoundError:
+        print("load checkpoint does not has non_trainables.bin")
 
     print("load lora model")
     adapter = PeftModel.from_pretrained(

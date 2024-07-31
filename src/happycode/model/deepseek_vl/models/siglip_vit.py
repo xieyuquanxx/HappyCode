@@ -20,20 +20,12 @@
 # https://github.com/huggingface/pytorch-image-models/blob/main/timm/models/vision_transformer.py
 import math
 import warnings
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from functools import partial
 from typing import (
-    Callable,
-    Dict,
     Final,
-    List,
     Literal,
-    Optional,
-    Sequence,
-    Set,
-    Tuple,
-    Type,
-    Union,
 )
 
 import torch
@@ -212,7 +204,7 @@ class Block(nn.Module):
         qk_norm: bool = False,
         proj_drop: float = 0.0,
         attn_drop: float = 0.0,
-        init_values: Optional[float] = None,
+        init_values: float | None = None,
         drop_path: float = 0.0,
         act_layer: nn.Module = nn.GELU,
         norm_layer: nn.Module = nn.LayerNorm,
@@ -259,8 +251,8 @@ class VisionTransformer(nn.Module):
 
     def __init__(
         self,
-        img_size: Union[int, Tuple[int, int]] = 224,
-        patch_size: Union[int, Tuple[int, int]] = 16,
+        img_size: int | tuple[int, int] = 224,
+        patch_size: int | tuple[int, int] = 16,
         in_chans: int = 3,
         num_classes: int = 1000,
         global_pool: Literal["", "avg", "token", "map"] = "token",
@@ -270,12 +262,12 @@ class VisionTransformer(nn.Module):
         mlp_ratio: float = 4.0,
         qkv_bias: bool = True,
         qk_norm: bool = False,
-        init_values: Optional[float] = None,
+        init_values: float | None = None,
         class_token: bool = True,
         no_embed_class: bool = False,
         reg_tokens: int = 0,
         pre_norm: bool = False,
-        fc_norm: Optional[bool] = None,
+        fc_norm: bool | None = None,
         dynamic_img_size: bool = False,
         dynamic_img_pad: bool = False,
         drop_rate: float = 0.0,
@@ -286,10 +278,10 @@ class VisionTransformer(nn.Module):
         drop_path_rate: float = 0.0,
         weight_init: Literal["skip", "jax", "jax_nlhb", "moco", ""] = "",
         embed_layer: Callable = PatchEmbed,
-        norm_layer: Optional[LayerType] = None,
-        act_layer: Optional[LayerType] = None,
-        block_fn: Type[nn.Module] = Block,
-        mlp_layer: Type[nn.Module] = Mlp,
+        norm_layer: LayerType | None = None,
+        act_layer: LayerType | None = None,
+        block_fn: type[nn.Module] = Block,
+        mlp_layer: type[nn.Module] = Mlp,
         ignore_head: bool = False,
     ) -> None:
         """
@@ -418,11 +410,11 @@ class VisionTransformer(nn.Module):
         named_apply(init_weights_vit_timm, self)
 
     @torch.jit.ignore
-    def no_weight_decay(self) -> Set:
+    def no_weight_decay(self) -> set:
         return {"pos_embed", "cls_token", "dist_token"}
 
     @torch.jit.ignore
-    def group_matcher(self, coarse: bool = False) -> Dict:
+    def group_matcher(self, coarse: bool = False) -> dict:
         return dict(
             stem=r"^cls_token|pos_embed|patch_embed",  # stem and embed
             blocks=[(r"^blocks\.(\d+)", None), (r"^norm", (99999,))],
@@ -483,8 +475,8 @@ class VisionTransformer(nn.Module):
     def _intermediate_layers(
         self,
         x: torch.Tensor,
-        n: Union[int, Sequence] = 1,
-    ) -> List[torch.Tensor]:
+        n: int | Sequence = 1,
+    ) -> list[torch.Tensor]:
         outputs, num_blocks = [], len(self.blocks)
         take_indices = set(range(num_blocks - n, num_blocks) if isinstance(n, int) else n)
 
@@ -503,11 +495,11 @@ class VisionTransformer(nn.Module):
     def get_intermediate_layers(
         self,
         x: torch.Tensor,
-        n: Union[int, Sequence] = 1,
+        n: int | Sequence = 1,
         reshape: bool = False,
         return_prefix_tokens: bool = False,
         norm: bool = False,
-    ) -> Tuple[Union[torch.Tensor, Tuple[torch.Tensor]]]:
+    ) -> tuple[torch.Tensor | tuple[torch.Tensor]]:
         """Intermediate layer accessor (NOTE: This is a WIP experiment).
         Inspired by DINO / DINOv2 interface
         """
@@ -562,10 +554,10 @@ class VisionTransformer(nn.Module):
 @dataclass
 class SigLIPVisionCfg:
     width: int = 1152
-    layers: Union[Tuple[int, int, int, int], int] = 27
+    layers: tuple[int, int, int, int] | int = 27
     heads: int = 16
     patch_size: int = 14
-    image_size: Union[Tuple[int, int], int] = 336
+    image_size: tuple[int, int] | int = 336
     global_pool: str = "map"
     mlp_ratio: float = 3.7362
     class_token: bool = False

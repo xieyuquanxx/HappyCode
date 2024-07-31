@@ -1,9 +1,9 @@
 import torch
-from .action_dpo import ActionMultiModalityCausalLM
+from transformers import LlamaForCausalLM
+
+from .action_vlm import ActionMultiModalityCausalLM
 from .deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
 from .memory_bank.models import MemoryBankMultiModalityCausalLM
-
-from transformers import LlamaForCausalLM
 
 
 def find_all_linear_names_of_llm(model: LlamaForCausalLM) -> list[str]:

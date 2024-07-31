@@ -10,65 +10,20 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
-import warnings
 from conf import HappyCodeConfig
 from happycode.dataset import make_sft_data_modlue
 from happycode.model import find_all_linear_names_of_llm
+from happycode.model.callback.logger import LoggerLogCallback
 from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
-from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
-
-
+from happycode.utils import (
+    get_logger,
+    rank0_log,
+    safe_save_model_for_hf_trainer,
+    seed_everything,
+    get_peft_state_maybe_zero_3,
+    get_peft_state_non_lora_maybe_zero_3,
+)
 local_rank = 0
-# with open("dict_action.pkl", "rb") as f1:
-#     dic = pickle.load(f1)
-
-
-# special_tokens_list = []
-# for key, value in dic.items():
-#     special_tokens_list.append(value)
-def maybe_zero_3(param, ignore_status=False, name=None):
-    from deepspeed import zero
-    from deepspeed.runtime.zero.partition_parameters import ZeroParamStatus
-    if hasattr(param, "ds_id"):
-        if param.ds_status == ZeroParamStatus.NOT_AVAILABLE:
-            if not ignore_status:
-                warnings.warn(f"{name}: param.ds_status != ZeroParamStatus.NOT_AVAILABLE: {param.ds_status}")
-        with zero.GatheredParameters([param]):
-            param = param.data.detach().cpu().clone()
-    else:
-        param = param.detach().cpu().clone()
-    return param
-def get_peft_state_maybe_zero_3(named_params, bias):
-    if bias == "none":
-        to_return = {k: t for k, t in named_params if "lora_" in k}
-    elif bias == "all":
-        to_return = {k: t for k, t in named_params if "lora_" in k or "bias" in k}
-    elif bias == "lora_only":
-        to_return = {}
-        maybe_lora_bias = {}
-        lora_bias_names = set()
-        for k, t in named_params:
-            if "lora_" in k:
-                to_return[k] = t
-                bias_name = k.split("lora_")[0] + "bias"
-                lora_bias_names.add(bias_name)
-            elif "bias" in k:
-                maybe_lora_bias[k] = t
-        for k, t in maybe_lora_bias:
-            if bias_name in lora_bias_names:
-                to_return[bias_name] = t
-    else:
-        raise NotImplementedError
-    to_return = {k: maybe_zero_3(v, ignore_status=True) for k, v in to_return.items()}
-    return to_return
-
-
-def get_peft_state_non_lora_maybe_zero_3(named_params, require_grad_only=True):
-    to_return = {k: t for k, t in named_params if "lora_" not in k}
-    if require_grad_only:
-        to_return = {k: t for k, t in to_return.items() if t.requires_grad}
-    to_return = {k: maybe_zero_3(v, ignore_status=True).cpu() for k, v in to_return.items()}
-    return to_return
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
@@ -80,10 +35,7 @@ def main(cfg: HappyCodeConfig) -> None:
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
     processor.tokenizer.add_special_tokens({"additional_special_tokens": ["<action>"]})
     processor.tokenizer.add_special_tokens({"additional_special_tokens": [str(i) for i in range(8641)]})
-    # processor.tokenizer.add_special_tokens(
-    #     {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"]}
-    # )
-    # processor.tokenizer.add_special_tokens({"additional_special_tokens": special_tokens_list})
+
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
@@ -131,7 +83,14 @@ def main(cfg: HappyCodeConfig) -> None:
             f"Adding LoRA Adapters...\nLora Config:\n{OmegaConf.to_yaml(lora_cfg)}",
         )
         model = get_peft_model(model, lora_config)  # type: ignore
-
+    
+    for name, p in model.vision_model.named_parameters():
+        if "attn" in name and "attn_pool" not in name:
+            p.requires_grad = True
+    
+    for param in model.aligner.parameters():
+        param.requires_grad = True
+        
     training_args = TrainingArguments(
         run_name=cfg.run_name,
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
@@ -156,6 +115,8 @@ def main(cfg: HappyCodeConfig) -> None:
         tokenizer=processor.tokenizer,
         **data_module,
     )
+    rank0_log(local_rank, logger, f"Total parameters (M): {trainer.get_num_trainable_parameters() / 1_000_000:.2f}M")
+    trainer.add_callback(LoggerLogCallback(logger))
 
     ckpt_dir = f"{cfg.ckpt_dir}/{cfg.run_name}"
     if list(pathlib.Path(ckpt_dir).glob("checkpoint-*")):
@@ -166,18 +127,14 @@ def main(cfg: HappyCodeConfig) -> None:
     trainer.save_state()
 
     if lora_cfg.lora_enable:
-        state_dict = get_peft_state_maybe_zero_3(
-            model.named_parameters(), lora_cfg.lora_bias
-        )
-        non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(
-            model.named_parameters()
-        )
+        state_dict = get_peft_state_maybe_zero_3(model.named_parameters(), lora_cfg.lora_bias)
+        non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(model.named_parameters())
         if training_args.local_rank == 0 or training_args.local_rank == -1:
             model.model_config.save_pretrained(training_args.output_dir)
             processor.tokenizer.save_pretrained(training_args.output_dir)
             processor.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir, state_dict=state_dict)
-            torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
+            torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, "non_lora_trainables.bin"))
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
 

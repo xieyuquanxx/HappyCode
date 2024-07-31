@@ -3,7 +3,6 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-import PIL
 from torch.utils.data import Dataset
 
 from conf.default import BaseDatasetConfig

@@ -7,7 +7,6 @@
 import copy
 from dataclasses import dataclass
 from functools import partial
-from typing import List, Optional, Tuple, Type, Union
 
 import torch
 import torch.nn as nn
@@ -19,7 +18,7 @@ class MLPBlock(nn.Module):
         self,
         embedding_dim: int,
         mlp_dim: int,
-        act: Type[nn.Module] = nn.GELU,
+        act: type[nn.Module] = nn.GELU,
     ) -> None:
         super().__init__()
         self.lin1 = nn.Linear(embedding_dim, mlp_dim)
@@ -60,14 +59,14 @@ class ImageEncoderViT(nn.Module):
         mlp_ratio: float = 4.0,
         out_chans: int = 256,
         qkv_bias: bool = True,
-        norm_layer: Type[nn.Module] = nn.LayerNorm,
-        act_layer: Type[nn.Module] = nn.GELU,
+        norm_layer: type[nn.Module] = nn.LayerNorm,
+        act_layer: type[nn.Module] = nn.GELU,
         use_abs_pos: bool = True,
         use_rel_pos: bool = False,
         rel_pos_zero_init: bool = True,
         window_size: int = 0,
-        global_attn_indexes: Tuple[int, ...] = (),
-        downsample_channels: Tuple[int, ...] = (512, 1024),
+        global_attn_indexes: tuple[int, ...] = (),
+        downsample_channels: tuple[int, ...] = (512, 1024),
     ) -> None:
         """
         Args:
@@ -98,7 +97,7 @@ class ImageEncoderViT(nn.Module):
             embed_dim=embed_dim,
         )
 
-        self.pos_embed: Optional[nn.Parameter] = None
+        self.pos_embed: nn.Parameter | None = None
         if use_abs_pos:
             # Initialize absolute positional embedding with pretrain image size.
             self.pos_embed = nn.Parameter(torch.zeros(1, img_size // patch_size, img_size // patch_size, embed_dim))
@@ -201,12 +200,12 @@ class Block(nn.Module):
         num_heads: int,
         mlp_ratio: float = 4.0,
         qkv_bias: bool = True,
-        norm_layer: Type[nn.Module] = nn.LayerNorm,
-        act_layer: Type[nn.Module] = nn.GELU,
+        norm_layer: type[nn.Module] = nn.LayerNorm,
+        act_layer: type[nn.Module] = nn.GELU,
         use_rel_pos: bool = False,
         rel_pos_zero_init: bool = True,
         window_size: int = 0,
-        input_size: Optional[Tuple[int, int]] = None,
+        input_size: tuple[int, int] | None = None,
     ) -> None:
         """
         Args:
@@ -268,7 +267,7 @@ class Attention(nn.Module):
         qkv_bias: bool = True,
         use_rel_pos: bool = False,
         rel_pos_zero_init: bool = True,
-        input_size: Optional[Tuple[int, int]] = None,
+        input_size: tuple[int, int] | None = None,
     ) -> None:
         """
         Args:
@@ -320,7 +319,7 @@ class Attention(nn.Module):
         return x
 
 
-def window_partition(x: torch.Tensor, window_size: int) -> Tuple[torch.Tensor, Tuple[int, int]]:
+def window_partition(x: torch.Tensor, window_size: int) -> tuple[torch.Tensor, tuple[int, int]]:
     """
     Partition into non-overlapping windows with padding if needed.
     Args:
@@ -347,8 +346,8 @@ def window_partition(x: torch.Tensor, window_size: int) -> Tuple[torch.Tensor, T
 def window_unpartition(
     windows: torch.Tensor,
     window_size: int,
-    pad_hw: Tuple[int, int],
-    hw: Tuple[int, int],
+    pad_hw: tuple[int, int],
+    hw: tuple[int, int],
 ) -> torch.Tensor:
     """
     Window unpartition into original sequences and removing padding.
@@ -410,8 +409,8 @@ def add_decomposed_rel_pos(
     q: torch.Tensor,
     rel_pos_h: torch.Tensor,
     rel_pos_w: torch.Tensor,
-    q_size: Tuple[int, int],
-    k_size: Tuple[int, int],
+    q_size: tuple[int, int],
+    k_size: tuple[int, int],
 ) -> torch.Tensor:
     """
     Calculate decomposed Relative Positional Embeddings from :paper:`mvitv2`.
@@ -451,9 +450,9 @@ class PatchEmbed(nn.Module):
 
     def __init__(
         self,
-        kernel_size: Tuple[int, int] = (16, 16),
-        stride: Tuple[int, int] = (16, 16),
-        padding: Tuple[int, int] = (0, 0),
+        kernel_size: tuple[int, int] = (16, 16),
+        stride: tuple[int, int] = (16, 16),
+        padding: tuple[int, int] = (0, 0),
         in_chans: int = 3,
         embed_dim: int = 768,
     ) -> None:
@@ -478,15 +477,15 @@ class PatchEmbed(nn.Module):
 
 @dataclass
 class SAMViTCfg:
-    image_size: Union[Tuple[int, int], int] = 1024
+    image_size: tuple[int, int] | int = 1024
     width: int = 1024
     layers: int = 23
     heads: int = 16
     patch_size: int = 16
     window_size: int = 14
     prompt_embed_dim: int = 256
-    global_attn_indexes: Union[List[int], Tuple[int]] = (5, 11, 17, 23)
-    downsample_channels: Union[List[int], Tuple[int]] = (512, 1024)
+    global_attn_indexes: list[int] | tuple[int] = (5, 11, 17, 23)
+    downsample_channels: list[int] | tuple[int] = (512, 1024)
 
 
 SAM_MODEL_CONFIG = {

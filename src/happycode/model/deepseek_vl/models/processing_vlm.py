@@ -25,7 +25,6 @@ from transformers import LlamaTokenizerFast
 from transformers.processing_utils import ProcessorMixin
 
 from ..utils.conversation import get_conv_template
-
 from .image_processing_vlm import VLMImageProcessor
 
 
