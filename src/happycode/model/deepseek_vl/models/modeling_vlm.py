@@ -106,12 +106,16 @@ class MultiModalityPreTrainedModel(PreTrainedModel):
     _no_split_modules = []
     _skip_keys_device_placement = "past_key_values"
 
-    main_input_name: str = "inputs_embeds"
+    main_input_name: str = "input_ids"
 
 
 class MultiModalityCausalLM(MultiModalityPreTrainedModel):
     _supports_flash_attn_2: bool = True
-
+    _module_names: list[str] = [
+        "vision_model",
+        "aligner",
+        "language_model"
+    ]
     def __init__(self, config: MultiModalityConfig):
         super().__init__(config)
 
@@ -204,8 +208,18 @@ class MultiModalityCausalLM(MultiModalityPreTrainedModel):
             return_dict=return_dict,
         )
 
+    def freeze_module(self, module_name: str) -> None:
+        assert module_name in self._module_names, f"module_name {module_name} is invalid."
+        for module in self._module_names:
+            if module == module_name:
+                module_var = getattr(self, module)
+                for param in module_var.parameters():
+                    param.requires_grad = False
+                    
     def floating_point_ops(self, input_dict: dict[str, torch.Tensor | Any], exclude_embeddings: bool = True) -> int:
-        return 0
+        return (
+            6 * input_dict[self.main_input_name].numel() * self.num_parameters(exclude_embeddings=exclude_embeddings)
+        )
 
 
 AutoConfig.register("vision", VisionConfig)

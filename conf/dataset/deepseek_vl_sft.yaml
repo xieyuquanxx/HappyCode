@@ -1,2 +1,5 @@
 data_dir: /data/Users/xyq/developer/happy_code/data/vpt
-file: 20240730_vpt_video.json
+
+
+file: 20240731_vpt_pred_single_action_train_80k.json
+eval_file: 20240731_vpt_pred_single_action_eval_20k.json

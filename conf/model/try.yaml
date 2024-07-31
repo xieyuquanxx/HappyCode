@@ -1,0 +1,21 @@
+model_path: model_repo/deepseek-vl-1.3b-base
+
+
+
+freeze:
+  vision_model: True
+  language_model: True
+  aligner: True
+
+
+lora:
+  lora_enable: False
+  lora_r: 128
+  lora_alpha: 256
+  lora_dropout: 0.05
+  lora_bias: "none"
+
+attn_implementation: "none" # [none, flash_attention_2]
+
+
+system_prompt: "You are a MineCraft player, you can achieve every task in MC.""
