@@ -14,7 +14,6 @@ pillow==10.3.0
 scikit-learn==1.5.0
 tensorboard==2.17.0
 rich==13.7.1
-torchsummary
 seaborn==0.13.2
 # from deepseek-vl
 timm
@@ -23,8 +22,7 @@ attrdict
 einops==0.8.0
 # flash-attn
 jupyterlab
-# uv pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
-# uv pip install torch==2.3.0+cu118 torchvision==0.18.0+cu118 --index-url https://download.pytorch.org/whl/cu118 
+# uv pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118
 
 # from minerl
 # uv pip install env/minerl --no-cache-dir --no-build-isolation

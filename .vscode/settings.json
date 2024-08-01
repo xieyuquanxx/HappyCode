@@ -15,4 +15,11 @@
         "source.fixAll.ruff": "explicit",
         "source.organizeImports.ruff": "explicit",
     },
+    "ruff.nativeServer": "auto",
+    "ruff.lint.args": [
+        "--config=${workspaceFolder}/pyproject.toml"
+    ],
+    "ruff.format.args": [
+        "--config=${workspaceFolder}/pyproject.toml"
+    ]
 }
