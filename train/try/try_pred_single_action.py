@@ -1,8 +1,22 @@
 import argparse
 import os
 import pathlib
+from dataclasses import asdict
 
 import torch
+from attrdict import AttrDict
+from happycode.dataset import make_sft_data_modlue
+from happycode.model import find_all_linear_names_of_llm
+from happycode.model.callback.logger import LoggerLogCallback
+from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
+from happycode.utils import (
+    get_logger,
+    get_peft_state_maybe_zero_3,
+    get_peft_state_non_lora_maybe_zero_3,
+    rank0_log,
+    safe_save_model_for_hf_trainer,
+    seed_everything,
+)
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from transformers import (
@@ -10,23 +24,16 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
+
 from conf import HappyCodeConfig
-from happycode.dataset import make_sft_data_modlue
-from happycode.model import find_all_linear_names_of_llm
-from happycode.model.callback.logger import LoggerLogCallback
-from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
-from happycode.utils import (
-    get_logger,
-    rank0_log,
-    safe_save_model_for_hf_trainer,
-    seed_everything,
-    get_peft_state_maybe_zero_3,
-    get_peft_state_non_lora_maybe_zero_3,
-)
+
+
 local_rank = 0
+
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
+
     logger = get_logger(__name__, cfg.log)
     seed_everything(cfg.training.seed)
 
@@ -75,20 +82,20 @@ def main(cfg: HappyCodeConfig) -> None:
             f"Adding LoRA Adapters...\nLora Config:\n{OmegaConf.to_yaml(lora_cfg)}",
         )
         model = get_peft_model(model, lora_config)  # type: ignore
-    
+
     for name, p in model.vision_model.named_parameters():
         if "attn" in name and "attn_pool" not in name:
             p.requires_grad = True
-    
+
     for param in model.aligner.parameters():
         param.requires_grad = True
-        
+
     training_args = TrainingArguments(
         run_name=cfg.run_name,
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **dict(cfg.training),
+        **asdict(cfg.training),
     )
 
     training_args.local_rank = local_rank
@@ -152,5 +159,6 @@ if __name__ == "__main__":
 
     cfg = compose(config_name=args.config_name, overrides=args.overrides)
     local_rank = args.local_rank
+    cfg = HappyCodeConfig(AttrDict(cfg))
 
-    main(cfg)  # type: ignore
+    main(cfg)

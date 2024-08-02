@@ -10,6 +10,8 @@ import minerl.herobraine.hero.mc as mc
 import numpy as np
 import inspect
 import functools
+
+
 def store_args(method):
     """Stores provided method args as instance attributes."""
     argspec = inspect.getfullargspec(method)
@@ -206,6 +208,8 @@ class ActionTransformer:
             "buttons": np.stack([acs.get(k, dummy) for k in Buttons.ALL], axis=-1),
         }
         return out
+
+
 class ActionMapping(abc.ABC):
     """Class that maps between the standard MC factored action space and a new one you define!
 
@@ -296,8 +300,10 @@ class ActionMapping(abc.ABC):
             ac_choice[index] = button_group[action + 1]  # the zero'th index will mean no button pressed
         return ac_choice
 
+
 class IDMActionMapping(ActionMapping):
     """For IDM, but essentially this is just an identity mapping"""
+
     def from_factored(self, ac: Dict) -> Dict:
         return ac
 
@@ -313,6 +319,7 @@ class IDMActionMapping(ActionMapping):
 
     def get_zero_action(self):
         raise NotImplementedError()
+
 
 class CameraHierarchicalMapping(ActionMapping):
     """Buttons are joint as in ButtonsJointMapping, but now a camera on/off meta action is added into this joint space.
@@ -379,7 +386,9 @@ class CameraHierarchicalMapping(ActionMapping):
         assert ac["buttons"].ndim == 2, f"bad buttons label, {ac['buttons']}"
         # Get button choices for everything but camera
         choices_by_group = OrderedDict(
-            (k, self.factored_buttons_to_groups(ac["buttons"], v)) for k, v in self.BUTTONS_GROUPS.items() if k != "camera"
+            (k, self.factored_buttons_to_groups(ac["buttons"], v))
+            for k, v in self.BUTTONS_GROUPS.items()
+            if k != "camera"
         )
         # Set camera "on off" action based on whether non-null camera action was given
         camera_is_null = np.all(ac["camera"] == self.camera_null_bin, axis=1)
@@ -429,8 +438,8 @@ class CameraHierarchicalMapping(ActionMapping):
 
     def get_zero_action(self):
         return self._null_action
-    
-    
+
+
 ACTION_TRANSFORMER_KWARGS = dict(
     camera_binsize=2,
     camera_maxval=10,
@@ -439,19 +448,18 @@ ACTION_TRANSFORMER_KWARGS = dict(
 )
 
 
-
 class AgentActionMapper:
     def __init__(self) -> None:
-        self.action_mapper  = CameraHierarchicalMapping(n_camera_bins=11)
+        self.action_mapper = CameraHierarchicalMapping(n_camera_bins=11)
         self.action_space = self.action_mapper.get_action_space_update()
         self.action_space = DictType(**self.action_space)
-        
+
         self.action_transformer = ActionTransformer(**ACTION_TRANSFORMER_KWARGS)
 
     def policy2env(self, action: str) -> dict[str, np.ndarray]:
         actions = action.strip().split(" ")
         agent_output = {"buttons": np.array([[int(actions[0])]]), "camera": np.array([[int(actions[1])]])}
-        
+
         agent_output = self.action_mapper.to_factored(agent_output)
         minerl_action = self.action_transformer.policy2env(agent_output)
         return minerl_action

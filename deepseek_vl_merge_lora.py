@@ -25,7 +25,9 @@ def merge(model_name: str, lora_path: str, new_model_name: str, device: str = "c
 
     try:
         non_lora_trainables = torch.load(os.path.join(lora_path, "non_lora_trainables.bin"), map_location="cpu")
-        non_lora_trainables = {(k[11:] if k.startswith("base_model.") else k): v for k, v in non_lora_trainables.items()}
+        non_lora_trainables = {
+            (k[11:] if k.startswith("base_model.") else k): v for k, v in non_lora_trainables.items()
+        }
         if any(k.startswith("model.model.") for k in non_lora_trainables):
             non_lora_trainables = {(k[6:] if k.startswith("model.") else k): v for k, v in non_lora_trainables.items()}
         base_model.load_state_dict(non_lora_trainables, strict=False)

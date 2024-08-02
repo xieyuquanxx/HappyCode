@@ -23,7 +23,9 @@ from happycode.utils import (
     get_peft_state_maybe_zero_3,
     get_peft_state_non_lora_maybe_zero_3,
 )
+
 local_rank = 0
+
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
@@ -35,7 +37,6 @@ def main(cfg: HappyCodeConfig) -> None:
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
     processor.tokenizer.add_special_tokens({"additional_special_tokens": ["<action>"]})
     processor.tokenizer.add_special_tokens({"additional_special_tokens": [str(i) for i in range(8641)]})
-
 
     model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
@@ -83,14 +84,14 @@ def main(cfg: HappyCodeConfig) -> None:
             f"Adding LoRA Adapters...\nLora Config:\n{OmegaConf.to_yaml(lora_cfg)}",
         )
         model = get_peft_model(model, lora_config)  # type: ignore
-    
+
     for name, p in model.vision_model.named_parameters():
         if "attn" in name and "attn_pool" not in name:
             p.requires_grad = True
-    
+
     for param in model.aligner.parameters():
         param.requires_grad = True
-        
+
     training_args = TrainingArguments(
         run_name=cfg.run_name,
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",

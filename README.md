@@ -7,6 +7,9 @@ DPO for MLLM.
 - [rye](https://github.com/astral-sh/rye)
 
 
+### Ruff
+1. format project: `ruff format .`
+
 ## Install for DPO
 ```bash
 # install uv

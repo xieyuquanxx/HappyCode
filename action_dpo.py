@@ -17,7 +17,6 @@ from happycode.model.deepseek_vl.models import VLChatProcessor
 from happycode.trainer import VLDPOTrainer
 from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
-
 local_rank = 0
 
 

@@ -22,7 +22,6 @@ from transformers import (
 )
 from transformers.models.blip_2.modeling_blip_2 import Blip2QFormerModel
 
-
 local_rank = 0
 
 

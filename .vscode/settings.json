@@ -12,14 +12,15 @@
         "videos"
     ],
     "editor.codeActionsOnSave": {
-        "source.fixAll.ruff": "explicit",
+        "source.fixAll.ruff": "always",
         "source.organizeImports.ruff": "explicit",
     },
-    "ruff.nativeServer": "auto",
-    "ruff.lint.args": [
-        "--config=${workspaceFolder}/pyproject.toml"
-    ],
-    "ruff.format.args": [
-        "--config=${workspaceFolder}/pyproject.toml"
-    ]
+    "ruff.nativeServer": "on",
+    "ruff.configuration": "${workspaceFolder}/pyproject.toml",
+    // "ruff.lint.args": [
+    //     "--config=${workspaceFolder}/pyproject.toml"
+    // ],
+    // "ruff.format.args": [
+    //     "--config=${workspaceFolder}/pyproject.toml"
+    // ]
 }

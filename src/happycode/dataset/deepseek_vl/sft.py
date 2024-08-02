@@ -10,7 +10,7 @@ from happycode.model.deepseek_vl.utils.io import load_pil_images
 
 
 class DeepSeekSftDataset(Dataset):
-    def __init__(self, processor, cfg: BaseDatasetConfig, is_eval:bool=False) -> None:
+    def __init__(self, processor, cfg: BaseDatasetConfig, is_eval: bool = False) -> None:
         super(__class__, self).__init__()
 
         self.processor = processor
@@ -52,8 +52,8 @@ def make_sft_data_modlue(processor, cfg: BaseDatasetConfig) -> dict[str, Any]:
     """Make dataset and collator for supervised fine-tuning."""
     sft_dataset = DeepSeekSftDataset(processor, cfg)
     data_collator = SFTDataCollator(processor)
-    
-    eval_dataset  = None
+
+    eval_dataset = None
     if cfg.eval_file is not None:
         eval_dataset = DeepSeekSftDataset(processor, cfg, is_eval=True)
 

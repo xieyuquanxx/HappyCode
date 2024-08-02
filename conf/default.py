@@ -44,7 +44,7 @@ class BaseModelConfig:
         default="none",
         metadata={"help": "Attention implementation. Can be 'none', 'flash_attention_2'"},
     )
-    
+
     system_prompt: str | None = field(default=None, metadata={"help": "System prompt for generation"})
 
 

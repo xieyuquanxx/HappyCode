@@ -15,9 +15,10 @@
             },
             "args": [
                 "project=deepseek_vl_test_sft",
-                "model=ds_vl_memory_bank",
+                "model=deepseek_vl",
                 "dataset=deepseek_vl_sft",
-                "training=deepseek_vl_sft"
+                "training=sft",
+                "training.deepspeed=''"
             ]
         },
         {

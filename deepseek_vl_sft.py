@@ -1,33 +1,41 @@
 import argparse
 import os
 import pathlib
+from dataclasses import asdict
 
 import torch
-from hydra import compose, initialize
-from omegaconf import OmegaConf
-from transformers import (
-    AutoModelForCausalLM,
-    Trainer,
-    TrainingArguments,
-)
-from conf import HappyCodeConfig
+from attrdict import AttrDict
 from happycode.dataset import make_sft_data_modlue
 from happycode.model import find_all_linear_names_of_llm
 from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
 from happycode.utils import (
     get_logger,
+    get_peft_state_maybe_zero_3,
+    get_peft_state_non_lora_maybe_zero_3,
     rank0_log,
     safe_save_model_for_hf_trainer,
     seed_everything,
-    get_peft_state_maybe_zero_3,
-    get_peft_state_non_lora_maybe_zero_3,
 )
+from hydra import compose, initialize
+from omegaconf import DictConfig, OmegaConf
+from transformers import (
+    AutoModelForCausalLM,
+    Trainer,
+    TrainingArguments,
+)
+
+from conf import HappyCodeConfig
+
+
 local_rank = 0
 
-def main(cfg: HappyCodeConfig) -> None:
+
+def main(cfg: DictConfig) -> None:
     global local_rank
     logger = get_logger(__name__, cfg.log)
     seed_everything(cfg.training.seed)
+
+    cfg = HappyCodeConfig(AttrDict(cfg))
 
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
@@ -85,7 +93,7 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **dict(cfg.training),
+        **asdict(cfg.training),
     )
 
     training_args.local_rank = local_rank
