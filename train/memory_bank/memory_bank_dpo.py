@@ -2,20 +2,20 @@ import argparse
 import pathlib
 
 import torch
+from happycode.config import HappyCodeConfig
+from happycode.dataset import make_dpo_data_modlue
+from happycode.model import find_all_linear_names_of_llm
+from happycode.model.memory_bank.models import (
+    MultiModalityCausalLM,
+    VLChatProcessor,
+)
+from happycode.trainer import VLDPOTrainer
+from happycode.utils import LoggerLogCallback, get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from transformers import AutoModelForCausalLM
-
 from trl import DPOConfig
 
-from conf import HappyCodeConfig
-from happycode.dataset import make_action_dpo_data_modlue
-from happycode.model import find_all_linear_names_of_llm
-from happycode.model.callback import LoggerLogCallback
-from happycode.model.deepseek_vl.models import VLChatProcessor
-
-from happycode.trainer import VLDPOTrainer
-from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 local_rank = 0
 
@@ -30,19 +30,18 @@ def main(cfg: HappyCodeConfig) -> None:
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
 
-    model = AutoModelForCausalLM.from_pretrained(
+    model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
+        trust_remote_code=True,
         attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
         is_dpo=True,
     )
-    ref_model = AutoModelForCausalLM.from_pretrained(
+    ref_model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
+        trust_remote_code=True,
         attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
-        is_dpo=True,
     )
     ref_model.eval()
-    model.main_input_name = "chosen_input_ids"
-    ref_model.main_input_name = model.main_input_name
 
     rank0_log(local_rank, logger, f"Load Qformer+Memory Bank with config {model.model_config.qformer_config}")
     rank0_log(
@@ -50,6 +49,7 @@ def main(cfg: HappyCodeConfig) -> None:
         logger,
         f"Load Model from {cfg.model.model_path}\nLoad Reference Model from {cfg.model.model_path}",
     )
+
     freeze_cfg = cfg.model.freeze
     freeze_modules_name = list(filter(lambda x: freeze_cfg[x], freeze_cfg))
     for module_name in freeze_modules_name:
@@ -89,11 +89,12 @@ def main(cfg: HappyCodeConfig) -> None:
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
+        padding_value=0,
         **dict(cfg.training),  # type: ignore
     )
 
     # data module
-    data_module = make_action_dpo_data_modlue(processor, cfg.dataset)
+    data_module = make_dpo_data_modlue(processor, cfg.dataset)
 
     trainer = VLDPOTrainer(
         model=model,

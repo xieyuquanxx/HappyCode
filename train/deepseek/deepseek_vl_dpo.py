@@ -1,21 +1,17 @@
 import argparse
-import dataclasses
 import pathlib
 import pickle
 
 import torch
+from happycode.config import HappyCodeConfig
+from happycode.dataset import make_dpo_data_modlue
+from happycode.model import MultiModalityCausalLM, VLChatProcessor, find_all_linear_names_of_llm
+from happycode.trainer import VLDPOTrainer
+from happycode.utils import LoggerLogCallback, get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from transformers import AutoModelForCausalLM
-
 from trl import DPOConfig
-
-from conf import HappyCodeConfig
-from happycode.dataset import make_dpo_data_modlue
-from happycode.model import MultiModalityCausalLM, VLChatProcessor, find_all_linear_names_of_llm
-from happycode.model.callback import LoggerLogCallback
-from happycode.trainer import VLDPOTrainer
-from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 
 
 local_rank = 0

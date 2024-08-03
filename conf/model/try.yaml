@@ -18,4 +18,4 @@ lora:
 attn_implementation: "none" # [none, flash_attention_2]
 
 
-system_prompt: "You are a MineCraft player, you can achieve every task in MC.""
+system_prompt: "You are a MineCraft player, you can achieve every task in MC."

@@ -3,8 +3,8 @@ defaults:
   - dataset: hf
   - model: deepseek_vl
   - training: deepseek_vl_sft
-  - env: minerl
   
+    
 project: ???
 
 run_name: ${now:%Y-%m-%d-%H-%M}

@@ -5,7 +5,7 @@ from typing import Any
 
 from torch.utils.data import Dataset
 
-from conf.default import BaseDatasetConfig
+from happycode.config import BaseDatasetConfig
 from happycode.model.deepseek_vl.utils.io import load_pil_images
 from happycode.utils.image import load_pil_images_from_path
 

@@ -1,15 +1,13 @@
 import abc
+import functools
+import inspect
 import itertools
 from collections import OrderedDict
-from typing import Dict, List
-from gym3.types import DictType, Discrete, TensorType
 
-import numpy as np
 import attr
 import minerl.herobraine.hero.mc as mc
 import numpy as np
-import inspect
-import functools
+from gym3.types import DictType, Discrete, TensorType
 
 
 def store_args(method):
@@ -240,7 +238,7 @@ class ActionMapping(abc.ABC):
         )
 
     @abc.abstractmethod
-    def from_factored(self, ac: Dict) -> Dict:
+    def from_factored(self, ac: dict) -> dict:
         """Converts a factored action (ac) to the new space
 
         :param ac: Dictionary of actions that must have a batch dimension
@@ -248,7 +246,7 @@ class ActionMapping(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def to_factored(self, ac: Dict) -> Dict:
+    def to_factored(self, ac: dict) -> dict:
         """Converts an action in the new space (ac) to the factored action space.
 
         :param ac: Dictionary of actions that must have a batch dimension
@@ -265,7 +263,7 @@ class ActionMapping(abc.ABC):
         """Return the zero or null action for this action space"""
         pass
 
-    def factored_buttons_to_groups(self, ac_buttons: np.ndarray, button_group: List[str]) -> List[str]:
+    def factored_buttons_to_groups(self, ac_buttons: np.ndarray, button_group: list[str]) -> list[str]:
         """For a mutually exclusive group of buttons in button_group, find which option
         in the group was chosen. Assumes that each button group has the option of 'none'
         meaning that no button in the group was pressed.
@@ -304,10 +302,10 @@ class ActionMapping(abc.ABC):
 class IDMActionMapping(ActionMapping):
     """For IDM, but essentially this is just an identity mapping"""
 
-    def from_factored(self, ac: Dict) -> Dict:
+    def from_factored(self, ac: dict) -> dict:
         return ac
 
-    def to_factored(self, ac: Dict) -> Dict:
+    def to_factored(self, ac: dict) -> dict:
         return ac
 
     def get_action_space_update(self):
@@ -380,7 +378,7 @@ class CameraHierarchicalMapping(ActionMapping):
             new_camera_ac[1] = self.camera_groups["camera_y"].index(camera_comb[1])
             self.CAMERA_IDX_TO_FACTORED[jnt_ac] = new_camera_ac
 
-    def from_factored(self, ac: Dict) -> Dict:
+    def from_factored(self, ac: dict) -> dict:
         """Converts a factored action (ac) to the new space. Assumes ac has a batch dim"""
         assert ac["camera"].ndim == 2, f"bad camera label, {ac['camera']}"
         assert ac["buttons"].ndim == 2, f"bad buttons label, {ac['buttons']}"
@@ -418,7 +416,7 @@ class CameraHierarchicalMapping(ActionMapping):
             camera=np.array(new_camera_ac)[:, None],
         )
 
-    def to_factored(self, ac: Dict) -> Dict:
+    def to_factored(self, ac: dict) -> dict:
         """Converts an action in the new space (ac) to the factored action space. Assumes ac has a batch dim"""
         assert ac["camera"].shape[-1] == 1
         assert ac["buttons"].shape[-1] == 1

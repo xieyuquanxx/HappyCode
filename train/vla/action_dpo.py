@@ -1,31 +1,17 @@
 import argparse
-import os
 import pathlib
-from dataclasses import asdict
 
 import torch
-from attrdict import AttrDict
-from happycode.dataset import make_sft_data_modlue
+from happycode.config import HappyCodeConfig
+from happycode.dataset import make_action_dpo_data_modlue
 from happycode.model import find_all_linear_names_of_llm
-from happycode.model.callback.logger import LoggerLogCallback
-from happycode.model.deepseek_vl.models import MultiModalityCausalLM, VLChatProcessor
-from happycode.utils import (
-    get_logger,
-    get_peft_state_maybe_zero_3,
-    get_peft_state_non_lora_maybe_zero_3,
-    rank0_log,
-    safe_save_model_for_hf_trainer,
-    seed_everything,
-)
+from happycode.model.deepseek_vl.models import VLChatProcessor
+from happycode.trainer import VLDPOTrainer
+from happycode.utils import LoggerLogCallback, get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 from hydra import compose, initialize
 from omegaconf import OmegaConf
-from transformers import (
-    AutoModelForCausalLM,
-    Trainer,
-    TrainingArguments,
-)
-
-from conf import HappyCodeConfig
+from transformers import AutoModelForCausalLM
+from trl import DPOConfig
 
 
 local_rank = 0
@@ -40,19 +26,27 @@ def main(cfg: HappyCodeConfig) -> None:
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
-    # processor.tokenizer.add_special_tokens({"additional_special_tokens": ["<action>"]})
-    processor.tokenizer.add_special_tokens({"additional_special_tokens": [str(i) for i in range(8641)]})
-    if cfg.model.system_prompt is not None:
-        processor.system_prompt = cfg.model.system_prompt
 
-    model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         cfg.model.model_path,
         attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
+        is_dpo=True,
     )
-    model.language_model.resize_token_embeddings(len(processor.tokenizer))
+    ref_model = AutoModelForCausalLM.from_pretrained(
+        cfg.model.model_path,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
+        is_dpo=True,
+    )
+    ref_model.eval()
+    model.main_input_name = "chosen_input_ids"
+    ref_model.main_input_name = model.main_input_name
 
-    rank0_log(local_rank, logger, f"Load Model from {cfg.model.model_path}")
-
+    rank0_log(local_rank, logger, f"Load Qformer+Memory Bank with config {model.model_config.qformer_config}")
+    rank0_log(
+        local_rank,
+        logger,
+        f"Load Model from {cfg.model.model_path}\nLoad Reference Model from {cfg.model.model_path}",
+    )
     freeze_cfg = cfg.model.freeze
     freeze_modules_name = list(filter(lambda x: freeze_cfg[x], freeze_cfg))
     for module_name in freeze_modules_name:
@@ -82,36 +76,28 @@ def main(cfg: HappyCodeConfig) -> None:
             f"Adding LoRA Adapters...\nLora Config:\n{OmegaConf.to_yaml(lora_cfg)}",
         )
         model = get_peft_model(model, lora_config)  # type: ignore
+    # if use lora, we need to set requires_grad=True for train parameters
+    # for param in model.qformer.parameters():
+    #     param.requires_grad = True
 
-    for name, p in model.vision_model.named_parameters():
-        if "attn" in name and "attn_pool" not in name:
-            p.requires_grad = True
-
-    for param in model.aligner.parameters():
-        param.requires_grad = True
-
-    training_args = TrainingArguments(
+    training_args = DPOConfig(
         run_name=cfg.run_name,
+        local_rank=local_rank,
         output_dir=f"{cfg.ckpt_dir}/{cfg.run_name}",
         remove_unused_columns=False,
         load_best_model_at_end=False,
-        **asdict(cfg.training),
+        **dict(cfg.training),  # type: ignore
     )
 
-    training_args.local_rank = local_rank
-    model.vision_model = model.vision_model.to(
-        dtype=torch.bfloat16 if training_args.bf16 else torch.float16,
-        device=training_args.device,
-    )
-    model.aligner = model.aligner.to(device=training_args.device)
+    # data module
+    data_module = make_action_dpo_data_modlue(processor, cfg.dataset)
 
-    # # data module
-    data_module = make_sft_data_modlue(processor, cfg.dataset)
-
-    trainer = Trainer(
+    trainer = VLDPOTrainer(
         model=model,
+        ref_model=ref_model,
         args=training_args,
         tokenizer=processor.tokenizer,
+        padding_value=0,
         **data_module,
     )
     rank0_log(local_rank, logger, f"Total parameters (M): {trainer.get_num_trainable_parameters() / 1_000_000:.2f}M")
@@ -126,16 +112,18 @@ def main(cfg: HappyCodeConfig) -> None:
     trainer.save_state()
 
     if lora_cfg.lora_enable:
-        state_dict = get_peft_state_maybe_zero_3(model.named_parameters(), lora_cfg.lora_bias)
-        non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(model.named_parameters())
         if training_args.local_rank == 0 or training_args.local_rank == -1:
             model.model_config.save_pretrained(training_args.output_dir)
             processor.tokenizer.save_pretrained(training_args.output_dir)
             processor.save_pretrained(training_args.output_dir)
-            model.save_pretrained(training_args.output_dir, state_dict=state_dict)
-            torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, "non_lora_trainables.bin"))
+            # model.save_pretrained(training_args.output_dir)
+            trainer.save_model(training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer, ckpt_dir)
+        if training_args.local_rank == 0 or training_args.local_rank == -1:
+            model.model_config.save_pretrained(training_args.output_dir)
+            processor.tokenizer.save_pretrained(training_args.output_dir)
+            processor.save_pretrained(training_args.output_dir)
 
 
 if __name__ == "__main__":
@@ -159,6 +147,5 @@ if __name__ == "__main__":
 
     cfg = compose(config_name=args.config_name, overrides=args.overrides)
     local_rank = args.local_rank
-    cfg = HappyCodeConfig(AttrDict(cfg))
 
-    main(cfg)
+    main(cfg)  # type: ignore

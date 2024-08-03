@@ -1,32 +1,38 @@
 import argparse
 import pathlib
+import pickle
 
 import torch
-from conf import HappyCodeConfig
-from happycode.dataset import make_action_sft_data_modlue
-from happycode.model import ActionMultiModalityCausalLM, VLChatProcessor
-from happycode.model.action_vlm.modeling_vlm import ActionQformerConfig
-from happycode.model.callback import LoggerLogCallback
+from happycode.config import HappyCodeConfig
+from happycode.dataset import make_sft_data_modlue
+from happycode.model import find_all_linear_names_of_llm
 from happycode.model.memory_bank.models import (
+    MemoryBankQformerConfig,
+    MultiModalityCausalLM,
+    VLChatProcessor,
     apply_memory_bank,
 )
-from happycode.utils import get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
+from happycode.utils import LoggerLogCallback, get_logger, rank0_log, safe_save_model_for_hf_trainer, seed_everything
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 from torch import nn
 from transformers import (
     AutoModelForCausalLM,
-    LlamaForCausalLM,
     Trainer,
     TrainingArguments,
 )
 from transformers.models.blip_2.modeling_blip_2 import Blip2QFormerModel
+
 
 local_rank = 0
 
 
 def main(cfg: HappyCodeConfig) -> None:
     global local_rank
+    with open("dataset/dict_action.pkl", "rb") as f1:
+        dic = pickle.load(f1)
+
+    special_tokens_list = list(dic.values())
 
     logger = get_logger(__name__, cfg.log)
     seed_everything(cfg.training.seed)
@@ -34,30 +40,28 @@ def main(cfg: HappyCodeConfig) -> None:
     rank0_log(local_rank, logger, OmegaConf.to_yaml(cfg))
 
     processor: VLChatProcessor = VLChatProcessor.from_pretrained(cfg.model.model_path)  # type: ignore
-
-    model: ActionMultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
-        cfg.model.model_path,
-        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
-        is_sft_stage2=True,
+    processor.tokenizer.add_special_tokens(
+        {"additional_special_tokens": ["<a>", "</a>", "<action>", "<x>", "</x>", "<y>", "</y>"] + special_tokens_list}
     )
 
-    qformer_config = ActionQformerConfig(vocab_size=processor.tokenizer.vocab_size, **dict(cfg.model.qformer))
+    model: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(
+        cfg.model.model_path,
+        attn_implementation=None if cfg.model.attn_implementation == "none" else cfg.model.attn_implementation,
+        is_sft=True,
+    )
+
+    qformer_config = MemoryBankQformerConfig(vocab_size=processor.tokenizer.vocab_size, **dict(cfg.model.qformer))
 
     model.model_config.qformer_config = qformer_config
+    processor.num_image_tokens = qformer_config.num_query_tokens
 
     query_tokens = nn.Parameter(torch.zeros(1, qformer_config.num_query_tokens, qformer_config.hidden_size))
     query_tokens.data.normal_(mean=0.0, std=qformer_config.initializer_range)
 
     qformer = Blip2QFormerModel(qformer_config).to(torch.bfloat16)
     qformer.encoder = apply_memory_bank(qformer.encoder, qformer_config.memory_bank_length, qformer_config.num_frames)
-    qformer_fc = nn.Linear(qformer_config.fc_input_dim, qformer_config.fc_output_dim)
-    qformer_fc.weight.data.normal_(mean=0.0, std=qformer_config.initializer_range)
-    qformer_fc.bias.data.zero_()
-
     model.qformer = qformer
     model.query_tokens = query_tokens
-    model.qformer_fc = qformer_fc
-
     rank0_log(local_rank, logger, f"Load Qformer+Memory Bank with config {qformer_config}")
     rank0_log(local_rank, logger, f"Load Model from {cfg .model.model_path}")
 
@@ -66,6 +70,34 @@ def main(cfg: HappyCodeConfig) -> None:
     for module_name in freeze_modules_name:
         rank0_log(local_rank, logger, f"freeze {module_name}")
         model.freeze_module(module_name)
+
+    lora_cfg = cfg.model.lora
+    if lora_cfg.lora_enable:
+        from peft.mapping import get_peft_model
+        from peft.tuners.lora import LoraConfig
+
+        lora_config = LoraConfig(
+            r=lora_cfg.lora_r,
+            lora_alpha=lora_cfg.lora_alpha,
+            target_modules=find_all_linear_names_of_llm(model.language_model),
+            lora_dropout=lora_cfg.lora_dropout,
+            bias=lora_cfg.lora_bias,  # type: ignore
+            task_type="CAUSAL_LM",
+        )
+        if cfg.training.bf16:
+            model.language_model = model.language_model.to(torch.bfloat16)  # type: ignore
+        if cfg.training.fp16:
+            model.language_model = model.language_model.to(torch.float16)  # type: ignore
+        rank0_log(
+            local_rank,
+            logger,
+            f"Adding LoRA Adapters...\nLora Config:\n{OmegaConf.to_yaml(lora_cfg)}",
+        )
+        model = get_peft_model(model, lora_config)  # type: ignore
+
+    # if use lora, we need to set requires_grad=True for train parameters
+    for param in model.qformer.parameters():
+        param.requires_grad = True
 
     training_args = TrainingArguments(
         run_name=cfg.run_name,
@@ -79,9 +111,9 @@ def main(cfg: HappyCodeConfig) -> None:
     model.vision_model = model.vision_model.to(training_args.device)
     model.aligner = model.aligner.to(training_args.device)
     model.qformer = model.qformer.to(training_args.device)
-    model.qformer_fc = model.qformer_fc.to(training_args.device)
+
     # # data module
-    data_module = make_action_sft_data_modlue(processor, cfg.dataset)
+    data_module = make_sft_data_modlue(processor, cfg.dataset)
 
     trainer = Trainer(
         model=model,
@@ -100,11 +132,18 @@ def main(cfg: HappyCodeConfig) -> None:
 
     trainer.save_state()
 
-    safe_save_model_for_hf_trainer(trainer, ckpt_dir)
-    if training_args.local_rank == 0 or training_args.local_rank == -1:
-        model.model_config.save_pretrained(training_args.output_dir)
-        processor.tokenizer.save_pretrained(training_args.output_dir)
-        processor.save_pretrained(training_args.output_dir)
+    if lora_cfg.lora_enable:
+        if training_args.local_rank == 0 or training_args.local_rank == -1:
+            model.model_config.save_pretrained(training_args.output_dir)
+            model.save_pretrained(training_args.output_dir)
+            processor.tokenizer.save_pretrained(training_args.output_dir)
+            processor.save_pretrained(training_args.output_dir)
+    else:
+        safe_save_model_for_hf_trainer(trainer, ckpt_dir)
+        if training_args.local_rank == 0 or training_args.local_rank == -1:
+            model.model_config.save_pretrained(training_args.output_dir)
+            processor.tokenizer.save_pretrained(training_args.output_dir)
+            processor.save_pretrained(training_args.output_dir)
 
 
 if __name__ == "__main__":

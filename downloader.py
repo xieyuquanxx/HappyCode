@@ -1,10 +1,10 @@
-from concurrent.futures import ThreadPoolExecutor, wait
-from threading import Lock
 import argparse
 import os
-
+from concurrent.futures import ThreadPoolExecutor, wait
+from threading import Lock
 
 from requests import get, head
+
 
 lock = Lock()
 
@@ -18,12 +18,12 @@ class Downloader:
         # 若资源显示302,则迭代找寻源文件
         while r.status_code == 302:
             self.url = r.headers["Location"]
-            print("该url已重定向至{}".format(self.url))
+            print(f"该url已重定向至{self.url}")
             r = head(self.url)
         self.size = int(r.headers["Content-Length"])
 
     def down(self, start, end):
-        headers = {"Range": "bytes={}-{}".format(start, end)}
+        headers = {"Range": f"bytes={start}-{end}"}
         # stream = True 下载的数据不会保存在内存中
         r = get(self.url, headers=headers, stream=True)
         # 写入文件对应位置,加入文件锁
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    with open(args.url_file, "r") as f:
+    with open(args.url_file) as f:
         urls = f.readlines()
     # print(urls)
     error_download_file = open("vpt_download_error.txt", "a")

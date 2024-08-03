@@ -8,7 +8,7 @@ per_device_eval_batch_size: 1
 dataloader_num_workers: 4
 dataloader_pin_memory: True
 
-gradient_accumulation_steps: 1
+gradient_accumulation_steps: 4
 
 fp16: False
 bf16: True

@@ -3,7 +3,7 @@ import os
 
 from rich.logging import RichHandler
 
-from conf import LogConfig
+from happycode.config import LogConfig
 
 
 def rank0_log(local_rank: int | None, logger: logging.Logger, msg: str) -> None:

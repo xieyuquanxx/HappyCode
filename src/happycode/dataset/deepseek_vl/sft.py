@@ -5,7 +5,7 @@ from typing import Any
 
 from torch.utils.data import Dataset
 
-from conf.default import BaseDatasetConfig
+from happycode.config.default import BaseDatasetConfig
 from happycode.model.deepseek_vl.utils.io import load_pil_images
 
 
@@ -53,12 +53,8 @@ def make_sft_data_modlue(processor, cfg: BaseDatasetConfig) -> dict[str, Any]:
     sft_dataset = DeepSeekSftDataset(processor, cfg)
     data_collator = SFTDataCollator(processor)
 
-    eval_dataset = None
-    if cfg.eval_file is not None:
-        eval_dataset = DeepSeekSftDataset(processor, cfg, is_eval=True)
-
     return {
         "train_dataset": sft_dataset,
-        "eval_dataset": eval_dataset,
+        "eval_dataset": None,
         "data_collator": data_collator,
     }

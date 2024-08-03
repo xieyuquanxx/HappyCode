@@ -90,10 +90,6 @@ class BaseDatasetConfig:
         default="train.json",
         metadata={"help": "data file"},
     )
-    eval_file: str | None = field(
-        default=None,
-        metadata={"help": "eval data file"},
-    )
     repo: str = field(
         default="pcuenq/oxford-pets",
         metadata={"help": "hugging face repo"},
